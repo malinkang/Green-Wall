@@ -20,6 +20,17 @@ const GitHubIcon = () => {
   )
 }
 
+const NotionIcon = () => {
+  return (
+    <svg viewBox="0 0 24 24">
+      <path
+        d="M4.459 3.083c.906-.241 2.098-.023 3.14.281l9.63 2.793c1.1.319 1.808.72 1.808 1.663v10.305c0 .88-.493 1.311-1.6 1.6l-9.838 2.593c-1.247.327-2.255.292-3.245 0L2.59 21.68C1.616 21.39 1 20.9 1 19.78V6.3c0-1.117.637-1.86 1.69-2.144l1.77-.473Zm.383 1.356-1.3.348c-.527.141-.836.46-.836 1.133v13.213c0 .603.232.85.86 1.034l1.24.354c.71.202 1.383.201 2.184-.012l9.54-2.514c.8-.211 1.045-.497 1.045-1.164V7.856c0-.62-.269-.9-1.045-1.12L7.343 3.936c-.89-.252-1.64-.285-2.5-.102Zm2.032 2.08 8.943 2.538v8.787L6.874 20.62V6.52Zm1.238 1.69v9.02l1.516-.36v-6.54l3.36 8.19 1.428-.34V8.178l-1.5.287v6.31l-3.203-7.716-2.1.458Z"
+        fill="currentColor"
+      />
+    </svg>
+  )
+}
+
 const Avatar = () => {
   const { graphData } = useData()
 
@@ -80,14 +91,12 @@ export function GraphHeader() {
   }
 
   const username = graphData.login
+  const href = graphData.profileUrl ?? `https://github.com/${username}`
+  const source = graphData.source ?? 'github'
 
   return (
     <div className="flex w-full items-center">
-      <Link
-        className="mr-4 flex shrink-0 items-center"
-        href={`https://github.com/${username}`}
-        target="_blank"
-      >
+      <Link className="mr-4 flex shrink-0 items-center" href={href} target="_blank">
         <span className="flex size-20 items-center">
           <Avatar />
         </span>
@@ -136,16 +145,14 @@ export function GraphHeader() {
       </div>
 
       <div className="ml-auto flex shrink-0 flex-col items-end gap-0.5 text-xs">
-        <Link className="pb-2" href={`https://github.com/${username}`} target="_blank">
+        <Link className="pb-2" href={href} target="_blank">
           <span className="inline-block size-9">
-            <GitHubIcon />
+            {source === 'notion' ? <NotionIcon /> : <GitHubIcon />}
           </span>
         </Link>
 
         <span className="opacity-70">
-          {typeof totalContributions === 'number'
-            ? `${numberWithCommas(totalContributions)} Commits`
-            : '-'}
+          {typeof totalContributions === 'number' ? `${numberWithCommas(totalContributions)} Contributions` : '-'}
         </span>
 
         <span className="opacity-70">

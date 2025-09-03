@@ -62,6 +62,10 @@ export interface ContributionCalendar {
 export interface GraphData extends ContributionBasic {
   contributionCalendars: ContributionCalendar[]
   statistics?: ValuableStatistics
+  /** Optional source identifier for rendering (e.g., 'github' | 'notion'). */
+  source?: 'github' | 'notion'
+  /** Optional profile URL for header linking. */
+  profileUrl?: string
 }
 
 export interface ResponseData {

@@ -23,7 +23,7 @@ export function Layout(props: React.PropsWithChildren) {
   return (
     <>
       <Head>
-        <title>Green Wall · GitHub contribution graph generator</title>
+        <title>Green Wall · Notion database heatmap generator</title>
       </Head>
 
       <div className="min-h-screen px-4 sm:px-5 md:mx-auto md:min-w-content md:max-w-content lg:px-0">

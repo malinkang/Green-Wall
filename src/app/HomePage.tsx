@@ -217,6 +217,9 @@ export function HomePage() {
             />
             <GenerateButton loading={loading} type="submit" />
           </div>
+          <div className="mt-3 text-center text-sm opacity-70">
+            Or generate from Notion database? <a className="underline" href="/notion">Try Notion mode</a>
+          </div>
         </form>
       </div>
 

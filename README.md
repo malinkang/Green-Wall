@@ -70,3 +70,38 @@ GITHUB_ACCESS_TOKEN="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 ```
 
 Then you are ready to run `pnpm dev` to develop.
+
+## Notion Database Heatmap (New)
+
+You can also generate a heatmap from a Notion database.
+
+- Set `NOTION_API_KEY` in your environment (server-side):
+
+```sh
+# .env.local
+NOTION_API_KEY="secret_..."
+```
+
+- Start the app and open `/notion`.
+- Provide:
+  - Notion Database ID
+  - Date property name (default: `Date`)
+  - Optional Count property (number/rollup). If omitted, each page counts as 1.
+
+The Notion mode shares the same rendering and export features as the GitHub mode.
+
+### Optional: Notion OAuth (login to list databases)
+
+To allow users to log in with Notion and list their databases for selection:
+
+```sh
+# .env.local
+NOTION_CLIENT_ID="your_public_integration_client_id"
+NOTION_CLIENT_SECRET="your_public_integration_client_secret"
+NOTION_REDIRECT_URI="http://localhost:3000/api/auth/notion/callback"
+# Optional scopes (default: databases.read,users.read)
+NOTION_OAUTH_SCOPES="databases.read,users.read"
+```
+
+- The top-right button triggers Notion login.
+- After login, the `/notion` page lists the user’s databases for selection.

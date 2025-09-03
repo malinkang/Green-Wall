@@ -1,11 +1,10 @@
 import { DataProvider } from '~/DataContext'
-
-import { HomePage } from './HomePage'
+import { NotionHome } from './notion/ui/NotionHome'
 
 export default function IndexPage() {
   return (
     <DataProvider key="home">
-      <HomePage />
+      <NotionHome />
     </DataProvider>
   )
 }
