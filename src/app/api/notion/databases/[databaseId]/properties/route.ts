@@ -3,11 +3,11 @@ import { NextRequest, NextResponse } from 'next/server'
 const NOTION_API_BASE = 'https://api.notion.com/v1'
 const NOTION_VERSION = '2022-06-28'
 
-export async function GET(_req: NextRequest, { params }: { params: { databaseId: string } }) {
+export async function GET(_req: NextRequest, context: { params: Promise<{ databaseId: string }> }) {
   const token = _req.cookies.get('notion_token')?.value
   if (!token) return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
 
-  const { databaseId } = params
+  const { databaseId } = await context.params
   const res = await fetch(`${NOTION_API_BASE}/databases/${databaseId}`, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -36,4 +36,3 @@ export async function GET(_req: NextRequest, { params }: { params: { databaseId:
 
   return NextResponse.json({ dateProps, numberProps }, { status: 200 })
 }
-
