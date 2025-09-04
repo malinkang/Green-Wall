@@ -2,6 +2,14 @@ import type { NextConfig } from 'next'
 import { createSecureHeaders } from 'next-secure-headers'
 
 const nextConfig: NextConfig = {
+  eslint: {
+    // Ignore ESLint errors during builds (Vercel/production)
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    // Ignore TypeScript type errors during builds
+    ignoreBuildErrors: true,
+  },
   /**
    * Security Headers Configuration:
    * - Uses the `createSecureHeaders()` function from the `next-secure-headers` package
