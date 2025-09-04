@@ -32,37 +32,43 @@ const nextConfig: NextConfig = {
       // Allow embedding share Notion page in Notion (iframe)
       {
         source: '/share/notion',
-        headers: createSecureHeaders({
-          frameGuard: false,
-          contentSecurityPolicy: {
-            directives: {
-              frameAncestors: [
-                "'self'",
-                'https://notion.so',
-                'https://www.notion.so',
-                'https://*.notion.so',
-                'https://*.notion.site',
-              ],
+        headers: [
+          ...createSecureHeaders({
+            frameGuard: false,
+            contentSecurityPolicy: {
+              directives: {
+                frameAncestors: [
+                  "'self'",
+                  'https://notion.so',
+                  'https://www.notion.so',
+                  'https://*.notion.so',
+                  'https://*.notion.site',
+                ],
+              },
             },
-          },
-        }),
+          }),
+          { key: 'Cache-Control', value: 'no-store' },
+        ],
       },
       {
         source: '/share/notion/(.*)',
-        headers: createSecureHeaders({
-          frameGuard: false,
-          contentSecurityPolicy: {
-            directives: {
-              frameAncestors: [
-                "'self'",
-                'https://notion.so',
-                'https://www.notion.so',
-                'https://*.notion.so',
-                'https://*.notion.site',
-              ],
+        headers: [
+          ...createSecureHeaders({
+            frameGuard: false,
+            contentSecurityPolicy: {
+              directives: {
+                frameAncestors: [
+                  "'self'",
+                  'https://notion.so',
+                  'https://www.notion.so',
+                  'https://*.notion.so',
+                  'https://*.notion.site',
+                ],
+              },
             },
-          },
-        }),
+          }),
+          { key: 'Cache-Control', value: 'no-store' },
+        ],
       },
       // Apply strict defaults to all other routes, but disable X-Frame-Options here
       // to avoid conflicting headers when multiple header rules match the same path.

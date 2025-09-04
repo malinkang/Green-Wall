@@ -1,5 +1,8 @@
 import { Suspense } from 'react'
 
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 import { DataProvider } from '~/DataContext'
 import { NotionSharePage } from './ui/NotionSharePage'
 
