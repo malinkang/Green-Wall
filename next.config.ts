@@ -28,7 +28,44 @@ const nextConfig: NextConfig = {
    */
   // eslint-disable-next-line @typescript-eslint/require-await
   async headers() {
-    return [{ source: '/(.*)', headers: createSecureHeaders() }]
+    return [
+      // Allow embedding share Notion page in Notion (iframe)
+      {
+        source: '/share/notion',
+        headers: createSecureHeaders({
+          frameGuard: false,
+          contentSecurityPolicy: {
+            directives: {
+              frameAncestors: [
+                "'self'",
+                'https://notion.so',
+                'https://www.notion.so',
+                'https://*.notion.so',
+                'https://*.notion.site',
+              ],
+            },
+          },
+        }),
+      },
+      {
+        source: '/share/notion/(.*)',
+        headers: createSecureHeaders({
+          frameGuard: false,
+          contentSecurityPolicy: {
+            directives: {
+              frameAncestors: [
+                "'self'",
+                'https://notion.so',
+                'https://www.notion.so',
+                'https://*.notion.so',
+                'https://*.notion.site',
+              ],
+            },
+          },
+        }),
+      },
+      { source: '/(.*)', headers: createSecureHeaders() },
+    ]
   },
 }
 
