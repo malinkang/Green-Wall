@@ -12,3 +12,5 @@ export default function Page() {
     </DataProvider>
   )
 }
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
