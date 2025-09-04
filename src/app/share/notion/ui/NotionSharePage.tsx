@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo } from 'react'
 
 import Image from 'next/image'
 import Link from 'next/link'
@@ -34,7 +34,6 @@ export function NotionSharePage() {
   }, [query])
 
   const { graphData, setGraphData, dispatchSettings } = useData()
-  const [loadError, setLoadError] = useState<string | null>(null)
 
   useEffect(() => {
     if (settings) dispatchSettings({ type: 'replace', payload: settings })
@@ -55,19 +54,12 @@ export function NotionSharePage() {
       if (res.ok) {
         const json = await res.json()
         setGraphData(json.data)
-        setLoadError(null)
-      } else {
-        setLoadError('Invalid or expired share link. Please re-generate the link on the same environment.')
       }
     })()
   }, [payload, query, setGraphData])
 
   if (!payload) {
     return <ErrorMessage text="Missing payload" />
-  }
-
-  if (loadError) {
-    return <ErrorMessage text={loadError} />
   }
 
   if (!graphData) {
