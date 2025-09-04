@@ -57,6 +57,11 @@ export function NotionSharePage() {
     })()
   }, [payload, query, setGraphData])
 
+  // Minimal wrapper to remove Safari mockup padding in embeds
+  const PlainMockup = ({ className = '', children }: { className?: string; children?: React.ReactNode }) => (
+    <div className={className}>{children}</div>
+  )
+
   const hideChrome = (
     <style jsx global>{`
       header, footer { display: none !important; }
@@ -88,8 +93,8 @@ export function NotionSharePage() {
   return (
     <>
       {hideChrome}
-      <div className="flex w-full overflow-x-auto py-4 md:justify-center">
-        <ContributionsGraph showInspect={false} />
+      <div className="w-full overflow-x-auto py-2">
+        <ContributionsGraph showInspect={false} Mockup={PlainMockup} />
       </div>
     </>
   )
