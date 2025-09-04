@@ -57,25 +57,37 @@ export function NotionSharePage() {
     })()
   }, [payload, query, setGraphData])
 
+  const hideChrome = (
+    <style jsx global>{`
+      header, footer { display: none !important; }
+      body.bg-decoration { background: none !important; }
+    `}</style>
+  )
+
   if (!payload) {
-    return <ErrorMessage text="Missing payload" />
+    return (
+      <>
+        {hideChrome}
+        <ErrorMessage text="Missing payload" />
+      </>
+    )
   }
 
   if (!graphData) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 text-main-400">
-        <Image priority alt="loading" height={60} src="/mona-loading-default.gif" width={60} />
-        <span className="bg-pageBg px-3 py-4">Loading Notion graph...</span>
-      </div>
+      <>
+        {hideChrome}
+        <div className="flex flex-col items-center justify-center py-20 text-main-400">
+          <Image priority alt="loading" height={60} src="/mona-loading-default.gif" width={60} />
+          <span className="bg-pageBg px-3 py-4">Loading Notion graph...</span>
+        </div>
+      </>
     )
   }
 
   return (
     <>
-      <style jsx global>{`
-        header, footer { display: none !important; }
-        body.bg-decoration { background: none !important; }
-      `}</style>
+      {hideChrome}
       <div className="flex w-full overflow-x-auto py-4 md:justify-center">
         <ContributionsGraph showInspect={false} />
       </div>
