@@ -64,15 +64,33 @@ export function NotionSharePage() {
 
   if (!graphData) {
     return (
-      <div className="flex flex-col items-center justify-center py-12 text-main-400">
+      <div className="flex flex-col items-center justify-center py-20 text-main-400">
         <Image priority alt="loading" height={60} src="/mona-loading-default.gif" width={60} />
+        <span className="bg-pageBg px-3 py-4">Loading Notion graph...</span>
       </div>
     )
   }
 
   return (
-    <div className="flex w-full overflow-x-auto py-4 md:justify-center">
-      <ContributionsGraph minimal showInspect={false} />
+    <div className="py-10 md:py-14">
+      <h1 className="mb-5 text-center text-lg font-medium md:mx-auto md:px-20 md:text-3xl md:leading-[1.2]">
+        My Notion database heatmap · GreenWall
+      </h1>
+
+      <div className="flex justify-center">
+        <Link href="/notion">
+          <button
+            className="cursor-pointer rounded-lg border-[3px] border-solid border-accent-400/70 bg-gradient-to-br from-accent-500 to-accent-300/60 bg-clip-text px-3 py-1 text-lg font-medium text-transparent outline-none transition-colors hover:border-accent-400 hover:bg-accent-400"
+            type="button"
+          >
+            Generate Yours
+          </button>
+        </Link>
+      </div>
+
+      <div className="flex w-full overflow-x-auto py-5 md:justify-center md:py-14">
+        <ContributionsGraph />
+      </div>
     </div>
   )
 }
