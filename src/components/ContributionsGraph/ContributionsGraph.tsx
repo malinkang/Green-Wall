@@ -19,13 +19,15 @@ interface ContributionsGraphProps extends Pick<GraphProps, 'showInspect' | 'titl
   Mockup?: React.ComponentType<React.ComponentProps<typeof MockupSafari>>
   /** CSS class name to be applied to the Mockup component. */
   mockupClassName?: string
+  /** Render only heatmap blocks without header/footer/mockup. */
+  minimal?: boolean
 }
 
 function InnerContributionsGraph(
   props: ContributionsGraphProps,
   ref: React.Ref<HTMLDivElement | null>,
 ) {
-  const { mockupClassName = '', wrapperId, showInspect, titleRender, Mockup = MockupSafari } = props
+  const { mockupClassName = '', wrapperId, showInspect, titleRender, Mockup = MockupSafari, minimal } = props
 
   const { graphData, settings, firstYear, lastYear } = useData()
 
@@ -71,6 +73,31 @@ function InnerContributionsGraph(
       : {}),
   }
 
+  const GraphList = (
+    <div className="flex flex-col gap-y-6 p-6">
+      {graphData.contributionCalendars.map((calendar) => {
+        let [startYear, endYear] = settings.yearRange ?? []
+        startYear = startYear && Number.isInteger(Number(startYear)) ? startYear : firstYear
+        endYear = endYear && Number.isInteger(Number(endYear)) ? endYear : lastYear
+
+        const shouldDisplay = startYear && endYear
+          ? calendar.year >= Number(startYear) && calendar.year <= Number(endYear)
+          : true
+
+        return (
+          <Graph
+            key={calendar.year}
+            className={shouldDisplay ? '' : 'hidden'}
+            data={calendar}
+            daysLabel={settings.daysLabel}
+            showInspect={showInspect}
+            titleRender={titleRender}
+          />
+        )
+      })}
+    </div>
+  )
+
   return (
     <div
       ref={graphRef}
@@ -80,43 +107,23 @@ function InnerContributionsGraph(
         color: 'var(--theme-foreground, #24292f)',
       }}
     >
-      <Mockup className={mockupClassName}>
-        <div>
-          <div className={`px-6 ${settings.showSafariHeader ? 'pt-2' : 'pt-6'}`}>
-            <GraphHeader />
-          </div>
-
-          <div className="flex flex-col gap-y-6 p-6">
-            {graphData.contributionCalendars.map((calendar) => {
-              let [startYear, endYear] = settings.yearRange ?? []
-              startYear = startYear && Number.isInteger(Number(startYear)) ? startYear : firstYear
-              endYear = endYear && Number.isInteger(Number(endYear)) ? endYear : lastYear
-
-              const shouldDisplay
-                = startYear && endYear
-                  ? calendar.year >= Number(startYear) && calendar.year <= Number(endYear)
-                  : true
-
-              return (
-                <Graph
-                  key={calendar.year}
-                  className={shouldDisplay ? '' : 'hidden'}
-                  data={calendar}
-                  daysLabel={settings.daysLabel}
-                  showInspect={showInspect}
-                  titleRender={titleRender}
-                />
-              )
-            })}
-          </div>
-
-          {settings.showAttribution && (
-            <div className="border-t-[1.5px] border-t-[color-mix(in_srgb,var(--theme-border)_50%,transparent)] px-6 py-3">
-              <GraphFooter />
+      {minimal ? (
+        GraphList
+      ) : (
+        <Mockup className={mockupClassName}>
+          <div>
+            <div className={`px-6 ${settings.showSafariHeader ? 'pt-2' : 'pt-6'}`}>
+              <GraphHeader />
             </div>
-          )}
-        </div>
-      </Mockup>
+            {GraphList}
+            {settings.showAttribution && (
+              <div className="border-t-[1.5px] border-t-[color-mix(in_srgb,var(--theme-border)_50%,transparent)] px-6 py-3">
+                <GraphFooter />
+              </div>
+            )}
+          </div>
+        </Mockup>
+      )}
     </div>
   )
 }
