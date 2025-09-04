@@ -64,7 +64,10 @@ const nextConfig: NextConfig = {
           },
         }),
       },
-      { source: '/(.*)', headers: createSecureHeaders() },
+      // Apply strict defaults to all other routes, but disable X-Frame-Options here
+      // to avoid conflicting headers when multiple header rules match the same path.
+      // We rely on CSP frame-ancestors to control embedding instead.
+      { source: '/(.*)', headers: createSecureHeaders({ frameGuard: false }) },
     ]
   },
 }
