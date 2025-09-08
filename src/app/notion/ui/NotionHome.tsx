@@ -3,15 +3,16 @@
 import { useCallback, useEffect, useId, useRef, useState } from 'react'
 
 import { toBlob, toPng } from 'html-to-image'
-import { DotIcon, FileCheck2Icon, ImageIcon, ImagesIcon } from 'lucide-react'
+import { DotIcon, FileCheck2Icon, ImageIcon, ImagesIcon, Settings2Icon } from 'lucide-react'
 
-import { AppearanceSetting, DraggableAppearanceSetting } from '~/components/AppearanceSetting'
+import { AppearanceSetting } from '~/components/AppearanceSetting'
+import { AppearanceSidebar } from '~/components/AppearanceSetting/AppearanceSidebar'
 import { NotionAppearanceControls } from '~/components/AppearanceSetting/NotionAppearanceControls'
 import { NotionShareButton } from '~/components/NotionShareButton'
 import { ContributionsGraph } from '~/components/ContributionsGraph'
 import { ErrorMessage } from '~/components/ErrorMessage'
 import Loading from '~/components/Loading'
-import { SettingButton } from '~/components/SettingButton'
+// import { SettingButton } from '~/components/SettingButton'
 import { useData } from '~/DataContext'
 import { trackEvent } from '~/helpers'
 import { useNotionRequest } from '~/hooks/useNotionRequest'
@@ -44,14 +45,13 @@ export function NotionHome() {
   const [dateCandidates, setDateCandidates] = useState<string[]>([])
   const [numberCandidates, setNumberCandidates] = useState<string[]>([])
 
-  const [settingPopUp, setSettingPopUp] = useState<{ offsetX: number, offsetY: number }>()
+  const [appearanceOpen, setAppearanceOpen] = useState(false)
   const [downloading, setDownloading] = useState(false)
   const [doingCopy, setDoingCopy] = useState(false)
   const [copySuccess, setCopySuccess] = useState(false)
 
   const reset = () => {
     setGraphData(undefined)
-    setSettingPopUp(undefined)
     dispatchSettings({ type: 'reset' })
   }
 
@@ -170,7 +170,6 @@ export function NotionHome() {
     }
   }
 
-  const popoverContentId = useId()
   const graphWrapperId = useId()
 
   const actionRefCallback = useCallback(
@@ -179,55 +178,50 @@ export function NotionHome() {
       if (actionRef.current) {
         const offsetTop = actionRef.current.getBoundingClientRect().top
         if (offsetTop > 0) document.body.scrollTo({ left: 0, top: offsetTop, behavior: 'smooth' })
-        setTimeout(() => {
-          const graphWrapperEle = document.getElementById(graphWrapperId)
-          if (graphWrapperEle instanceof HTMLElement) {
-            const { top, right } = graphWrapperEle.getBoundingClientRect()
-            setSettingPopUp({ offsetX: right + 20, offsetY: top })
-          }
-        }, 500)
+        // No auto pop-out in sidebar mode
       }
     },
     [graphWrapperId],
   )
 
+  const SIDEBAR_WIDTH = 320
   return (
-    <div className="py-10 md:py-14">
+    <div className="relative">
+      <AppearanceSidebar open={appearanceOpen} width={SIDEBAR_WIDTH} onClose={() => setAppearanceOpen(false)}>
+        <NotionAppearanceControls
+          authChecked={authChecked}
+          databases={databases}
+          dbLoading={dbLoading}
+          databaseId={databaseId}
+          setDatabaseId={setDatabaseId}
+          dateProp={dateProp}
+          setDateProp={setDateProp}
+          countProp={countProp}
+          setCountProp={setCountProp}
+          dateCandidates={dateCandidates}
+          numberCandidates={numberCandidates}
+          loading={loading}
+          onGenerate={() => void handleSubmit()}
+        />
+        <AppearanceSetting />
+      </AppearanceSidebar>
+
+      <div className="py-10 md:py-14" style={{ marginLeft: appearanceOpen ? SIDEBAR_WIDTH + 16 : 0 }}>
       <h1 className="text-center text-3xl font-bold md:mx-auto md:px-20 md:text-4xl md:leading-[1.2] lg:text-6xl">
         Turn your Notion database into a contributions heatmap.
       </h1>
 
       <div className="py-12 md:py-16">
         <div className="flex items-center justify-center">
-          <SettingButton aria-controls={popoverContentId} onClick={(ev) => setSettingPopUp({ offsetX: ev.clientX, offsetY: ev.clientY })} />
+          <button className="simple-button" type="button" onClick={() => setAppearanceOpen(o => !o)}>
+            <Settings2Icon className="size-[18px]" />
+            <span>Appearance</span>
+          </button>
         </div>
       </div>
 
       {/* Global Appearance panel (available before/after generating) */}
-      {settingPopUp && (
-        <DraggableAppearanceSetting
-          initialPosition={{ x: settingPopUp.offsetX, y: settingPopUp.offsetY }}
-          fixedLeft
-          onClose={() => setSettingPopUp(undefined)}
-        >
-          <NotionAppearanceControls
-            authChecked={authChecked}
-            databases={databases}
-            dbLoading={dbLoading}
-            databaseId={databaseId}
-            setDatabaseId={setDatabaseId}
-            dateProp={dateProp}
-            setDateProp={setDateProp}
-            countProp={countProp}
-            setCountProp={setCountProp}
-            dateCandidates={dateCandidates}
-            numberCandidates={numberCandidates}
-            loading={loading}
-            onGenerate={() => void handleSubmit()}
-          />
-          <AppearanceSetting />
-        </DraggableAppearanceSetting>
-      )}
+      {/* Sidebar mounted above; no overlay */}
 
       {error ? (
         <ErrorMessage errorType={error.errorType} text={error.message} />
@@ -287,6 +281,7 @@ export function NotionHome() {
           )}
         </Loading>
       )}
+      </div>
     </div>
   )
 }

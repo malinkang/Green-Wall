@@ -3,15 +3,16 @@
 import { useCallback, useId, useRef, useState } from 'react'
 
 import { toBlob, toPng } from 'html-to-image'
-import { DotIcon, FileCheck2Icon, ImageIcon, ImagesIcon } from 'lucide-react'
+import { DotIcon, FileCheck2Icon, ImageIcon, ImagesIcon, Settings2Icon } from 'lucide-react'
 
-import { AppearanceSetting, DraggableAppearanceSetting } from '~/components/AppearanceSetting'
+import { AppearanceSetting } from '~/components/AppearanceSetting'
+import { AppearanceSidebar } from '~/components/AppearanceSetting/AppearanceSidebar'
 import { ContributionsGraph } from '~/components/ContributionsGraph'
 import { ErrorMessage } from '~/components/ErrorMessage'
 import GenerateButton from '~/components/GenerateButton'
 import Loading from '~/components/Loading'
 import { SearchInput } from '~/components/SearchInput'
-import { SettingButton } from '~/components/SettingButton'
+// import { SettingButton } from '~/components/SettingButton'
 import { ShareButton } from '~/components/ShareButton'
 import { useData } from '~/DataContext'
 import { trackEvent } from '~/helpers'
@@ -37,7 +38,7 @@ export function HomePage() {
   const { graphData, setGraphData, dispatchSettings } = useData()
   const [searchName, setSearchName] = useState<GitHubUsername>('')
 
-  const [settingPopUp, setSettingPopUp] = useState<{ offsetX: number, offsetY: number }>()
+  const [appearanceOpen, setAppearanceOpen] = useState(false)
 
   const [downloading, setDownloading] = useState(false)
 
@@ -46,7 +47,6 @@ export function HomePage() {
 
   const reset = () => {
     setGraphData(undefined)
-    setSettingPopUp(undefined)
     dispatchSettings({ type: 'reset' })
   }
 
@@ -161,7 +161,6 @@ export function HomePage() {
     }
   }
 
-  const popoverContentId = useId()
   const graphWrapperId = useId()
 
   const actionRefCallback = useCallback(
@@ -176,26 +175,20 @@ export function HomePage() {
           document.body.scrollTo({ left: 0, top: offsetTop, behavior: 'smooth' })
         }
 
-        setTimeout(() => {
-          // Automatically pop-up settings for users to discover the settings at first glance.
-          const graphWrapperEle = document.getElementById(graphWrapperId)
-
-          if (graphWrapperEle instanceof HTMLElement) {
-            const { top, right } = graphWrapperEle.getBoundingClientRect()
-
-            setSettingPopUp({
-              offsetX: right + 20,
-              offsetY: top,
-            })
-          }
-        }, 500)
+        // Previously auto-pop-out settings; not needed for sidebar
       }
     },
     [graphWrapperId],
   )
 
+  const SIDEBAR_WIDTH = 320
   return (
-    <div className="py-10 md:py-14">
+    <div className="relative">
+      <AppearanceSidebar open={appearanceOpen} width={SIDEBAR_WIDTH} onClose={() => setAppearanceOpen(false)}>
+        <AppearanceSetting />
+      </AppearanceSidebar>
+
+      <div className="py-10 md:py-14" style={{ marginLeft: appearanceOpen ? SIDEBAR_WIDTH + 16 : 0 }}>
       <h1 className="text-center text-3xl font-bold md:mx-auto md:px-20 md:text-4xl md:leading-[1.2] lg:text-6xl">
         Review the contributions you have made on GitHub over the years.
       </h1>
@@ -278,50 +271,10 @@ export function HomePage() {
 
                     <div className="flex flex-wrap items-center gap-x-6 md:justify-center">
                       <ShareButton />
-
-                      <SettingButton
-                        content={<AppearanceSetting />}
-                        popoverContentId={popoverContentId}
-                        onClick={() => {
-                          if (settingPopUp) {
-                            setSettingPopUp(undefined)
-                          }
-                        }}
-                        onPopOut={() => {
-                          const popoverContentWrapper
-                        = document.getElementById(popoverContentId)?.parentNode
-
-                          if (popoverContentWrapper instanceof HTMLElement) {
-                            const style = window.getComputedStyle(popoverContentWrapper, null)
-                            const matrix = style.transform
-                            const values = matrix.split('(')[1].split(')')[0].split(',')
-                            const offsetX = values[4]
-                            const offsetY = values[5]
-
-                            setSettingPopUp({
-                              offsetX: Number(offsetX),
-                              offsetY: Number(offsetY),
-                            })
-                          }
-                        }}
-                      />
-
-                      <div className="relative">
-                        {!!settingPopUp && (
-                          <DraggableAppearanceSetting
-                            initialPosition={{
-                              x: settingPopUp.offsetX,
-                              y: settingPopUp.offsetY,
-                            }}
-                            fixedLeft
-                            onClose={() => {
-                              setSettingPopUp(undefined)
-                            }}
-                          >
-                            <AppearanceSetting />
-                          </DraggableAppearanceSetting>
-                        )}
-                      </div>
+                      <button className="simple-button" type="button" onClick={() => setAppearanceOpen(o => !o)}>
+                        <Settings2Icon className="size-[18px]" />
+                        <span>Appearance</span>
+                      </button>
                     </div>
                   </div>
 
@@ -334,6 +287,7 @@ export function HomePage() {
               )}
             </Loading>
           )}
+      </div>
     </div>
   )
 }
