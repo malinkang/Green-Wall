@@ -13,6 +13,13 @@ interface NotionPage {
   properties: Record<string, any>
 }
 
+interface NotionUserMeResponse {
+  name?: string
+  avatar_url?: string
+  // keep index signature for forward compatibility
+  [key: string]: any
+}
+
 function levelForCount(count: number, max: number): ContributionLevel {
   if (count <= 0) return ContributionLevel.NONE
   if (max <= 1) return ContributionLevel.FOURTH_QUARTILE
@@ -109,6 +116,23 @@ async function fetchNotionDatabaseMeta(databaseId: string, token: string) {
   return { title, avatarUrl }
 }
 
+async function fetchNotionUserMe(token: string): Promise<{ name?: string; avatarUrl?: string } | null> {
+  try {
+    const res = await fetch(`${NOTION_API_BASE}/users/me`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Notion-Version': NOTION_VERSION,
+      },
+      cache: 'no-store',
+    })
+    if (!res.ok) return null
+    const json = (await res.json()) as NotionUserMeResponse
+    return { name: json.name, avatarUrl: json.avatar_url }
+  } catch {
+    return null
+  }
+}
+
 async function queryNotionDatabase(
   databaseId: string,
   token: string,
@@ -191,6 +215,7 @@ export async function fetchNotionGraphData(options: {
   if (!token) throw new Error('Require NOTION API KEY or Notion OAuth token.')
 
   const meta = await fetchNotionDatabaseMeta(databaseId, token)
+  const userMe = await fetchNotionUserMe(token)
 
   const contributionCalendars: ContributionCalendar[] = []
 
@@ -207,7 +232,7 @@ export async function fetchNotionGraphData(options: {
   }
 
   const login = meta.title
-  const avatarUrl = meta.avatarUrl || '/favicon.svg'
+  const avatarUrl = userMe?.avatarUrl || meta.avatarUrl || '/favicon.svg'
 
   return {
     login,
