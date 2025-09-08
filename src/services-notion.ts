@@ -263,12 +263,13 @@ export async function fetchNotionGraphData(options: {
     contributionCalendars.push(buildCalendarFromCounts(year, counts, links))
   }
 
-  const login = meta.title
+  const displayName = userMe?.name || meta.title
+  const login = displayName
   const avatarUrl = userMe?.avatarUrl || personAvatar || meta.avatarUrl || '/favicon.svg'
 
   return {
     login,
-    name: meta.title,
+    name: displayName,
     avatarUrl,
     bio: 'Notion Database Heatmap',
     followers: { totalCount: 0 },

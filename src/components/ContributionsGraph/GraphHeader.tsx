@@ -189,8 +189,8 @@ export function GraphHeader() {
         <span className="opacity-70">
           {typeof totalYears === 'number'
             ? totalYears === 1
-              ? `In ${lastYear ?? '-'}`
-              : `${totalYears} Years`
+              ? `在 ${lastYear ?? '-'}`
+              : `${totalYears} 年`
             : '-'}
         </span>
       </div>
