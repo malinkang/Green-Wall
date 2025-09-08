@@ -10,6 +10,8 @@ interface NotionDatabase {
 }
 
 interface NotionPage {
+  id: string
+  url?: string
   properties: Record<string, any>
 }
 
@@ -37,7 +39,7 @@ function formatDate(d: Date): string {
   return `${y}-${m}-${day}`
 }
 
-function buildCalendarFromCounts(year: number, counts: Record<string, number>): ContributionCalendar {
+function buildCalendarFromCounts(year: number, counts: Record<string, number>, links?: Record<string, string>): ContributionCalendar {
   const start = new Date(year, 0, 1)
   const end = new Date(year, 11, 31)
   const days: ContributionDay[] = []
@@ -58,6 +60,7 @@ function buildCalendarFromCounts(year: number, counts: Record<string, number>): 
       count: c,
       weekday: d.getDay() as 0 | 1 | 2 | 3 | 4 | 5 | 6,
       level: levelForCount(c, max),
+      url: links?.[key],
     })
   }
 
@@ -167,7 +170,8 @@ async function queryNotionDatabase(
       throw new Error(`Notion database query failed: ${res.status}`)
     }
     const json = await res.json() as any
-    pages.push(...(json.results as NotionPage[]))
+    const results = (json.results as any[]).map((p) => ({ id: p.id, url: p.url, properties: p.properties })) as NotionPage[]
+    pages.push(...results)
     hasMore = json.has_more
     start_cursor = json.next_cursor || undefined
   }
@@ -224,11 +228,19 @@ export async function fetchNotionGraphData(options: {
     const endISO = new Date(year + 1, 0, 1).toISOString()
     const pages = await queryNotionDatabase(databaseId, token, { dateProp, startISO, endISO })
     const counts: Record<string, number> = {}
+    const links: Record<string, string> = {}
     for (const p of pages) {
       const { date, count } = extractDateAndCount(p, dateProp, countProp)
-      if (date) counts[date] = (counts[date] ?? 0) + count
+      if (date) {
+        counts[date] = (counts[date] ?? 0) + count
+        // store first page url per date for click-through
+        if (!links[date]) {
+          const pageUrl = p.url || `https://www.notion.so/${p.id.replace(/-/g, '')}`
+          links[date] = pageUrl
+        }
+      }
     }
-    contributionCalendars.push(buildCalendarFromCounts(year, counts))
+    contributionCalendars.push(buildCalendarFromCounts(year, counts, links))
   }
 
   const login = meta.title

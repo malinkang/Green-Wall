@@ -49,6 +49,8 @@ export interface ContributionDay {
   weekday?: 0 | 1 | 2 | 3 | 4 | 5 | 6
   count: number
   date: string
+  /** Optional link to the source page (used by Notion). */
+  url?: string
 }
 
 export interface ContributionCalendar {

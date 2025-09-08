@@ -195,6 +195,11 @@ export function Graph(props: GraphProps) {
                     handleMouseEnter(ev.currentTarget, day)
                   }}
                   onMouseLeave={handleMouseLeave}
+                  onClick={() => {
+                    if (day.url) {
+                      window.open(day.url, '_blank', 'noopener,noreferrer')
+                    }
+                  }}
                 />,
               )
             })
