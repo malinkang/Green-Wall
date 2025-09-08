@@ -4,17 +4,30 @@ import GenerateButton from '~/components/GenerateButton'
 import { RadixSelect } from '~/components/ui-kit/RadixSelect'
 
 export function NotionAppearanceControls(props: {
+  // Auth and database selection
+  authChecked: boolean
+  databases: { id: string; title: string }[] | null
+  dbLoading: boolean
+  databaseId: string
+  setDatabaseId: (v: string) => void
+  // Notion properties
   dateProp: string
   setDateProp: (v: string) => void
   countProp: string
   setCountProp: (v: string) => void
   dateCandidates: string[]
   numberCandidates: string[]
+  // Actions
   loading?: boolean
   onGenerate: () => void
 }) {
   const COUNT_NONE = '__NONE__'
   const {
+    authChecked,
+    databases,
+    dbLoading,
+    databaseId,
+    setDatabaseId,
     dateProp,
     setDateProp,
     countProp,
@@ -26,10 +39,32 @@ export function NotionAppearanceControls(props: {
   } = props
 
   return (
-    <div className="mt-4 border-t border-[color-mix(in_srgb,var(--theme-border,_#d0d7de)_50%,transparent)] pt-4">
+    <div className="mb-4">
       <div className="mb-2 text-sm font-medium text-main-500">Notion</div>
 
       <div className="flex flex-col gap-3">
+        <fieldset className="flex items-center gap-2">
+          <label className="shrink-0 text-sm opacity-70">Database</label>
+          <div className="min-w-[12rem]">
+            {!authChecked ? (
+              <div className="text-sm opacity-70">Checking Notion login…</div>
+            ) : databases === null ? (
+              <a
+                className="inline-flex items-center rounded-md bg-main-100 px-3 py-1.5 text-sm font-medium text-main-600 hover:bg-main-200"
+                href="/api/auth/notion/login"
+              >
+                Login with Notion
+              </a>
+            ) : (
+              <RadixSelect
+                value={databaseId}
+                onValueChange={setDatabaseId}
+                items={(databases || []).map(d => ({ label: d.title, value: d.id }))}
+                disabled={dbLoading}
+              />
+            )}
+          </div>
+        </fieldset>
         <fieldset className="flex items-center gap-2">
           <label className="shrink-0 text-sm opacity-70">Date prop</label>
           <div className="min-w-[12rem]">
@@ -60,4 +95,3 @@ export function NotionAppearanceControls(props: {
     </div>
   )
 }
-

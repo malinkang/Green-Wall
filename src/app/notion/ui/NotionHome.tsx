@@ -10,13 +10,12 @@ import { NotionAppearanceControls } from '~/components/AppearanceSetting/NotionA
 import { NotionShareButton } from '~/components/NotionShareButton'
 import { ContributionsGraph } from '~/components/ContributionsGraph'
 import { ErrorMessage } from '~/components/ErrorMessage'
-import GenerateButton from '~/components/GenerateButton'
 import Loading from '~/components/Loading'
 import { SettingButton } from '~/components/SettingButton'
 import { useData } from '~/DataContext'
 import { trackEvent } from '~/helpers'
 import { useNotionRequest } from '~/hooks/useNotionRequest'
-import { RadixSelect } from '~/components/ui-kit/RadixSelect'
+// database selection moved into Appearance panel
 
 function Divider() {
   return (
@@ -29,7 +28,6 @@ function Divider() {
 }
 
 export function NotionHome() {
-  const COUNT_NONE = '__NONE__'
   const canUseClipboardItem = typeof ClipboardItem !== 'undefined'
 
   const graphRef = useRef<HTMLDivElement>(null)
@@ -41,7 +39,7 @@ export function NotionHome() {
   const [countProp, setCountProp] = useState('')
   const [databases, setDatabases] = useState<{ id: string, title: string }[] | null>(null)
   const [dbLoading, setDbLoading] = useState(false)
-  const [dbQuery, setDbQuery] = useState('')
+  // removed search query state
   const [authChecked, setAuthChecked] = useState(false)
   const [dateCandidates, setDateCandidates] = useState<string[]>([])
   const [numberCandidates, setNumberCandidates] = useState<string[]>([])
@@ -63,10 +61,10 @@ export function NotionHome() {
 
   const { run, loading, error } = useNotionRequest({ onError: handleError })
 
-  const loadDatabases = useCallback(async (q?: string) => {
+  const loadDatabases = useCallback(async (_q?: string) => {
     try {
       setDbLoading(true)
-      const url = q?.trim() ? `/api/notion/databases?q=${encodeURIComponent(q.trim())}` : '/api/notion/databases'
+      const url = '/api/notion/databases'
       const res = await fetch(url)
       if (res.status === 401) {
         setDatabases(null)
@@ -83,11 +81,7 @@ export function NotionHome() {
   // Check login and load databases
   useEffect(() => { void loadDatabases() }, [loadDatabases])
 
-  // Debounced search
-  useEffect(() => {
-    const t = setTimeout(() => { void loadDatabases(dbQuery) }, 300)
-    return () => clearTimeout(t)
-  }, [dbQuery, loadDatabases])
+  // No debounce (no search box)
 
   // Load date/number property candidates when database changes
   useEffect(() => {
@@ -204,45 +198,9 @@ export function NotionHome() {
       </h1>
 
       <div className="py-12 md:py-16">
-        <form
-          onSubmit={(ev) => {
-            ev.preventDefault()
-            void handleSubmit()
-          }}
-        >
-          <div className="flex flex-col items-center justify-center gap-3 md:flex-row md:gap-x-5">
-            {!authChecked ? (
-              <div className="text-sm opacity-70">Checking Notion login…</div>
-            ) : databases === null ? (
-              <a
-                className="inline-flex items-center rounded-md bg-main-100 px-4 py-2 text-sm font-medium text-main-600 hover:bg-main-200"
-                href="/api/auth/notion/login"
-              >
-                Login with Notion to list your databases
-              </a>
-            ) : (
-              <div className="flex items-center gap-2">
-                <span className="text-sm opacity-70">Database</span>
-                <input
-                  className="inline-block h-[2.4rem] w-[14rem] overflow-hidden rounded-lg bg-main-100 px-3 text-sm font-medium text-main-600 caret-main-500 shadow-main-300/60 outline-none transition-all duration-300 placeholder:select-none placeholder:font-normal placeholder:text-main-400 focus:bg-white focus:shadow-[0_0_1.2rem_var(--tw-shadow-color)]"
-                  placeholder="Search database..."
-                  value={dbQuery}
-                  onChange={(e) => setDbQuery(e.target.value)}
-                />
-                <div className="min-w-[16rem]">
-                  <RadixSelect
-                    value={databaseId}
-                    onValueChange={setDatabaseId}
-                    items={(databases || []).map(d => ({ label: d.title, value: d.id }))}
-                    disabled={dbLoading}
-                  />
-                </div>
-              </div>
-            )}
-            {/* Open Appearance to configure Notion props and generate */}
-            <SettingButton aria-controls={popoverContentId} onClick={(ev) => setSettingPopUp({ offsetX: ev.clientX, offsetY: ev.clientY })} />
-          </div>
-        </form>
+        <div className="flex items-center justify-center">
+          <SettingButton aria-controls={popoverContentId} onClick={(ev) => setSettingPopUp({ offsetX: ev.clientX, offsetY: ev.clientY })} />
+        </div>
       </div>
 
       {/* Global Appearance panel (available before/after generating) */}
@@ -252,8 +210,12 @@ export function NotionHome() {
           fixedLeft
           onClose={() => setSettingPopUp(undefined)}
         >
-          <AppearanceSetting />
           <NotionAppearanceControls
+            authChecked={authChecked}
+            databases={databases}
+            dbLoading={dbLoading}
+            databaseId={databaseId}
+            setDatabaseId={setDatabaseId}
             dateProp={dateProp}
             setDateProp={setDateProp}
             countProp={countProp}
@@ -263,6 +225,7 @@ export function NotionHome() {
             loading={loading}
             onGenerate={() => void handleSubmit()}
           />
+          <AppearanceSetting />
         </DraggableAppearanceSetting>
       )}
 
