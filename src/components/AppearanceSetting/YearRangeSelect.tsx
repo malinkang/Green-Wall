@@ -11,13 +11,10 @@ export function YearRangeSelect(props: YearRangeSelectProps) {
 
   const { settings, dispatchSettings, firstYear, lastYear } = useData()
 
+  const currentYearStr = new Date().getFullYear().toString()
   let [startYear, endYear] = settings.yearRange ?? []
-  startYear ??= firstYear
-  endYear ??= lastYear
-
-  if (!startYear || !endYear) {
-    return null
-  }
+  startYear ??= firstYear ?? currentYearStr
+  endYear ??= lastYear ?? currentYearStr
 
   // Build available years from graphData when present; otherwise derive from settings.yearRange
   const buildYearsFromRange = (start?: string, end?: string) => {
@@ -34,8 +31,8 @@ export function YearRangeSelect(props: YearRangeSelectProps) {
 
   const availableYears
     = graphData?.contributionYears
-    ?? buildYearsFromRange(settings.yearRange?.[0], settings.yearRange?.[1])
-    ?? []
+    ?? buildYearsFromRange(startYear, endYear)
+    ?? [Number(currentYearStr)]
 
   const handleYearChange = (se: 'start' | 'end', year: string) => {
     let payload: GraphSettings['yearRange'] = undefined
