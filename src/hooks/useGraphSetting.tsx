@@ -39,6 +39,22 @@ type Action
     payload: State['unit']
   }
   | {
+    type: 'logoUrl'
+    payload: State['logoUrl']
+  }
+  | {
+    type: 'avatarUrl'
+    payload: State['avatarUrl']
+  }
+  | {
+    type: 'titleOverride'
+    payload: State['titleOverride']
+  }
+  | {
+    type: 'subtitleOverride'
+    payload: State['subtitleOverride']
+  }
+  | {
     type: 'reset'
     payload?: never
   }
@@ -56,6 +72,10 @@ const initialState: State = {
   showAttribution: true,
   showSafariHeader: true,
   unit: 'contributions',
+  logoUrl: undefined,
+  avatarUrl: undefined,
+  titleOverride: undefined,
+  subtitleOverride: undefined,
 }
 
 export function useGraphSetting() {
@@ -84,6 +104,18 @@ export function useGraphSetting() {
 
       case 'unit':
         return { ...state, unit: payload }
+
+      case 'logoUrl':
+        return { ...state, logoUrl: payload }
+
+      case 'avatarUrl':
+        return { ...state, avatarUrl: payload }
+
+      case 'titleOverride':
+        return { ...state, titleOverride: payload }
+
+      case 'subtitleOverride':
+        return { ...state, subtitleOverride: payload }
 
       case 'reset':
         return initialState

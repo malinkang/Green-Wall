@@ -23,6 +23,8 @@ export function SharePage() {
     const size = query.get('size') ?? undefined
     let theme = query.get('theme') ?? undefined
     const unit = query.get('unit') ?? undefined
+    const title = query.get('title') ?? undefined
+    const subtitle = query.get('subtitle') ?? undefined
     theme = THEME_PRESETS.some((t) => t.name === theme) ? theme : DEFAULT_THEME
 
     // default values
@@ -35,6 +37,8 @@ export function SharePage() {
       size: size as GraphSize | undefined,
       theme: theme as Themes | undefined,
       unit: (unit as any) ?? undefined,
+      titleOverride: title ?? undefined,
+      subtitleOverride: subtitle ?? undefined,
       showSafariHeader,
       showAttribution,
     }

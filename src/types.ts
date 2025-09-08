@@ -68,6 +68,8 @@ export interface GraphData extends ContributionBasic {
   source?: 'github' | 'notion'
   /** Optional profile URL for header linking. */
   profileUrl?: string
+  /** Optional Notion database title for default title rendering. */
+  dbTitle?: string
 }
 
 export interface ResponseData {
@@ -86,6 +88,14 @@ export interface GraphSettings {
   theme?: Themes
   /** Display unit for totals and labels. */
   unit?: 'contributions' | 'second' | 'minute' | 'hour' | 'meter' | 'kilometer'
+  /** Custom logo URL (data URL or external); when set, shows on header right. */
+  logoUrl?: string
+  /** Custom avatar URL (data URL or external); when set, overrides source avatar. */
+  avatarUrl?: string
+  /** Custom title to render as first line; when empty fallback to @dbTitle (Notion) or name. */
+  titleOverride?: string
+  /** Custom subtitle to render instead of default bio; empty means no subtitle. */
+  subtitleOverride?: string
 }
 
 export interface GitHubApiJson<Data> {

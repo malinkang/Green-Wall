@@ -279,5 +279,6 @@ export async function fetchNotionGraphData(options: {
     contributionCalendars,
     source: 'notion',
     profileUrl: `https://www.notion.so/${databaseId.replace(/-/g, '')}`,
+    dbTitle: meta.title,
   }
 }

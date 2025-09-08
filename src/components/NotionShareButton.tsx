@@ -37,6 +37,8 @@ export function NotionShareButton(props: { databaseId: string; dateProp: string;
       if (settings.showAttribution === false) Url.searchParams.set('showAttribution', 'false')
 
       if (settings.unit && settings.unit !== 'contributions') Url.searchParams.set('unit', settings.unit)
+      if (settings.titleOverride && settings.titleOverride.trim()) Url.searchParams.set('title', settings.titleOverride.trim())
+      if (settings.subtitleOverride && settings.subtitleOverride.trim()) Url.searchParams.set('subtitle', settings.subtitleOverride.trim())
 
       setShareUrl(Url)
     }

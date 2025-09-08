@@ -52,6 +52,13 @@ export function ShareButton() {
         Url.searchParams.set('unit', settings.unit)
       }
 
+      if (settings.titleOverride && settings.titleOverride.trim()) {
+        Url.searchParams.set('title', settings.titleOverride.trim())
+      }
+      if (settings.subtitleOverride && settings.subtitleOverride.trim()) {
+        Url.searchParams.set('subtitle', settings.subtitleOverride.trim())
+      }
+
       setShareUrl(Url)
     }
   }, [username, settings, firstYear, lastYear])
