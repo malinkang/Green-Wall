@@ -51,8 +51,8 @@ export function NotionHome() {
   const [copySuccess, setCopySuccess] = useState(false)
 
   const reset = () => {
+    // Do not reset settings to preserve Notion-detected year range and user preferences
     setGraphData(undefined)
-    dispatchSettings({ type: 'reset' })
   }
 
   const handleError = () => {
