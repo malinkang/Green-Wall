@@ -12,7 +12,8 @@ import { trackEvent } from '~/helpers'
 
 import { YearRangeSelect } from './YearRangeSelect'
 
-export function AppearanceSetting() {
+export function AppearanceSetting(props: { showYearRange?: boolean } = { showYearRange: true }) {
+  const { showYearRange = true } = props
   const { graphData, settings, dispatchSettings } = useData()
 
   const daysLabelId = useId()
@@ -21,10 +22,12 @@ export function AppearanceSetting() {
 
   return (
     <div className="appearance-setting min-w-[min(40vw,220px)] max-w-[min(90vw,280px)] text-main-400">
-      <fieldset>
-        <label>年份范围</label>
-        <YearRangeSelect graphData={graphData} />
-      </fieldset>
+      {showYearRange && (
+        <fieldset>
+          <label>年份范围</label>
+          <YearRangeSelect graphData={graphData} />
+        </fieldset>
+      )}
 
       <fieldset>
         <label htmlFor={daysLabelId}>显示星期标签</label>

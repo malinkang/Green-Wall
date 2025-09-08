@@ -8,6 +8,7 @@ import { DotIcon, FileCheck2Icon, ImageIcon, ImagesIcon } from 'lucide-react'
 import { AppearanceSetting } from '~/components/AppearanceSetting'
 import { AppearanceSidebar } from '~/components/AppearanceSetting/AppearanceSidebar'
 import { NotionAppearanceControls } from '~/components/AppearanceSetting/NotionAppearanceControls'
+import { YearRangeSelect } from '~/components/AppearanceSetting/YearRangeSelect'
 import { NotionShareButton } from '~/components/NotionShareButton'
 import { ContributionsGraph } from '~/components/ContributionsGraph'
 import { ErrorMessage } from '~/components/ErrorMessage'
@@ -219,6 +220,14 @@ export function NotionHome() {
   return (
     <div className="relative">
       <AppearanceSidebar open={appearanceOpen} width={SIDEBAR_WIDTH} onClose={() => setAppearanceOpen(false)}>
+        {/* Year range selection above the Generate button */}
+        <div className="mb-4">
+          <fieldset>
+            <label>年份范围</label>
+            <YearRangeSelect graphData={graphData} />
+          </fieldset>
+        </div>
+
         <NotionAppearanceControls
           authChecked={authChecked}
           databases={databases}
@@ -234,7 +243,7 @@ export function NotionHome() {
           loading={loading}
           onGenerate={() => void handleSubmit()}
         />
-        <AppearanceSetting />
+        <AppearanceSetting showYearRange={false} />
       </AppearanceSidebar>
 
       <div className="py-10 md:py-14" style={{ marginLeft: appearanceOpen ? SIDEBAR_WIDTH + 16 : 0 }}>
