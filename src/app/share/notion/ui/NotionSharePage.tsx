@@ -23,6 +23,8 @@ export function NotionSharePage() {
     const unit = query.get('unit') ?? undefined
     const title = query.get('title') ?? undefined
     const subtitle = query.get('subtitle') ?? undefined
+    const avatar = query.get('avatar') ?? undefined
+    const logo = query.get('logo') ?? undefined
     theme = THEME_PRESETS.some((t) => t.name === theme) ? theme : DEFAULT_THEME
     const showSafariHeader = query.get('showSafariHeader') !== 'false'
     const showAttribution = query.get('showAttribution') !== 'false'
@@ -33,6 +35,8 @@ export function NotionSharePage() {
       unit: (unit as any) ?? undefined,
       titleOverride: title ?? undefined,
       subtitleOverride: subtitle ?? undefined,
+      avatarUrl: avatar ?? undefined,
+      logoUrl: logo ?? undefined,
       showSafariHeader,
       showAttribution,
     }

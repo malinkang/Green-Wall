@@ -59,6 +59,13 @@ export function ShareButton() {
         Url.searchParams.set('subtitle', settings.subtitleOverride.trim())
       }
 
+      if (settings.avatarUrl && settings.avatarUrl.trim()) {
+        Url.searchParams.set('avatar', settings.avatarUrl.trim())
+      }
+      if (settings.logoUrl && settings.logoUrl.trim()) {
+        Url.searchParams.set('logo', settings.logoUrl.trim())
+      }
+
       setShareUrl(Url)
     }
   }, [username, settings, firstYear, lastYear])

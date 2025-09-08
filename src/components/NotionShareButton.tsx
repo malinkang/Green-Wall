@@ -39,6 +39,8 @@ export function NotionShareButton(props: { databaseId: string; dateProp: string;
       if (settings.unit && settings.unit !== 'contributions') Url.searchParams.set('unit', settings.unit)
       if (settings.titleOverride && settings.titleOverride.trim()) Url.searchParams.set('title', settings.titleOverride.trim())
       if (settings.subtitleOverride && settings.subtitleOverride.trim()) Url.searchParams.set('subtitle', settings.subtitleOverride.trim())
+      if (settings.avatarUrl && settings.avatarUrl.trim()) Url.searchParams.set('avatar', settings.avatarUrl.trim())
+      if (settings.logoUrl && settings.logoUrl.trim()) Url.searchParams.set('logo', settings.logoUrl.trim())
 
       setShareUrl(Url)
     }
