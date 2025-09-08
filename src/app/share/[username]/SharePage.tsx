@@ -66,7 +66,7 @@ export function SharePage() {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-main-400">
         <Image priority alt="loading" height={60} src="/mona-loading-default.gif" width={60} />
-        <span className="bg-pageBg px-3 py-4">Loading contributions...</span>
+        <span className="bg-pageBg px-3 py-4">正在加载图表...</span>
       </div>
     )
   }
@@ -75,9 +75,9 @@ export function SharePage() {
     return (
       <div className="py-10 md:py-14">
         <h1 className="mb-5 text-center text-lg font-medium md:mx-auto md:px-20 md:text-3xl md:leading-[1.2]">
-          Generated my GitHub graph with GreenWall
+          我用 Green Wall 生成了 GitHub 热力图
           <br />
-          Try it and share yours! 🌱
+          也来试试并分享你的吧！🌱
         </h1>
 
         <div className="flex justify-center">
@@ -86,7 +86,7 @@ export function SharePage() {
               className="cursor-pointer rounded-lg border-[3px] border-solid border-accent-400/70 bg-gradient-to-br from-accent-500 to-accent-300/60 bg-clip-text px-3 py-1 text-lg font-medium text-transparent outline-none transition-colors hover:border-accent-400 hover:bg-accent-400"
               type="button"
             >
-              Generate Yours
+              前往生成
             </button>
           </Link>
         </div>

@@ -274,7 +274,7 @@ export function NotionHome() {
                     onClick={() => void handleDownload()}
                   >
                     <ImageIcon className="mr-2 size-4 shrink-0 md:size-5" />
-                    <span>Save as Image</span>
+                    <span>保存为图片</span>
                   </button>
                   {canUseClipboardItem && (
                     <button
@@ -289,12 +289,12 @@ export function NotionHome() {
                       {copySuccess ? (
                         <>
                           <FileCheck2Icon className="mr-2 size-4 shrink-0 md:size-5" />
-                          <span>Copied</span>
+                          <span>已复制</span>
                         </>
                       ) : (
                         <>
                           <ImagesIcon className="mr-2 size-4 shrink-0 md:size-5" />
-                          <span>Copy Image</span>
+                          <span>复制图片</span>
                         </>
                       )}
                     </button>

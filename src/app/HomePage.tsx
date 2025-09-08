@@ -237,7 +237,7 @@ export function HomePage() {
                         }}
                       >
                         <ImageIcon className="mr-2 size-4 shrink-0 md:size-5" />
-                        <span>Save as Image</span>
+                        <span>保存为图片</span>
                       </button>
 
                       {canUseClipboardItem && (
@@ -264,7 +264,7 @@ export function HomePage() {
                                   <ImagesIcon className="size-4 shrink-0 md:size-5" />
                                 )}
                           </span>
-                          <span>{copySuccess ? 'Copied' : 'Copy'} as Image</span>
+                          <span>{copySuccess ? '已复制' : '复制'} 图片</span>
                         </button>
                       )}
                     </div>

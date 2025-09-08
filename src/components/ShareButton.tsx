@@ -75,7 +75,7 @@ export function ShareButton() {
                       trackEvent('Preview Share URL')
                     }}
                   >
-                    <span>Preview</span>
+                    <span>预览</span>
                     <ArrowUpRightIcon className="size-4 translate-y-px" />
                   </button>
                 </Link>
@@ -94,18 +94,18 @@ export function ShareButton() {
                     }
                   }}
                 >
-                  {copied ? 'Copied' : 'Copy'}
+                  {copied ? '已复制' : '复制'}
                 </button>
               </div>
             </div>
           )}
         </div>
       )}
-      title="Share Your Graph"
+      title="分享你的图表"
     >
       <button className="simple-button divider">
         <MousePointerClickIcon className="size-5" />
-        <span>Share it</span>
+        <span>分享</span>
       </button>
     </RadixPopover>
   )

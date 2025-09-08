@@ -57,7 +57,7 @@ export function NotionShareButton(props: { databaseId: string; dateProp: string;
               <div className="-mr-1 mt-4 flex h-7 items-center justify-end gap-x-2">
                 <Link passHref className="h-full" href={shareUrl} target="_blank">
                   <button className="flex h-full items-center gap-x-1 rounded bg-main-200 px-2">
-                    <span>Preview</span>
+                    <span>预览</span>
                     <ArrowUpRightIcon className="size-4 translate-y-px" />
                   </button>
                 </Link>
@@ -72,20 +72,20 @@ export function NotionShareButton(props: { databaseId: string; dateProp: string;
                     }
                   }}
                 >
-                  {copied ? 'Copied' : 'Copy'}
+                  {copied ? '已复制' : '复制'}
                 </button>
               </div>
             </div>
           )}
         </div>
       )}
-      title="Share Notion Graph"
+      title="分享 Notion 图表"
     >
       <button
         className="inline-flex h-full items-center rounded-md bg-main-100 px-4 py-2 text-sm font-medium text-main-500 hover:bg-main-200 disabled:pointer-events-none motion-safe:transition-colors motion-safe:duration-300 md:text-base"
       >
         <Share2Icon className="mr-2 size-4 shrink-0 md:size-5" />
-        <span>Share</span>
+        <span>分享</span>
       </button>
     </RadixPopover>
   )

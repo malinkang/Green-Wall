@@ -94,7 +94,7 @@ export function GitHubButton() {
             fill="currentColor"
           />
         </svg>
-        <span className="ml-2">Login with Notion</span>
+        <span className="ml-2">使用 Notion 登录</span>
       </button>
     </a>
   )
