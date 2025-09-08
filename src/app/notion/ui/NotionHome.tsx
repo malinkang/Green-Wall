@@ -220,14 +220,6 @@ export function NotionHome() {
   return (
     <div className="relative">
       <AppearanceSidebar open={appearanceOpen} width={SIDEBAR_WIDTH} onClose={() => setAppearanceOpen(false)}>
-        {/* Year range selection above the Generate button */}
-        <div className="mb-4">
-          <fieldset>
-            <label>年份范围</label>
-            <YearRangeSelect graphData={graphData} />
-          </fieldset>
-        </div>
-
         <NotionAppearanceControls
           authChecked={authChecked}
           databases={databases}
@@ -242,7 +234,14 @@ export function NotionHome() {
           numberCandidates={numberCandidates}
           loading={loading}
           onGenerate={() => void handleSubmit()}
-        />
+        >
+          <div className="mt-1">
+            <fieldset>
+              <label>年份范围</label>
+              <YearRangeSelect graphData={graphData} />
+            </fieldset>
+          </div>
+        </NotionAppearanceControls>
         <AppearanceSetting showYearRange={false} />
       </AppearanceSidebar>
 

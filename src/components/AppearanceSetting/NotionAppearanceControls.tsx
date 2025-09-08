@@ -20,6 +20,7 @@ export function NotionAppearanceControls(props: {
   // Actions
   loading?: boolean
   onGenerate: () => void
+  children?: React.ReactNode
 }) {
   const COUNT_NONE = '__NONE__'
   const {
@@ -87,6 +88,8 @@ export function NotionAppearanceControls(props: {
             />
           </div>
         </fieldset>
+
+        {props.children}
 
         <div>
           <GenerateButton loading={!!loading} type="button" onClick={onGenerate} />
