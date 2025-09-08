@@ -61,17 +61,7 @@ export function AppearanceSetting(props: { showYearRange?: boolean; showUnit?: b
         />
       </fieldset>
 
-      <fieldset>
-        <label htmlFor={safariHeader}>显示浏览器标题栏</label>
-        <RadixSwitch
-          checked={settings.showSafariHeader}
-          defaultChecked={true}
-          id={safariHeader}
-          onCheckedChange={(checked) => {
-            dispatchSettings({ type: 'showSafariHeader', payload: checked })
-          }}
-        />
-      </fieldset>
+      {/* 隐藏“显示浏览器标题栏”选项，按默认不展示处理 */}
 
       <fieldset>
         <label htmlFor={attributionId}>显示署名</label>

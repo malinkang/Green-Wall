@@ -26,7 +26,8 @@ export function NotionSharePage() {
     const avatar = query.get('avatar') ?? undefined
     const logo = query.get('logo') ?? undefined
     theme = THEME_PRESETS.some((t) => t.name === theme) ? theme : DEFAULT_THEME
-    const showSafariHeader = query.get('showSafariHeader') !== 'false'
+    // 默认不展示浏览器标题栏；仅当参数为 'true' 时展示
+    const showSafariHeader = query.get('showSafariHeader') === 'true'
     const showAttribution = query.get('showAttribution') !== 'false'
     return {
       yearRange: [start, end] as GraphSettings['yearRange'],

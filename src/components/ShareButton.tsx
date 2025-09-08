@@ -40,8 +40,8 @@ export function ShareButton() {
         Url.searchParams.set('theme', settings.theme)
       }
 
-      if (settings.showSafariHeader === false) {
-        Url.searchParams.set('showSafariHeader', 'false')
+      if (settings.showSafariHeader === true) {
+        Url.searchParams.set('showSafariHeader', 'true')
       }
 
       if (settings.showAttribution === false) {

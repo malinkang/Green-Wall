@@ -33,7 +33,7 @@ export function NotionShareButton(props: { databaseId: string; dateProp: string;
       }
       if (settings.size && settings.size !== DEFAULT_SIZE) Url.searchParams.set('size', settings.size)
       if (settings.theme && settings.theme !== DEFAULT_THEME) Url.searchParams.set('theme', settings.theme)
-      if (settings.showSafariHeader === false) Url.searchParams.set('showSafariHeader', 'false')
+      if (settings.showSafariHeader === true) Url.searchParams.set('showSafariHeader', 'true')
       if (settings.showAttribution === false) Url.searchParams.set('showAttribution', 'false')
 
       if (settings.unit && settings.unit !== 'contributions') Url.searchParams.set('unit', settings.unit)
