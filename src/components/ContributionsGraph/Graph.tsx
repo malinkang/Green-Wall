@@ -38,9 +38,28 @@ export function Graph(props: GraphProps) {
       case 'hour': return '小时'
       case 'meter': return '米'
       case 'kilometer': return '千米'
-      default: return 'Contributions'
+      default: return '次'
     }
   })()
+
+  const formatByUnit = (value: number): string => {
+    if (settings.unit === 'second' || settings.unit === 'minute' || settings.unit === 'hour') {
+      // Normalize to minutes
+      let totalMinutes = 0
+      if (settings.unit === 'second') totalMinutes = Math.floor(value / 60)
+      if (settings.unit === 'minute') totalMinutes = value
+      if (settings.unit === 'hour') totalMinutes = value * 60
+
+      const hours = Math.floor(totalMinutes / 60)
+      const minutes = totalMinutes % 60
+
+      if (hours <= 0) return `${minutes}分钟`
+      if (minutes === 0) return `${hours}小时`
+      return `${hours}小时${minutes}分钟`
+    }
+    // Non-time units: keep number + unit label
+    return `${numberWithCommas(value)} ${unitLabel}`
+  }
 
   const currentYear = new Date().getFullYear()
   const isNewYear
@@ -83,7 +102,7 @@ export function Graph(props: GraphProps) {
                 <span className="opacity-80">
                   {isNewYear && calendar.total === 0
                     ? newYearText
-                    : `${numberWithCommas(calendar.total)} ${unitLabel}`}
+                    : formatByUnit(calendar.total)}
                 </span>
               </div>
             )}
@@ -107,7 +126,7 @@ export function Graph(props: GraphProps) {
           tooltipInfo
             ? (
                 <span className={settings.size === GraphSize.Small ? 'text-xs' : 'text-sm'}>
-                  <strong className="font-medium">{tooltipInfo.count}</strong> {unitLabel}
+                  <strong className="font-medium">{formatByUnit(tooltipInfo.count)}</strong>
                   {' 在 '}
                   {tooltipInfo.date}
                 </span>

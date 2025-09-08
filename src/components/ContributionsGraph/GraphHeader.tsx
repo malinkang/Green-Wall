@@ -101,9 +101,26 @@ export function GraphHeader() {
       case 'hour': return '小时'
       case 'meter': return '米'
       case 'kilometer': return '千米'
-      default: return 'Contributions'
+      default: return '次'
     }
   })()
+
+  const formatByUnit = (value: number): string => {
+    if (settings.unit === 'second' || settings.unit === 'minute' || settings.unit === 'hour') {
+      let totalMinutes = 0
+      if (settings.unit === 'second') totalMinutes = Math.floor(value / 60)
+      if (settings.unit === 'minute') totalMinutes = value
+      if (settings.unit === 'hour') totalMinutes = value * 60
+
+      const hours = Math.floor(totalMinutes / 60)
+      const minutes = totalMinutes % 60
+
+      if (hours <= 0) return `${minutes}分钟`
+      if (minutes === 0) return `${hours}小时`
+      return `${hours}小时${minutes}分钟`
+    }
+    return `${numberWithCommas(value)} ${unitLabel}`
+  }
 
   return (
     <div className="flex w-full items-center">
@@ -163,7 +180,7 @@ export function GraphHeader() {
         </Link>
 
         <span className="opacity-70">
-          {typeof totalContributions === 'number' ? `${numberWithCommas(totalContributions)} ${unitLabel}` : '-'}
+          {typeof totalContributions === 'number' ? formatByUnit(totalContributions) : '-'}
         </span>
 
         <span className="opacity-70">
