@@ -94,6 +94,17 @@ export function GraphHeader() {
   const href = graphData.profileUrl ?? `https://github.com/${username}`
   const source = graphData.source ?? 'github'
 
+  const unitLabel = (() => {
+    switch (settings.unit) {
+      case 'second': return '秒'
+      case 'minute': return '分钟'
+      case 'hour': return '小时'
+      case 'meter': return '米'
+      case 'kilometer': return '千米'
+      default: return 'Contributions'
+    }
+  })()
+
   return (
     <div className="flex w-full items-center">
       <Link className="mr-4 flex shrink-0 items-center" href={href} target="_blank">
@@ -152,7 +163,7 @@ export function GraphHeader() {
         </Link>
 
         <span className="opacity-70">
-          {typeof totalContributions === 'number' ? `${numberWithCommas(totalContributions)} Contributions` : '-'}
+          {typeof totalContributions === 'number' ? `${numberWithCommas(totalContributions)} ${unitLabel}` : '-'}
         </span>
 
         <span className="opacity-70">

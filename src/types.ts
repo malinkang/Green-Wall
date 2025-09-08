@@ -82,6 +82,8 @@ export interface GraphSettings {
   size?: GraphSize
   blockShape?: BlockShape
   theme?: Themes
+  /** Display unit for totals and labels. */
+  unit?: 'contributions' | 'second' | 'minute' | 'hour' | 'meter' | 'kilometer'
 }
 
 export interface GitHubApiJson<Data> {

@@ -22,6 +22,25 @@ export function AppearanceSetting(props: { showYearRange?: boolean } = { showYea
 
   return (
     <div className="appearance-setting min-w-[min(40vw,220px)] max-w-[min(90vw,280px)] text-main-400">
+      <fieldset>
+        <label>单位</label>
+        <RadixToggleGroup
+          options={[
+            { label: '次', value: 'contributions', tooltip: '次（默认）' },
+            { label: '秒', value: 'second', tooltip: '秒' },
+            { label: '分钟', value: 'minute', tooltip: '分钟' },
+            { label: '小时', value: 'hour', tooltip: '小时' },
+            { label: '米', value: 'meter', tooltip: '米' },
+            { label: '千米', value: 'kilometer', tooltip: '千米' },
+          ]}
+          size="small"
+          type="single"
+          value={settings.unit}
+          onValueChange={(unit) => {
+            dispatchSettings({ type: 'unit', payload: unit as any })
+          }}
+        />
+      </fieldset>
       {showYearRange && (
         <fieldset>
           <label>年份范围</label>

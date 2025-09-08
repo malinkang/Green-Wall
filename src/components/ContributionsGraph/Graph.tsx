@@ -31,6 +31,17 @@ export function Graph(props: GraphProps) {
 
   const { username, settings } = useData()
 
+  const unitLabel = (() => {
+    switch (settings.unit) {
+      case 'second': return '秒'
+      case 'minute': return '分钟'
+      case 'hour': return '小时'
+      case 'meter': return '米'
+      case 'kilometer': return '千米'
+      default: return 'Contributions'
+    }
+  })()
+
   const currentYear = new Date().getFullYear()
   const isNewYear
     = currentYear === calendar.year
@@ -72,7 +83,7 @@ export function Graph(props: GraphProps) {
                 <span className="opacity-80">
                   {isNewYear && calendar.total === 0
                     ? newYearText
-                    : `${numberWithCommas(calendar.total)} Contributions`}
+                    : `${numberWithCommas(calendar.total)} ${unitLabel}`}
                 </span>
               </div>
             )}
@@ -96,10 +107,8 @@ export function Graph(props: GraphProps) {
           tooltipInfo
             ? (
                 <span className={settings.size === GraphSize.Small ? 'text-xs' : 'text-sm'}>
-                  <strong className="font-medium">{tooltipInfo.count}</strong>
-                  {' '}
-                  contributions in
-                  {' '}
+                  <strong className="font-medium">{tooltipInfo.count}</strong> {unitLabel}
+                  {' 在 '}
                   {tooltipInfo.date}
                 </span>
               )

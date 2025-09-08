@@ -35,6 +35,10 @@ type Action
     payload: State['theme']
   }
   | {
+    type: 'unit'
+    payload: State['unit']
+  }
+  | {
     type: 'reset'
     payload?: never
   }
@@ -51,6 +55,7 @@ const initialState: State = {
   daysLabel: false,
   showAttribution: true,
   showSafariHeader: true,
+  unit: 'contributions',
 }
 
 export function useGraphSetting() {
@@ -76,6 +81,9 @@ export function useGraphSetting() {
 
       case 'theme':
         return { ...state, theme: payload }
+
+      case 'unit':
+        return { ...state, unit: payload }
 
       case 'reset':
         return initialState
