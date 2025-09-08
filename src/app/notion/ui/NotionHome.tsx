@@ -267,7 +267,10 @@ export function NotionHome() {
                   )}
                 </div>
 
-                <SettingButton aria-controls={popoverContentId} onClick={(ev) => setSettingPopUp({ offsetX: ev.clientX, offsetY: ev.clientY })} />
+                <button className="simple-button" type="button" onClick={() => setAppearanceOpen(o => !o)}>
+                  <Settings2Icon className="size-[18px]" />
+                  <span>Appearance</span>
+                </button>
               </div>
 
               <Divider />
