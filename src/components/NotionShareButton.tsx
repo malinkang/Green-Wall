@@ -79,11 +79,12 @@ export function NotionShareButton(props: { databaseId: string; dateProp: string;
       )}
       title="Share Notion Graph"
     >
-      <button className="simple-button divider">
-        <Share2Icon className="size-5" />
+      <button
+        className="inline-flex h-full items-center rounded-md bg-main-100 px-4 py-2 text-sm font-medium text-main-500 hover:bg-main-200 disabled:pointer-events-none motion-safe:transition-colors motion-safe:duration-300 md:text-base"
+      >
+        <Share2Icon className="mr-2 size-4 shrink-0 md:size-5" />
         <span>Share</span>
       </button>
     </RadixPopover>
   )
 }
-

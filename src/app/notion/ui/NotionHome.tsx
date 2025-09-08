@@ -207,9 +207,7 @@ export function NotionHome() {
       </AppearanceSidebar>
 
       <div className="py-10 md:py-14" style={{ marginLeft: appearanceOpen ? SIDEBAR_WIDTH + 16 : 0 }}>
-      <h1 className="text-center text-3xl font-bold md:mx-auto md:px-20 md:text-4xl md:leading-[1.2] lg:text-6xl">
-        Turn your Notion database into a contributions heatmap.
-      </h1>
+      <h1 className="sr-only">Turn your Notion database into a contributions heatmap.</h1>
 
       {/* Appearance sidebar is always open by default; removed toggle button section */}
 
