@@ -34,7 +34,7 @@ export function NotionHome() {
   const graphRef = useRef<HTMLDivElement>(null)
   const actionRef = useRef<HTMLDivElement | null>(null)
 
-  const { graphData, setGraphData, dispatchSettings } = useData()
+  const { graphData, setGraphData, dispatchSettings, settings } = useData()
   const [databaseId, setDatabaseId] = useState('')
   const [dateProp, setDateProp] = useState('')
   const [countProp, setCountProp] = useState('')
@@ -145,7 +145,18 @@ export function NotionHome() {
 
     reset()
     trackEvent('Click Generate Notion')
-    const data = await run({ databaseId: db, dateProp: dateProp.trim() || 'Date', countProp: countProp.trim() || undefined })
+    // Build years array from current settings.yearRange if available
+    let years: number[] | undefined
+    const [startY, endY] = settings.yearRange ?? []
+    if (startY && endY && Number.isInteger(Number(startY)) && Number.isInteger(Number(endY))) {
+      const a = Number(startY)
+      const b = Number(endY)
+      const min = Math.min(a, b)
+      const max = Math.max(a, b)
+      years = []
+      for (let y = min; y <= max; y++) years.push(y)
+    }
+    const data = await run({ databaseId: db, dateProp: dateProp.trim() || 'Date', countProp: countProp.trim() || undefined, years })
     setGraphData(data)
   }
 
