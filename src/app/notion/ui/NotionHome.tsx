@@ -320,6 +320,7 @@ export function NotionHome() {
                 {settingPopUp && (
                   <DraggableAppearanceSetting
                     initialPosition={{ x: settingPopUp.offsetX, y: settingPopUp.offsetY }}
+                    fixedLeft
                     onClose={() => setSettingPopUp(undefined)}
                   >
                     <AppearanceSetting />

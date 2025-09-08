@@ -7,9 +7,11 @@ export function DraggableAppearanceSetting(
   props: React.PropsWithChildren<{
     initialPosition: { x: number, y: number }
     onClose?: () => void
+    /** If true, pin the panel to the left side and disable dragging. */
+    fixedLeft?: boolean
   }>,
 ) {
-  const { children, initialPosition, onClose } = props
+  const { children, initialPosition, onClose, fixedLeft } = props
 
   const dragControls = useDragControls()
 
@@ -17,16 +19,19 @@ export function DraggableAppearanceSetting(
 
   return (
     <motion.div
-      drag
+      drag={!fixedLeft}
       animate={pressing ? 'scale' : undefined}
-      className="fixed left-0 top-0 z-50 inline-block overflow-hidden rounded-lg bg-white shadow-overlay"
+      className={
+        `fixed z-50 inline-block overflow-hidden rounded-lg bg-white shadow-overlay `
+        + (fixedLeft ? 'left-4 top-1/2 -translate-y-1/2' : 'left-0 top-0')
+      }
       dragConstraints={{ current: document.body }}
       dragControls={dragControls}
       dragListener={false}
       dragMomentum={false}
       dragTransition={{ bounceStiffness: 1000, bounceDamping: 40 }}
       style={{
-        translate: `${initialPosition.x}px ${initialPosition.y}px`,
+        translate: fixedLeft ? undefined : `${initialPosition.x}px ${initialPosition.y}px`,
       }}
       variants={{
         scale: { scale: 0.97 },
@@ -37,8 +42,10 @@ export function DraggableAppearanceSetting(
         initial={{ cursor: 'grab' }}
         whileTap={{ cursor: 'grabbing' }}
         onPointerDown={(event) => {
-          dragControls.start(event, { snapToCursor: false })
-          setPressing(true)
+          if (!fixedLeft) {
+            dragControls.start(event, { snapToCursor: false })
+            setPressing(true)
+          }
         }}
         onPointerUp={() => {
           setPressing(false)

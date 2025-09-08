@@ -313,6 +313,7 @@ export function HomePage() {
                               x: settingPopUp.offsetX,
                               y: settingPopUp.offsetY,
                             }}
+                            fixedLeft
                             onClose={() => {
                               setSettingPopUp(undefined)
                             }}
