@@ -6,6 +6,7 @@ import { toBlob, toPng } from 'html-to-image'
 import { DotIcon, FileCheck2Icon, ImageIcon, ImagesIcon } from 'lucide-react'
 
 import { AppearanceSetting, DraggableAppearanceSetting } from '~/components/AppearanceSetting'
+import { NotionAppearanceControls } from '~/components/AppearanceSetting/NotionAppearanceControls'
 import { NotionShareButton } from '~/components/NotionShareButton'
 import { ContributionsGraph } from '~/components/ContributionsGraph'
 import { ErrorMessage } from '~/components/ErrorMessage'
@@ -238,31 +239,32 @@ export function NotionHome() {
                 </div>
               </div>
             )}
-            <div className="flex items-center gap-2">
-              <span className="text-sm opacity-70">Date prop</span>
-              <div className="min-w-[14rem]">
-                <RadixSelect
-                  value={dateProp}
-                  onValueChange={setDateProp}
-                  items={dateCandidates.map(n => ({ label: n, value: n }))}
-                  disabled={!dateCandidates.length}
-                />
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-sm opacity-70">Count prop</span>
-              <div className="min-w-[14rem]">
-                <RadixSelect
-                  value={countProp || COUNT_NONE}
-                  onValueChange={(v) => setCountProp(v === COUNT_NONE ? '' : v)}
-                  items={[{ label: 'None', value: COUNT_NONE }, ...numberCandidates.map(n => ({ label: n, value: n }))]}
-                />
-              </div>
-            </div>
-            <GenerateButton loading={loading} type="submit" />
+            {/* Open Appearance to configure Notion props and generate */}
+            <SettingButton aria-controls={popoverContentId} onClick={(ev) => setSettingPopUp({ offsetX: ev.clientX, offsetY: ev.clientY })} />
           </div>
         </form>
       </div>
+
+      {/* Global Appearance panel (available before/after generating) */}
+      {settingPopUp && (
+        <DraggableAppearanceSetting
+          initialPosition={{ x: settingPopUp.offsetX, y: settingPopUp.offsetY }}
+          fixedLeft
+          onClose={() => setSettingPopUp(undefined)}
+        >
+          <AppearanceSetting />
+          <NotionAppearanceControls
+            dateProp={dateProp}
+            setDateProp={setDateProp}
+            countProp={countProp}
+            setCountProp={setCountProp}
+            dateCandidates={dateCandidates}
+            numberCandidates={numberCandidates}
+            loading={loading}
+            onGenerate={() => void handleSubmit()}
+          />
+        </DraggableAppearanceSetting>
+      )}
 
       {error ? (
         <ErrorMessage errorType={error.errorType} text={error.message} />
@@ -317,15 +319,6 @@ export function NotionHome() {
                 <div id={graphWrapperId} className="relative z-10">
                   <ContributionsGraph ref={graphRef} showInspect={false} />
                 </div>
-                {settingPopUp && (
-                  <DraggableAppearanceSetting
-                    initialPosition={{ x: settingPopUp.offsetX, y: settingPopUp.offsetY }}
-                    fixedLeft
-                    onClose={() => setSettingPopUp(undefined)}
-                  >
-                    <AppearanceSetting />
-                  </DraggableAppearanceSetting>
-                )}
               </div>
             </>
           )}
