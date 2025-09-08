@@ -22,12 +22,12 @@ export function AppearanceSetting() {
   return (
     <div className="appearance-setting min-w-[min(40vw,220px)] max-w-[min(90vw,280px)] text-main-400">
       <fieldset>
-        <label>Year Range</label>
+        <label>年份范围</label>
         <YearRangeSelect graphData={graphData} />
       </fieldset>
 
       <fieldset>
-        <label htmlFor={daysLabelId}>Days Label</label>
+        <label htmlFor={daysLabelId}>显示星期标签</label>
         <RadixSwitch
           checked={settings.daysLabel}
           defaultChecked={true}
@@ -39,7 +39,7 @@ export function AppearanceSetting() {
       </fieldset>
 
       <fieldset>
-        <label htmlFor={safariHeader}>Safari Header</label>
+        <label htmlFor={safariHeader}>显示浏览器标题栏</label>
         <RadixSwitch
           checked={settings.showSafariHeader}
           defaultChecked={true}
@@ -51,7 +51,7 @@ export function AppearanceSetting() {
       </fieldset>
 
       <fieldset>
-        <label htmlFor={attributionId}>Attribution</label>
+        <label htmlFor={attributionId}>显示署名</label>
         <RadixSwitch
           checked={settings.showAttribution}
           defaultChecked={true}
@@ -64,12 +64,10 @@ export function AppearanceSetting() {
 
       <fieldset>
         <label className="flex items-center">
-          Graph Size
+          图表大小
           <RadixTooltip
             label={(
-              <span className="inline-block max-w-xs leading-5">
-                You can also adjust the web zoom to change the size of the saved image.
-              </span>
+              <span className="inline-block max-w-xs leading-5">也可以通过浏览器缩放调整导出图片尺寸。</span>
             )}
           >
             <CircleHelpIcon className="ml-1 inline-block size-4 cursor-help opacity-90" />
@@ -77,9 +75,9 @@ export function AppearanceSetting() {
         </label>
         <RadixToggleGroup
           options={[
-            { label: 'S', value: GraphSize.Small, tooltip: 'Small' },
-            { label: 'M', value: GraphSize.Medium, tooltip: 'Medium' },
-            { label: 'L', value: GraphSize.Large, tooltip: 'Large' },
+            { label: 'S', value: GraphSize.Small, tooltip: '小' },
+            { label: 'M', value: GraphSize.Medium, tooltip: '中' },
+            { label: 'L', value: GraphSize.Large, tooltip: '大' },
           ]}
           size="small"
           type="single"
@@ -91,18 +89,18 @@ export function AppearanceSetting() {
       </fieldset>
 
       <fieldset>
-        <label className="flex items-center">Block Shape</label>
+        <label className="flex items-center">区块形状</label>
         <RadixToggleGroup
           options={[
             {
               label: <span className="inline-block size-4 rounded-[2px] bg-current" />,
               value: BlockShape.Square,
-              tooltip: 'Square',
+              tooltip: '方形',
             },
             {
               label: <span className="inline-block size-4 rounded-full bg-current" />,
               value: BlockShape.Round,
-              tooltip: 'Round',
+              tooltip: '圆形',
             },
           ]}
           size="small"
@@ -115,12 +113,12 @@ export function AppearanceSetting() {
       </fieldset>
 
       <fieldset className="flex-col !items-start">
-        <label>Themes</label>
+        <label>主题</label>
         <ThemeSelector
           className="mt-3 pl-1"
           value={settings.theme}
           onChange={(theme) => {
-            trackEvent('Change theme', { themeName: theme })
+            trackEvent('切换主题', { themeName: theme })
             dispatchSettings({ type: 'theme', payload: theme })
           }}
         />

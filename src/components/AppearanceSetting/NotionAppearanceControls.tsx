@@ -40,20 +40,20 @@ export function NotionAppearanceControls(props: {
 
   return (
     <div className="mb-4">
-      <div className="mb-2 text-sm font-medium text-main-500">Notion</div>
+      <div className="mb-2 text-sm font-medium text-main-500">Notion 设置</div>
 
       <div className="flex flex-col gap-3">
         <fieldset className="flex items-center gap-2">
-          <label className="shrink-0 text-sm opacity-70">Database</label>
+          <label className="shrink-0 text-sm opacity-70">数据库</label>
           <div className="min-w-[12rem]">
             {!authChecked ? (
-              <div className="text-sm opacity-70">Checking Notion login…</div>
+              <div className="text-sm opacity-70">正在检查 Notion 登录…</div>
             ) : databases === null ? (
               <a
                 className="inline-flex items-center rounded-md bg-main-100 px-3 py-1.5 text-sm font-medium text-main-600 hover:bg-main-200"
                 href="/api/auth/notion/login"
               >
-                Login with Notion
+                使用 Notion 登录
               </a>
             ) : (
               <RadixSelect
@@ -66,7 +66,7 @@ export function NotionAppearanceControls(props: {
           </div>
         </fieldset>
         <fieldset className="flex items-center gap-2">
-          <label className="shrink-0 text-sm opacity-70">Date prop</label>
+          <label className="shrink-0 text-sm opacity-70">日期属性</label>
           <div className="min-w-[12rem]">
             <RadixSelect
               value={dateProp}
@@ -78,12 +78,12 @@ export function NotionAppearanceControls(props: {
         </fieldset>
 
         <fieldset className="flex items-center gap-2">
-          <label className="shrink-0 text-sm opacity-70">Count prop</label>
+          <label className="shrink-0 text-sm opacity-70">数值属性</label>
           <div className="min-w-[12rem]">
             <RadixSelect
               value={countProp || COUNT_NONE}
               onValueChange={(v) => setCountProp(v === COUNT_NONE ? '' : v)}
-              items={[{ label: 'None', value: COUNT_NONE }, ...numberCandidates.map(n => ({ label: n, value: n }))]}
+              items={[{ label: '无', value: COUNT_NONE }, ...numberCandidates.map(n => ({ label: n, value: n }))]}
             />
           </div>
         </fieldset>

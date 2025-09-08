@@ -7,7 +7,7 @@ export function AppearanceSidebar(props: React.PropsWithChildren<{
   title?: string
   onClose?: () => void
 }>) {
-  const { children, open, width = 320, title = 'Appearance', onClose } = props
+  const { children, open, width = 320, title = '设置', onClose } = props
 
   return (
     <aside
@@ -18,7 +18,7 @@ export function AppearanceSidebar(props: React.PropsWithChildren<{
       <div className="sticky top-0 flex items-center gap-2 border-b bg-accent-50 px-3 py-2 text-accent-500">
         <span className="font-medium">{title}</span>
         <button
-          aria-label="Close sidebar"
+          aria-label="关闭侧边栏"
           className="ml-auto hidden md:inline-flex"
           onClick={() => onClose?.()}
         >
@@ -33,4 +33,3 @@ export function AppearanceSidebar(props: React.PropsWithChildren<{
     </aside>
   )
 }
-

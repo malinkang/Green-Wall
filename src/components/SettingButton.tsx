@@ -18,11 +18,11 @@ export function SettingButton(props: SettingButtonProps) {
       popoverContentId={popoverContentId}
       title={(
         <div className="flex">
-          <span>Appearance</span>
+          <span>设置</span>
 
           <Popover.Close
             className="ml-auto hidden md:block"
-            title="Pop out"
+            title="弹出"
             onClick={() => {
               onPopOut?.()
             }}
@@ -36,7 +36,7 @@ export function SettingButton(props: SettingButtonProps) {
     >
       <button className="simple-button" {...buttonProps}>
         <Settings2Icon className="size-[18px]" />
-        <span>Appearance</span>
+        <span>设置</span>
       </button>
     </RadixPopover>
   )
