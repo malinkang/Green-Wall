@@ -237,7 +237,6 @@ export function NotionHome() {
         >
           <div className="mt-1">
             <fieldset>
-              <label>年份范围</label>
               <YearRangeSelect graphData={graphData} />
             </fieldset>
           </div>
