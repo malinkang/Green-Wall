@@ -3,7 +3,7 @@
 import { useCallback, useId, useRef, useState } from 'react'
 
 import { toBlob, toPng } from 'html-to-image'
-import { DotIcon, FileCheck2Icon, ImageIcon, ImagesIcon, Settings2Icon } from 'lucide-react'
+import { DotIcon, FileCheck2Icon, ImageIcon, ImagesIcon } from 'lucide-react'
 
 import { AppearanceSetting } from '~/components/AppearanceSetting'
 import { AppearanceSidebar } from '~/components/AppearanceSetting/AppearanceSidebar'
@@ -38,7 +38,7 @@ export function HomePage() {
   const { graphData, setGraphData, dispatchSettings } = useData()
   const [searchName, setSearchName] = useState<GitHubUsername>('')
 
-  const [appearanceOpen, setAppearanceOpen] = useState(false)
+  const [appearanceOpen, setAppearanceOpen] = useState(true)
 
   const [downloading, setDownloading] = useState(false)
 
@@ -271,10 +271,7 @@ export function HomePage() {
 
                     <div className="flex flex-wrap items-center gap-x-6 md:justify-center">
                       <ShareButton />
-                      <button className="simple-button" type="button" onClick={() => setAppearanceOpen(o => !o)}>
-                        <Settings2Icon className="size-[18px]" />
-                        <span>Appearance</span>
-                      </button>
+                      {/* Appearance sidebar shown by default; removed toggle button */}
                     </div>
                   </div>
 

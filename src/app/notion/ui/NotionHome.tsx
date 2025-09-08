@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useId, useRef, useState } from 'react'
 
 import { toBlob, toPng } from 'html-to-image'
-import { DotIcon, FileCheck2Icon, ImageIcon, ImagesIcon, Settings2Icon } from 'lucide-react'
+import { DotIcon, FileCheck2Icon, ImageIcon, ImagesIcon } from 'lucide-react'
 
 import { AppearanceSetting } from '~/components/AppearanceSetting'
 import { AppearanceSidebar } from '~/components/AppearanceSetting/AppearanceSidebar'
@@ -45,7 +45,7 @@ export function NotionHome() {
   const [dateCandidates, setDateCandidates] = useState<string[]>([])
   const [numberCandidates, setNumberCandidates] = useState<string[]>([])
 
-  const [appearanceOpen, setAppearanceOpen] = useState(false)
+  const [appearanceOpen, setAppearanceOpen] = useState(true)
   const [downloading, setDownloading] = useState(false)
   const [doingCopy, setDoingCopy] = useState(false)
   const [copySuccess, setCopySuccess] = useState(false)
@@ -211,14 +211,7 @@ export function NotionHome() {
         Turn your Notion database into a contributions heatmap.
       </h1>
 
-      <div className="py-12 md:py-16">
-        <div className="flex items-center justify-center">
-          <button className="simple-button" type="button" onClick={() => setAppearanceOpen(o => !o)}>
-            <Settings2Icon className="size-[18px]" />
-            <span>Appearance</span>
-          </button>
-        </div>
-      </div>
+      {/* Appearance sidebar is always open by default; removed toggle button section */}
 
       {/* Global Appearance panel (available before/after generating) */}
       {/* Sidebar mounted above; no overlay */}
@@ -267,10 +260,7 @@ export function NotionHome() {
                   )}
                 </div>
 
-                <button className="simple-button" type="button" onClick={() => setAppearanceOpen(o => !o)}>
-                  <Settings2Icon className="size-[18px]" />
-                  <span>Appearance</span>
-                </button>
+                {/* Appearance sidebar open by default; no toggle button here */}
               </div>
 
               <Divider />
