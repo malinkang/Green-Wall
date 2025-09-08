@@ -5,8 +5,8 @@ export function UnitSelector() {
   const { settings, dispatchSettings } = useData()
 
   return (
-    <fieldset className="mb-3 flex items-center gap-2">
-      <label className="shrink-0">单位</label>
+    <fieldset className="flex items-center gap-2">
+      <label className="shrink-0 text-sm opacity-70">单位</label>
       <div className="min-w-[12rem]">
         <RadixSelect
           value={(settings.unit as string) || 'contributions'}
@@ -24,4 +24,3 @@ export function UnitSelector() {
     </fieldset>
   )
 }
-

@@ -25,7 +25,7 @@ export function AppearanceSetting(props: { showYearRange?: boolean; showUnit?: b
     <div className="appearance-setting min-w-[min(40vw,220px)] max-w-[min(90vw,280px)] text-main-400">
       {showUnit && (
         <fieldset className="flex items-center gap-2">
-          <label className="shrink-0">单位</label>
+          <label className="shrink-0 text-sm opacity-70">单位</label>
           <div className="min-w-[12rem]">
             <RadixSelect
               value={(settings.unit as string) || 'contributions'}

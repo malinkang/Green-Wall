@@ -221,8 +221,6 @@ export function NotionHome() {
   return (
     <div className="relative">
       <AppearanceSidebar open={appearanceOpen} width={SIDEBAR_WIDTH} onClose={() => setAppearanceOpen(false)}>
-        {/* Place unit selector before year range */}
-        <UnitSelector />
         <NotionAppearanceControls
           authChecked={authChecked}
           databases={databases}
@@ -242,6 +240,8 @@ export function NotionHome() {
           loading={loading}
           onGenerate={() => void handleSubmit()}
         >
+          {/* Place unit below Count prop and above Year Range */}
+          <UnitSelector />
           <div className="mt-1">
             <fieldset className="flex items-center gap-2">
               <label className="shrink-0 text-sm opacity-70">年份范围</label>
