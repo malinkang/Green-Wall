@@ -5,6 +5,7 @@ import { CircleHelpIcon } from 'lucide-react'
 import { ThemeSelector } from '~/components/ThemeSelector'
 import { RadixSwitch } from '~/components/ui-kit/RadixSwitch'
 import { RadixToggleGroup } from '~/components/ui-kit/RadixToggleGroup'
+import { RadixSelect } from '~/components/ui-kit/RadixSelect'
 import { RadixTooltip } from '~/components/ui-kit/RadixTooltip'
 import { useData } from '~/DataContext'
 import { BlockShape, GraphSize } from '~/enums'
@@ -22,24 +23,22 @@ export function AppearanceSetting(props: { showYearRange?: boolean } = { showYea
 
   return (
     <div className="appearance-setting min-w-[min(40vw,220px)] max-w-[min(90vw,280px)] text-main-400">
-      <fieldset>
-        <label>单位</label>
-        <RadixToggleGroup
-          options={[
-            { label: '次', value: 'contributions', tooltip: '次（默认）' },
-            { label: '秒', value: 'second', tooltip: '秒' },
-            { label: '分钟', value: 'minute', tooltip: '分钟' },
-            { label: '小时', value: 'hour', tooltip: '小时' },
-            { label: '米', value: 'meter', tooltip: '米' },
-            { label: '千米', value: 'kilometer', tooltip: '千米' },
-          ]}
-          size="small"
-          type="single"
-          value={settings.unit}
-          onValueChange={(unit) => {
-            dispatchSettings({ type: 'unit', payload: unit as any })
-          }}
-        />
+      <fieldset className="flex items-center gap-2">
+        <label className="shrink-0">单位</label>
+        <div className="min-w-[12rem]">
+          <RadixSelect
+            value={(settings.unit as string) || 'contributions'}
+            onValueChange={(unit) => dispatchSettings({ type: 'unit', payload: unit as any })}
+            items={[
+              { label: '次（默认）', value: 'contributions' },
+              { label: '秒', value: 'second' },
+              { label: '分钟', value: 'minute' },
+              { label: '小时', value: 'hour' },
+              { label: '米', value: 'meter' },
+              { label: '千米', value: 'kilometer' },
+            ]}
+          />
+        </div>
       </fieldset>
       {showYearRange && (
         <fieldset>
