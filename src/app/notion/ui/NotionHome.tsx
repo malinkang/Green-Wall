@@ -236,7 +236,8 @@ export function NotionHome() {
           onGenerate={() => void handleSubmit()}
         >
           <div className="mt-1">
-            <fieldset>
+            <fieldset className="flex items-center gap-2">
+              <label className="shrink-0 text-sm opacity-70">年份范围</label>
               <YearRangeSelect graphData={graphData} />
             </fieldset>
           </div>
