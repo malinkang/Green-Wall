@@ -168,7 +168,7 @@ export function NotionHome() {
         setDownloading(true)
         trackEvent('Click Download Notion')
 
-        const dataURL = await toPng(graphRef.current)
+        const dataURL = await toPng(graphRef.current, { cacheBust: true, useCORS: true })
         const trigger = document.createElement('a')
         trigger.href = dataURL
         trigger.download = `${graphData.login}_notion_heatmap`
@@ -188,7 +188,7 @@ export function NotionHome() {
         const item = new ClipboardItem({
           'image/png': (async () => {
             if (!graphRef.current) throw new Error('no-ref')
-            const blobData = await toBlob(graphRef.current)
+            const blobData = await toBlob(graphRef.current, { cacheBust: true, useCORS: true })
             if (!blobData) throw new Error('no-blob')
             return blobData
           })(),

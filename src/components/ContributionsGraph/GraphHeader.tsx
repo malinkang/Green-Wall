@@ -51,6 +51,9 @@ const Avatar = () => {
         setStatus('loading')
 
         const avatarImg = new window.Image()
+        try {
+          avatarImg.crossOrigin = 'anonymous'
+        } catch {}
 
         avatarImg.onload = () => {
           root.appendChild(avatarImg)

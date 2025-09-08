@@ -97,7 +97,7 @@ export function HomePage() {
         setDownloading(true)
         trackEvent('Click Download')
 
-        const dataURL = await toPng(graphRef.current)
+        const dataURL = await toPng(graphRef.current, { cacheBust: true, useCORS: true })
         const trigger = document.createElement('a')
         trigger.href = dataURL
         trigger.download = `${graphData.login}_contributions`
@@ -132,7 +132,7 @@ export function HomePage() {
               throw new Error()
             }
 
-            const blobData = await toBlob(graphRef.current)
+            const blobData = await toBlob(graphRef.current, { cacheBust: true, useCORS: true })
 
             if (!blobData) {
               throw new Error()
