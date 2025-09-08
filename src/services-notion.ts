@@ -9,9 +9,13 @@ interface NotionDatabase {
   icon?: { type: 'emoji' | 'file' | 'external', emoji?: string, external?: { url: string }, file?: { url: string } }
 }
 
+interface NotionUserRef { object?: 'user'; id?: string; type?: string; name?: string; avatar_url?: string }
+
 interface NotionPage {
   id: string
   url?: string
+  created_by?: NotionUserRef
+  last_edited_by?: NotionUserRef
   properties: Record<string, any>
 }
 
@@ -170,7 +174,13 @@ async function queryNotionDatabase(
       throw new Error(`Notion database query failed: ${res.status}`)
     }
     const json = await res.json() as any
-    const results = (json.results as any[]).map((p) => ({ id: p.id, url: p.url, properties: p.properties })) as NotionPage[]
+    const results = (json.results as any[]).map((p) => ({
+      id: p.id,
+      url: p.url,
+      properties: p.properties,
+      created_by: p.created_by,
+      last_edited_by: p.last_edited_by,
+    })) as NotionPage[]
     pages.push(...results)
     hasMore = json.has_more
     start_cursor = json.next_cursor || undefined
@@ -223,6 +233,7 @@ export async function fetchNotionGraphData(options: {
 
   const contributionCalendars: ContributionCalendar[] = []
 
+  let personAvatar: string | undefined
   for (const year of years) {
     const startISO = new Date(year, 0, 1).toISOString()
     const endISO = new Date(year + 1, 0, 1).toISOString()
@@ -239,12 +250,21 @@ export async function fetchNotionGraphData(options: {
           links[date] = pageUrl
         }
       }
+      // capture a human user avatar if available
+      if (!personAvatar) {
+        const u = (p.created_by && p.created_by.type !== 'bot' && p.created_by.avatar_url)
+          ? p.created_by
+          : (p.last_edited_by && p.last_edited_by.type !== 'bot' && p.last_edited_by.avatar_url)
+            ? p.last_edited_by
+            : undefined
+        if (u?.avatar_url) personAvatar = u.avatar_url
+      }
     }
     contributionCalendars.push(buildCalendarFromCounts(year, counts, links))
   }
 
   const login = meta.title
-  const avatarUrl = userMe?.avatarUrl || meta.avatarUrl || '/favicon.svg'
+  const avatarUrl = userMe?.avatarUrl || personAvatar || meta.avatarUrl || '/favicon.svg'
 
   return {
     login,
