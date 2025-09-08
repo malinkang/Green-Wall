@@ -19,6 +19,24 @@ export function YearRangeSelect(props: YearRangeSelectProps) {
     return null
   }
 
+  // Build available years from graphData when present; otherwise derive from settings.yearRange
+  const buildYearsFromRange = (start?: string, end?: string) => {
+    if (!start || !end) return undefined as number[] | undefined
+    const s = Number(start)
+    const e = Number(end)
+    if (!Number.isInteger(s) || !Number.isInteger(e)) return undefined
+    const min = Math.min(s, e)
+    const max = Math.max(s, e)
+    const arr: number[] = []
+    for (let y = min; y <= max; y++) arr.push(y)
+    return arr
+  }
+
+  const availableYears
+    = graphData?.contributionYears
+    ?? buildYearsFromRange(settings.yearRange?.[0], settings.yearRange?.[1])
+    ?? []
+
   const handleYearChange = (se: 'start' | 'end', year: string) => {
     let payload: GraphSettings['yearRange'] = undefined
 
@@ -39,7 +57,7 @@ export function YearRangeSelect(props: YearRangeSelectProps) {
   return (
     <div className="flex items-center">
       <RadixSelect
-        items={graphData?.contributionYears.map((year) => ({
+        items={availableYears.map((year) => ({
           label: `${year}`,
           value: `${year}`,
           disabled: year > Number(endYear),
@@ -49,7 +67,7 @@ export function YearRangeSelect(props: YearRangeSelectProps) {
       />
       <span className="mx-2">-</span>
       <RadixSelect
-        items={graphData?.contributionYears.map((year) => ({
+        items={availableYears.map((year) => ({
           label: `${year}`,
           value: `${year}`,
           disabled: year < Number(startYear),
