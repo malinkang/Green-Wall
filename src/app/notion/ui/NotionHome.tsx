@@ -227,7 +227,11 @@ export function NotionHome() {
           databaseId={databaseId}
           setDatabaseId={setDatabaseId}
           dateProp={dateProp}
-          setDateProp={setDateProp}
+          setDateProp={(v) => {
+            setDateProp(v)
+            const y = new Date().getFullYear().toString()
+            dispatchSettings({ type: 'yearRange', payload: [y, y] })
+          }}
           countProp={countProp}
           setCountProp={setCountProp}
           dateCandidates={dateCandidates}
