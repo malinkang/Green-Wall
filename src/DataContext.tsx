@@ -37,8 +37,9 @@ export function DataProvider(props: React.PropsWithChildren) {
 
   const [settings, dispatchSettings] = useGraphSetting()
 
-  const firstYear = graphData?.contributionYears.at(-1)?.toString()
-  const lastYear = graphData?.contributionYears.at(0)?.toString()
+  // Years array is ascending (oldest -> newest). Ensure labels align:
+  const firstYear = graphData?.contributionYears.at(0)?.toString()
+  const lastYear = graphData?.contributionYears.at(-1)?.toString()
 
   const totalYears = graphData?.contributionYears.length
 
