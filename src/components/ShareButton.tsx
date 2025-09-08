@@ -48,6 +48,10 @@ export function ShareButton() {
         Url.searchParams.set('showAttribution', 'false')
       }
 
+      if (settings.unit && settings.unit !== 'contributions') {
+        Url.searchParams.set('unit', settings.unit)
+      }
+
       setShareUrl(Url)
     }
   }, [username, settings, firstYear, lastYear])

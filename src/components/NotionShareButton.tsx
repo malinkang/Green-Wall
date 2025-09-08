@@ -36,6 +36,8 @@ export function NotionShareButton(props: { databaseId: string; dateProp: string;
       if (settings.showSafariHeader === false) Url.searchParams.set('showSafariHeader', 'false')
       if (settings.showAttribution === false) Url.searchParams.set('showAttribution', 'false')
 
+      if (settings.unit && settings.unit !== 'contributions') Url.searchParams.set('unit', settings.unit)
+
       setShareUrl(Url)
     }
     void makeUrl()

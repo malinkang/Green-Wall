@@ -22,6 +22,7 @@ export function SharePage() {
     const end = query.get('end') ?? undefined
     const size = query.get('size') ?? undefined
     let theme = query.get('theme') ?? undefined
+    const unit = query.get('unit') ?? undefined
     theme = THEME_PRESETS.some((t) => t.name === theme) ? theme : DEFAULT_THEME
 
     // default values
@@ -33,6 +34,7 @@ export function SharePage() {
       yearRange: [start, end] as GraphSettings['yearRange'],
       size: size as GraphSize | undefined,
       theme: theme as Themes | undefined,
+      unit: (unit as any) ?? undefined,
       showSafariHeader,
       showAttribution,
     }
