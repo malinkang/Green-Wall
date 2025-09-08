@@ -53,11 +53,12 @@ export function Graph(props: GraphProps) {
       const hours = Math.floor(totalMinutes / 60)
       const minutes = totalMinutes % 60
 
-      if (hours <= 0) return `${minutes}分钟`
+      if (hours <= 0) return minutes === 0 ? '' : `${minutes}分钟`
       if (minutes === 0) return `${hours}小时`
       return `${hours}小时${minutes}分钟`
     }
     // Non-time units: keep number + unit label
+    if (value === 0) return ''
     return `${numberWithCommas(value)} ${unitLabel}`
   }
 
@@ -124,13 +125,17 @@ export function Graph(props: GraphProps) {
       <GraphTooltip
         label={
           tooltipInfo
-            ? (
-                <span className={settings.size === GraphSize.Small ? 'text-xs' : 'text-sm'}>
-                  <strong className="font-medium">{formatByUnit(tooltipInfo.count)}</strong>
-                  {' 在 '}
-                  {tooltipInfo.date}
-                </span>
-              )
+            ? (() => {
+                const text = formatByUnit(tooltipInfo.count)
+                if (!text) return null
+                return (
+                  <span className={settings.size === GraphSize.Small ? 'text-xs' : 'text-sm'}>
+                    <strong className="font-medium">{text}</strong>
+                    {' 在 '}
+                    {tooltipInfo.date}
+                  </span>
+                )
+              })()
             : null
         }
         refElement={refEle}
@@ -196,7 +201,7 @@ export function Graph(props: GraphProps) {
                   }}
                   onMouseLeave={handleMouseLeave}
                   onClick={() => {
-                    if (day.url) {
+                    if (day.url && day.count > 0) {
                       window.open(day.url, '_blank', 'noopener,noreferrer')
                     }
                   }}

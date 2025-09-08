@@ -204,7 +204,8 @@ function extractDateAndCount(
     date = prop.date.start.substring(0, 10)
   }
 
-  let count = 1
+  // When a count property is provided, default to 0 (empty)
+  let count = countProp ? 0 : 1
   if (countProp) {
     const cprop = page.properties?.[countProp]
     if (cprop) {

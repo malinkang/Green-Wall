@@ -118,10 +118,11 @@ export function GraphHeader() {
       const hours = Math.floor(totalMinutes / 60)
       const minutes = totalMinutes % 60
 
-      if (hours <= 0) return `${minutes}分钟`
+      if (hours <= 0) return minutes === 0 ? '' : `${minutes}分钟`
       if (minutes === 0) return `${hours}小时`
       return `${hours}小时${minutes}分钟`
     }
+    if (value === 0) return ''
     return `${numberWithCommas(value)} ${unitLabel}`
   }
 
@@ -183,7 +184,7 @@ export function GraphHeader() {
         </Link>
 
         <span className="opacity-70">
-          {typeof totalContributions === 'number' ? formatByUnit(totalContributions) : '-'}
+          {typeof totalContributions === 'number' ? (formatByUnit(totalContributions) || '') : ''}
         </span>
 
         <span className="opacity-70">
