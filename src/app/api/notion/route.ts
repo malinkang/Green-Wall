@@ -5,7 +5,6 @@ import { getValuableStatistics } from '~/helpers'
 import type { ContributionYear, GraphData, ResponseData, ValuableStatistics } from '~/types'
 import { fetchNotionGraphData } from '~/services-notion'
 import { neonSql } from '~/lib/neon'
-import { fetch as _fetch } from 'undici'
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
@@ -24,7 +23,7 @@ export async function GET(request: NextRequest) {
   try {
     const token = request.cookies.get('notion_token')?.value
     // Fetch database meta to get last edited time for caching decision
-    const metaRes = await _fetch(`https://api.notion.com/v1/databases/${databaseId}`, {
+    const metaRes = await fetch(`https://api.notion.com/v1/databases/${databaseId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
         'Notion-Version': '2022-06-28',
@@ -32,9 +31,19 @@ export async function GET(request: NextRequest) {
       cache: 'no-store',
     })
     let lastEditedTime: string | undefined
+    let meta: any | undefined
     if (metaRes.ok) {
-      const meta = await metaRes.json() as any
+      meta = await metaRes.json() as any
       lastEditedTime = meta?.last_edited_time
+      // upsert meta cache
+      try {
+        await neonSql`
+          INSERT INTO notion_meta_cache (database_id, last_edited_time, meta_json, updated_at)
+          VALUES (${databaseId}, ${lastEditedTime ? `${lastEditedTime}::timestamptz` : null}::timestamptz, ${meta as any}, NOW())
+          ON CONFLICT (database_id)
+          DO UPDATE SET last_edited_time = EXCLUDED.last_edited_time, meta_json = EXCLUDED.meta_json, updated_at = NOW()
+        `
+      } catch {}
     }
 
     // Try cache if last edited time is available

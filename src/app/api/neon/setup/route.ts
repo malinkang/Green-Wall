@@ -58,6 +58,15 @@ export async function POST() {
       );
     `
 
+    await neonSql`
+      CREATE TABLE IF NOT EXISTS notion_meta_cache (
+        database_id TEXT PRIMARY KEY,
+        last_edited_time TIMESTAMPTZ,
+        meta_json JSONB,
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      );
+    `
+
     return NextResponse.json({ ok: true })
   } catch (err) {
     const message = err instanceof Error ? err.message : 'unknown error'
