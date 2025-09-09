@@ -159,9 +159,7 @@ export function GraphHeader() {
           <span className="text-xl font-semibold" translate="no">
             {settings.titleOverride?.trim()
               ? settings.titleOverride.trim()
-              : (graphData.source === 'notion' && graphData.dbTitle
-                ? `@${graphData.dbTitle}`
-                : graphData.name)}
+              : (graphData.login || graphData.name)}
           </span>
         </div>
 
