@@ -28,10 +28,10 @@ export function GitHubButton() {
 
     const fetchMe = async () => {
       try {
-        const res = await fetch('/api/notion/me', { cache: 'no-store' })
+        const res = await fetch('/api/neon/me', { cache: 'no-store' })
         if (res.ok) {
           const json = await res.json()
-          setMe({ name: json?.name || json?.bot?.owner?.workspace_name, avatar_url: json?.avatar_url })
+          setMe({ name: json?.name, avatar_url: json?.avatar_url })
         } else {
           setMe(null)
         }
