@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 
 import { DotIcon } from 'lucide-react'
+import { RadixPopover } from '~/components/ui-kit/RadixPopover'
 
 import { useData } from '~/DataContext'
 import { GraphSize } from '~/enums'
@@ -117,9 +118,36 @@ export function GraphHeader() {
   return (
     <div className="flex w-full items-center">
       <span className="mr-4 flex shrink-0 items-center">
-        <span className="flex size-20 items-center">
-          <Avatar />
-        </span>
+        <RadixPopover
+          title={undefined}
+          content={(
+            <div className="flex flex-col gap-2">
+              <button
+                className="inline-flex items-center rounded bg-red-100 px-3 py-1 text-sm text-red-600 hover:bg-red-200"
+                type="button"
+                onClick={async () => {
+                  try {
+                    await fetch('/api/notion/logout', { method: 'POST' })
+                  } catch {}
+                  try {
+                    // 回到 Notion 页面或刷新当前页
+                    if (window.location.pathname.startsWith('/notion')) {
+                      window.location.reload()
+                    } else {
+                      window.location.href = '/notion'
+                    }
+                  } catch {}
+                }}
+              >
+                退出登录
+              </button>
+            </div>
+          )}
+        >
+          <span className="flex size-20 items-center cursor-pointer">
+            <Avatar />
+          </span>
+        </RadixPopover>
       </span>
 
       <div className="flex basis-1/2 flex-col gap-1">
