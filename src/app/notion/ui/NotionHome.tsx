@@ -144,6 +144,18 @@ export function NotionHome() {
     return () => window.removeEventListener('notion-auth-success', handler)
   }, [loadDatabases])
 
+  // If logged in (databases loaded), sync Notion user into Neon (no settings persistence)
+  useEffect(() => {
+    const syncNotionUser = async () => {
+      try {
+        await fetch('/api/neon/notion/sync', { method: 'POST' })
+      } catch {}
+    }
+    if (authChecked && databases) {
+      void syncNotionUser()
+    }
+  }, [authChecked, databases])
+
   const handleSubmit = async () => {
     const db = databaseId.trim()
     if (!db || loading) return
