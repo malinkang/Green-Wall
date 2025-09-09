@@ -40,27 +40,57 @@ export async function GET(request: NextRequest) {
       lastEditedTime = meta?.last_edited_time
     }
 
-    const cacheKey = `${parsed.dp}|${parsed.cp ?? ''}|${years.join(',')}|${lastEditedTime ?? 'unknown'}`
-    const rows = await neonSql`
-      SELECT graph_json FROM notion_cache2 WHERE database_id = ${parsed.db} AND cache_key = ${cacheKey}
-    `
-    if (rows[0]?.graph_json) {
-      return NextResponse.json({ data: rows[0].graph_json })
+    const cachedCalendars: any[] = []
+    const missingYears: number[] = []
+    for (const y of years) {
+      const perYearKey = `${parsed.dp}|${parsed.cp ?? ''}|${y}|${lastEditedTime ?? 'unknown'}`
+      const r = await neonSql`
+        SELECT calendar_json FROM notion_year_cache WHERE database_id = ${parsed.db} AND cache_key_year = ${perYearKey}
+      `
+      if (r[0]?.calendar_json) cachedCalendars.push(r[0].calendar_json)
+      else missingYears.push(y)
     }
 
-    const data = await fetchNotionGraphData({
-      databaseId: parsed.db,
-      dateProp: parsed.dp,
-      countProp: parsed.cp,
-      years,
-      tokenOverride: parsed.t,
-    })
-    await neonSql`
-      INSERT INTO notion_cache2 (database_id, cache_key, last_edited_time, graph_json, updated_at)
-      VALUES (${parsed.db}, ${cacheKey}, ${lastEditedTime ? `${lastEditedTime}::timestamptz` : null}::timestamptz, ${data as any}, NOW())
-      ON CONFLICT (database_id, cache_key)
-      DO UPDATE SET last_edited_time = EXCLUDED.last_edited_time, graph_json = EXCLUDED.graph_json, updated_at = NOW()
-    `
+    let data
+    if (missingYears.length > 0) {
+      const fresh = await fetchNotionGraphData({
+        databaseId: parsed.db,
+        dateProp: parsed.dp,
+        countProp: parsed.cp,
+        years: missingYears,
+        tokenOverride: parsed.t,
+      })
+      for (const cal of fresh.contributionCalendars) {
+        const perYearKey = `${parsed.dp}|${parsed.cp ?? ''}|${cal.year}|${lastEditedTime ?? 'unknown'}`
+        await neonSql`
+          INSERT INTO notion_year_cache (database_id, cache_key_year, last_edited_time, calendar_json, updated_at)
+          VALUES (${parsed.db}, ${perYearKey}, ${lastEditedTime ? `${lastEditedTime}::timestamptz` : null}::timestamptz, ${cal as any}, NOW())
+          ON CONFLICT (database_id, cache_key_year)
+          DO UPDATE SET last_edited_time = EXCLUDED.last_edited_time, calendar_json = EXCLUDED.calendar_json, updated_at = NOW()
+        `
+      }
+      const calendars = [...cachedCalendars, ...fresh.contributionCalendars].sort((a, b) => a.year - b.year)
+      data = {
+        ...fresh,
+        contributionYears: years,
+        contributionCalendars: calendars,
+      }
+    } else {
+      // Build from cached only; use minimal meta
+      const calendars = cachedCalendars.sort((a, b) => a.year - b.year)
+      data = {
+        login: '',
+        name: '',
+        avatarUrl: '/favicon.svg',
+        bio: 'Notion Database Heatmap',
+        followers: { totalCount: 0 },
+        following: { totalCount: 0 },
+        contributionYears: years,
+        contributionCalendars: calendars,
+        source: 'notion',
+        profileUrl: `https://www.notion.so/${parsed.db.replace(/-/g, '')}`,
+      }
+    }
     return NextResponse.json({ data })
   } catch (err) {
     return NextResponse.json({ message: 'Failed to build graph' }, { status: 500 })

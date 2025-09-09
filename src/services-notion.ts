@@ -99,7 +99,7 @@ function buildCalendarFromCounts(year: number, counts: Record<string, number>, l
   return { year, weeks, total }
 }
 
-async function fetchNotionDatabaseMeta(databaseId: string, token: string) {
+export async function fetchNotionDatabaseMeta(databaseId: string, token: string) {
   const res = await fetch(`${NOTION_API_BASE}/databases/${databaseId}`, {
     headers: {
       Authorization: `Bearer ${token}`,

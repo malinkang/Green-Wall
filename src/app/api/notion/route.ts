@@ -2,8 +2,8 @@ import { type NextRequest, NextResponse } from 'next/server'
 
 import { ErrorType } from '~/enums'
 import { getValuableStatistics } from '~/helpers'
-import type { ContributionYear, GraphData, ResponseData, ValuableStatistics } from '~/types'
-import { fetchNotionGraphData } from '~/services-notion'
+import type { ContributionCalendar, ContributionYear, GraphData, ResponseData, ValuableStatistics } from '~/types'
+import { fetchNotionGraphData, fetchNotionDatabaseMeta } from '~/services-notion'
 import { neonSql } from '~/lib/neon'
 
 export async function GET(request: NextRequest) {
@@ -48,30 +48,72 @@ export async function GET(request: NextRequest) {
 
     // Try cache v2 with parameterized key (dateProp|countProp|years|lastEditedTime)
     const cacheKey = `${dateProp}|${countProp ?? ''}|${years.join(',')}|${lastEditedTime ?? 'unknown'}`
-    const rows = await neonSql`
-      SELECT graph_json FROM notion_cache2 WHERE database_id = ${databaseId} AND cache_key = ${cacheKey}
-    `
-    if (rows[0]?.graph_json) {
-      const cached = rows[0].graph_json as any
-      return NextResponse.json({ data: cached }, { status: 200 })
+    // Per-year cache
+    const cachedCalendars: ContributionCalendar[] = []
+    const missingYears: number[] = []
+    for (const y of years) {
+      const perYearKey = `${dateProp}|${countProp ?? ''}|${y}|${lastEditedTime ?? 'unknown'}`
+      const r = await neonSql`
+        SELECT calendar_json FROM notion_year_cache WHERE database_id = ${databaseId} AND cache_key_year = ${perYearKey}
+      `
+      if (r[0]?.calendar_json) {
+        cachedCalendars.push(r[0].calendar_json as ContributionCalendar)
+      } else {
+        missingYears.push(y)
+      }
     }
 
-    const graphData = await fetchNotionGraphData({ databaseId, dateProp, countProp, years, statistics, tokenOverride: token })
+    let data: GraphData
+    if (missingYears.length > 0) {
+      const fresh = await fetchNotionGraphData({ databaseId, dateProp, countProp, years: missingYears, statistics, tokenOverride: token })
+      // upsert per-year cache
+      for (const cal of fresh.contributionCalendars) {
+        const perYearKey = `${dateProp}|${countProp ?? ''}|${cal.year}|${lastEditedTime ?? 'unknown'}`
+        await neonSql`
+          INSERT INTO notion_year_cache (database_id, cache_key_year, last_edited_time, calendar_json, updated_at)
+          VALUES (${databaseId}, ${perYearKey}, ${lastEditedTime ? `${lastEditedTime}::timestamptz` : null}::timestamptz, ${cal as any}, NOW())
+          ON CONFLICT (database_id, cache_key_year)
+          DO UPDATE SET last_edited_time = EXCLUDED.last_edited_time, calendar_json = EXCLUDED.calendar_json, updated_at = NOW()
+        `
+      }
+      const calendars = [...cachedCalendars, ...fresh.contributionCalendars].sort((a, b) => a.year - b.year)
+      data = {
+        login: fresh.login,
+        name: fresh.name,
+        avatarUrl: fresh.avatarUrl,
+        bio: fresh.bio,
+        followers: fresh.followers,
+        following: fresh.following,
+        contributionYears: years,
+        contributionCalendars: calendars,
+        source: 'notion',
+        profileUrl: fresh.profileUrl,
+      }
+    } else {
+      // build graphData from meta + cached calendars
+      const meta = await fetchNotionDatabaseMeta(databaseId, token as string)
+      const calendars = cachedCalendars.sort((a, b) => a.year - b.year)
+      data = {
+        login: meta.title,
+        name: meta.title,
+        avatarUrl: meta.avatarUrl || '/favicon.svg',
+        bio: 'Notion Database Heatmap',
+        followers: { totalCount: 0 },
+        following: { totalCount: 0 },
+        contributionYears: years,
+        contributionCalendars: calendars,
+        source: 'notion',
+        profileUrl: `https://www.notion.so/${databaseId.replace(/-/g, '')}`,
+      }
+    }
 
     let valuableStatistics: ValuableStatistics | undefined
     if (statistics) {
-      valuableStatistics = getValuableStatistics(graphData)
+      valuableStatistics = getValuableStatistics(data)
     }
+    data = valuableStatistics ? { ...data, statistics: valuableStatistics } : data
 
-    const data: GraphData = valuableStatistics ? { ...graphData, statistics: valuableStatistics } : graphData
-
-    // Upsert cache
-    await neonSql`
-      INSERT INTO notion_cache2 (database_id, cache_key, last_edited_time, graph_json, updated_at)
-      VALUES (${databaseId}, ${cacheKey}, ${lastEditedTime ? `${lastEditedTime}::timestamptz` : null}::timestamptz, ${data as any}, NOW())
-      ON CONFLICT (database_id, cache_key)
-      DO UPDATE SET last_edited_time = EXCLUDED.last_edited_time, graph_json = EXCLUDED.graph_json, updated_at = NOW()
-    `
+    // Optionally upsert full-range cache (can keep for sharing), but year-level already saved
 
     return NextResponse.json({ data }, { status: 200 })
   }

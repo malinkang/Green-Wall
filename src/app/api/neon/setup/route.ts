@@ -79,6 +79,18 @@ export async function POST() {
       );
     `
 
+    await neonSql`
+      CREATE TABLE IF NOT EXISTS notion_year_cache (
+        database_id TEXT NOT NULL,
+        cache_key_year TEXT NOT NULL,
+        year INT NOT NULL,
+        last_edited_time TIMESTAMPTZ,
+        calendar_json JSONB,
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        PRIMARY KEY (database_id, cache_key_year)
+      );
+    `
+
     return NextResponse.json({ ok: true })
   } catch (err) {
     const message = err instanceof Error ? err.message : 'unknown error'
