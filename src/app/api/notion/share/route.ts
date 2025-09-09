@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { decryptJSON } from '~/lib/secure'
 import { fetchNotionGraphData } from '~/services-notion'
+import { neonSql } from '~/lib/neon'
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
@@ -25,6 +26,29 @@ export async function GET(request: NextRequest) {
   for (let y = Math.min(startYear, endYear); y <= Math.max(startYear, endYear); y++) years.push(y)
 
   try {
+    // Fetch last edited time for cache key
+    const metaRes = await fetch(`https://api.notion.com/v1/databases/${parsed.db}`, {
+      headers: {
+        Authorization: `Bearer ${parsed.t}`,
+        'Notion-Version': '2022-06-28',
+      },
+      cache: 'no-store',
+    })
+    let lastEditedTime: string | undefined
+    if (metaRes.ok) {
+      const meta = await metaRes.json() as any
+      lastEditedTime = meta?.last_edited_time
+    }
+
+    if (lastEditedTime) {
+      const rows = await neonSql`
+        SELECT graph_json FROM notion_cache WHERE database_id = ${parsed.db} AND last_edited_time = ${lastEditedTime}::timestamptz
+      `
+      if (rows[0]?.graph_json) {
+        return NextResponse.json({ data: rows[0].graph_json })
+      }
+    }
+
     const data = await fetchNotionGraphData({
       databaseId: parsed.db,
       dateProp: parsed.dp,
@@ -32,6 +56,14 @@ export async function GET(request: NextRequest) {
       years,
       tokenOverride: parsed.t,
     })
+    if (lastEditedTime) {
+      await neonSql`
+        INSERT INTO notion_cache (database_id, last_edited_time, graph_json, updated_at)
+        VALUES (${parsed.db}, ${lastEditedTime}::timestamptz, ${data as any}, NOW())
+        ON CONFLICT (database_id)
+        DO UPDATE SET last_edited_time = EXCLUDED.last_edited_time, graph_json = EXCLUDED.graph_json, updated_at = NOW()
+      `
+    }
     return NextResponse.json({ data })
   } catch (err) {
     return NextResponse.json({ message: 'Failed to build graph' }, { status: 500 })

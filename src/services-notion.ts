@@ -7,6 +7,7 @@ const NOTION_VERSION = '2022-06-28'
 interface NotionDatabase {
   title?: { plain_text?: string }[]
   icon?: { type: 'emoji' | 'file' | 'external', emoji?: string, external?: { url: string }, file?: { url: string } }
+  last_edited_time?: string
 }
 
 interface NotionUserRef { object?: 'user'; id?: string; type?: string; name?: string; avatar_url?: string }
@@ -120,7 +121,8 @@ async function fetchNotionDatabaseMeta(databaseId: string, token: string) {
     const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='64' height='64'><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='48'>${json.icon.emoji}</text></svg>`
     avatarUrl = `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`
   }
-  return { title, avatarUrl }
+  const lastEditedTime = json.last_edited_time || undefined
+  return { title, avatarUrl, lastEditedTime }
 }
 
 async function fetchNotionUserMe(token: string): Promise<{ name?: string; avatarUrl?: string } | null> {

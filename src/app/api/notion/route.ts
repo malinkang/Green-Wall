@@ -4,6 +4,8 @@ import { ErrorType } from '~/enums'
 import { getValuableStatistics } from '~/helpers'
 import type { ContributionYear, GraphData, ResponseData, ValuableStatistics } from '~/types'
 import { fetchNotionGraphData } from '~/services-notion'
+import { neonSql } from '~/lib/neon'
+import { fetch as _fetch } from 'undici'
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
@@ -21,6 +23,31 @@ export async function GET(request: NextRequest) {
 
   try {
     const token = request.cookies.get('notion_token')?.value
+    // Fetch database meta to get last edited time for caching decision
+    const metaRes = await _fetch(`https://api.notion.com/v1/databases/${databaseId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Notion-Version': '2022-06-28',
+      },
+      cache: 'no-store',
+    })
+    let lastEditedTime: string | undefined
+    if (metaRes.ok) {
+      const meta = await metaRes.json() as any
+      lastEditedTime = meta?.last_edited_time
+    }
+
+    // Try cache if last edited time is available
+    if (lastEditedTime) {
+      const rows = await neonSql`
+        SELECT graph_json FROM notion_cache WHERE database_id = ${databaseId} AND last_edited_time = ${lastEditedTime}::timestamptz
+      `
+      if (rows[0]?.graph_json) {
+        const cached = rows[0].graph_json as any
+        return NextResponse.json({ data: cached }, { status: 200 })
+      }
+    }
+
     const graphData = await fetchNotionGraphData({ databaseId, dateProp, countProp, years, statistics, tokenOverride: token })
 
     let valuableStatistics: ValuableStatistics | undefined
@@ -29,6 +56,17 @@ export async function GET(request: NextRequest) {
     }
 
     const data: GraphData = valuableStatistics ? { ...graphData, statistics: valuableStatistics } : graphData
+
+    // Upsert cache
+    if (lastEditedTime) {
+      await neonSql`
+        INSERT INTO notion_cache (database_id, last_edited_time, graph_json, updated_at)
+        VALUES (${databaseId}, ${lastEditedTime}::timestamptz, ${data as any}, NOW())
+        ON CONFLICT (database_id)
+        DO UPDATE SET last_edited_time = EXCLUDED.last_edited_time, graph_json = EXCLUDED.graph_json, updated_at = NOW()
+      `
+    }
+
     return NextResponse.json({ data }, { status: 200 })
   }
   catch (err) {
