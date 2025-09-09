@@ -67,6 +67,18 @@ export async function POST() {
       );
     `
 
+    // New cache table with parameterized key to support multiple ranges/props
+    await neonSql`
+      CREATE TABLE IF NOT EXISTS notion_cache2 (
+        database_id TEXT NOT NULL,
+        cache_key TEXT NOT NULL,
+        last_edited_time TIMESTAMPTZ,
+        graph_json JSONB,
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        PRIMARY KEY (database_id, cache_key)
+      );
+    `
+
     return NextResponse.json({ ok: true })
   } catch (err) {
     const message = err instanceof Error ? err.message : 'unknown error'

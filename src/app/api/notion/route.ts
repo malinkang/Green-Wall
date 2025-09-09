@@ -46,15 +46,14 @@ export async function GET(request: NextRequest) {
       } catch {}
     }
 
-    // Try cache if last edited time is available
-    if (lastEditedTime) {
-      const rows = await neonSql`
-        SELECT graph_json FROM notion_cache WHERE database_id = ${databaseId} AND last_edited_time = ${lastEditedTime}::timestamptz
-      `
-      if (rows[0]?.graph_json) {
-        const cached = rows[0].graph_json as any
-        return NextResponse.json({ data: cached }, { status: 200 })
-      }
+    // Try cache v2 with parameterized key (dateProp|countProp|years|lastEditedTime)
+    const cacheKey = `${dateProp}|${countProp ?? ''}|${years.join(',')}|${lastEditedTime ?? 'unknown'}`
+    const rows = await neonSql`
+      SELECT graph_json FROM notion_cache2 WHERE database_id = ${databaseId} AND cache_key = ${cacheKey}
+    `
+    if (rows[0]?.graph_json) {
+      const cached = rows[0].graph_json as any
+      return NextResponse.json({ data: cached }, { status: 200 })
     }
 
     const graphData = await fetchNotionGraphData({ databaseId, dateProp, countProp, years, statistics, tokenOverride: token })
@@ -67,14 +66,12 @@ export async function GET(request: NextRequest) {
     const data: GraphData = valuableStatistics ? { ...graphData, statistics: valuableStatistics } : graphData
 
     // Upsert cache
-    if (lastEditedTime) {
-      await neonSql`
-        INSERT INTO notion_cache (database_id, last_edited_time, graph_json, updated_at)
-        VALUES (${databaseId}, ${lastEditedTime}::timestamptz, ${data as any}, NOW())
-        ON CONFLICT (database_id)
-        DO UPDATE SET last_edited_time = EXCLUDED.last_edited_time, graph_json = EXCLUDED.graph_json, updated_at = NOW()
-      `
-    }
+    await neonSql`
+      INSERT INTO notion_cache2 (database_id, cache_key, last_edited_time, graph_json, updated_at)
+      VALUES (${databaseId}, ${cacheKey}, ${lastEditedTime ? `${lastEditedTime}::timestamptz` : null}::timestamptz, ${data as any}, NOW())
+      ON CONFLICT (database_id, cache_key)
+      DO UPDATE SET last_edited_time = EXCLUDED.last_edited_time, graph_json = EXCLUDED.graph_json, updated_at = NOW()
+    `
 
     return NextResponse.json({ data }, { status: 200 })
   }
