@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { neonSql } from '~/lib/neon'
 
 const TOKEN_URL = 'https://api.notion.com/v1/oauth/token'
 
@@ -51,6 +52,32 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ ok: false, message: 'missing_token' }, { status: 400 })
   }
 
+  // Fetch Notion user and upsert into Neon users with token
+  try {
+    const meRes = await fetch('https://api.notion.com/v1/users/me', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Notion-Version': '2022-06-28',
+      },
+      cache: 'no-store',
+    })
+    if (meRes.ok) {
+      const me = await meRes.json() as any
+      const external_id: string = me?.id || ''
+      const name: string | null = me?.name || me?.bot?.owner?.workspace_name || null
+      const email: string | null = me?.person?.email || null
+      const avatar_url: string | null = me?.avatar_url || null
+      if (external_id) {
+        await neonSql`
+          INSERT INTO users (external_id, name, email, avatar_url, notion_token)
+          VALUES (${external_id}, ${name}, ${email}, ${avatar_url}, ${accessToken})
+          ON CONFLICT (external_id)
+          DO UPDATE SET name = EXCLUDED.name, email = EXCLUDED.email, avatar_url = EXCLUDED.avatar_url, notion_token = EXCLUDED.notion_token, updated_at = NOW()
+        `
+      }
+    }
+  } catch {}
+
   const response = NextResponse.json({ ok: true })
   const isProd = process.env.NODE_ENV === 'production'
   response.cookies.set('notion_token', accessToken, {
@@ -62,4 +89,3 @@ export async function GET(request: NextRequest) {
   })
   return response
 }
-

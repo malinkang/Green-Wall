@@ -12,11 +12,21 @@ export async function POST() {
         id UUID PRIMARY KEY DEFAULT COALESCE(uuid_generate_v4(), gen_random_uuid()),
         external_id TEXT UNIQUE,
         name TEXT,
+        email TEXT,
         avatar_url TEXT,
+        notion_token TEXT,
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
         updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
       );
     `
+
+    // Backfill: add notion_token column if table already exists
+    try {
+      await neonSql`ALTER TABLE users ADD COLUMN IF NOT EXISTS notion_token TEXT;`
+    } catch {}
+    try {
+      await neonSql`ALTER TABLE users ADD COLUMN IF NOT EXISTS email TEXT;`
+    } catch {}
 
     await neonSql`
       CREATE TABLE IF NOT EXISTS user_settings (
@@ -44,4 +54,3 @@ export async function POST() {
     return NextResponse.json({ ok: false, message }, { status: 500 })
   }
 }
-
