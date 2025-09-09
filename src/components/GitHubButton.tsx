@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from 'react'
+import { RadixPopover } from '~/components/ui-kit/RadixPopover'
 
 type NotionMe = {
   name?: string
@@ -74,13 +75,34 @@ export function GitHubButton() {
   if (me) {
     return (
       <div className="ml-auto">
-        <button
-          title={me.name || 'Notion user'}
-          className="flex size-9 items-center justify-center overflow-hidden rounded-full ring-4 ring-pageBg md:size-10 md:ring-8"
+        <RadixPopover
+          title={undefined}
+          content={(
+            <div className="flex flex-col gap-2">
+              <button
+                className="inline-flex items-center rounded bg-red-100 px-3 py-1 text-sm text-red-600 hover:bg-red-200"
+                type="button"
+                onClick={async () => {
+                  try {
+                    await fetch('/api/notion/logout', { method: 'POST' })
+                  } catch {}
+                  window.location.reload()
+                }}
+              >
+                退出登录
+              </button>
+            </div>
+          )}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={me.avatar_url || '/favicon.svg'} alt="avatar" className="h-full w-full object-cover" />
-        </button>
+          <button
+            title={me.name || 'Notion user'}
+            className="flex size-9 items-center justify-center overflow-hidden rounded-full ring-4 ring-pageBg md:size-10 md:ring-8"
+            type="button"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={me.avatar_url || '/favicon.svg'} alt="avatar" className="h-full w-full object-cover" />
+          </button>
+        </RadixPopover>
       </div>
     )
   }

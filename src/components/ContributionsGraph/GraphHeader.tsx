@@ -144,9 +144,13 @@ export function GraphHeader() {
             </div>
           )}
         >
-          <span className="flex size-20 items-center cursor-pointer">
+          <button
+            type="button"
+            aria-haspopup="dialog"
+            className="flex size-20 items-center cursor-pointer rounded-full focus:outline-none focus:ring-2 focus:ring-accent-400/60"
+          >
             <Avatar />
-          </span>
+          </button>
         </RadixPopover>
       </span>
 
