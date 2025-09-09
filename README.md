@@ -90,6 +90,22 @@ NOTION_API_KEY="secret_..."
 
 The Notion mode shares the same rendering and export features as the GitHub mode.
 
+## Database (Neon) Integration
+
+This project can optionally persist basic user information (e.g., Notion user after OAuth) to a Postgres database via Neon (serverless, Vercel‑friendly).
+
+Setup
+
+- Create a Neon project and copy the HTTP connection string (postgresql://...sslmode=require).
+- Add an environment variable in Vercel: `DATABASE_URL` with your Neon connection string.
+- Deploy the project, then initialize tables once by calling:
+
+```bash
+curl -X POST https://YOUR_DOMAIN/api/neon/setup
+```
+
+After Notion login on `/notion`, the app automatically syncs the Notion user to the `users` table via `/api/neon/notion/sync`.
+
 ### Optional: Notion OAuth (login to list databases)
 
 To allow users to log in with Notion and list their databases for selection:
