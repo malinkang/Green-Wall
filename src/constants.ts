@@ -67,19 +67,6 @@ export const THEMES = [
     levelColors: ['#262640', '#505073', '#6d6d98', '#7f7fae', '#9c9cd2'],
     background: '#17151f',
   },
-  {
-    name: 'PostSpark',
-    textColor: 'hsl(0 0% 12%)',
-    // Level 0 uses a light muted background; higher levels derive from primary teal
-    levelColors: [
-      'hsl(60 4.8% 97%)',
-      'hsl(180 45% 80%)',
-      'hsl(180 45% 60%)',
-      'hsl(180 45% 45%)',
-      'hsl(180 45% 35%)',
-    ],
-    background: 'hsl(0 0% 100%)',
-  },
 ] satisfies Theme[]
 
 export const THEME_PRESETS = [
@@ -138,23 +125,6 @@ export const THEME_PRESETS = [
     colorPrimary: 'rgba(156, 156, 210, 1)',
     colorBorder: 'color-mix(in srgb, rgba(97, 97, 121, 0.55), transparent 0%)',
     colorBackgroundContainer: 'url(/images/background/lead.webp) no-repeat center center / cover',
-    levelColors: [
-      'var(--theme-secondary)',
-      'color-mix(in srgb, var(--theme-primary) 35%, var(--theme-secondary))',
-      'color-mix(in srgb, var(--theme-primary) 60%, var(--theme-secondary))',
-      'color-mix(in srgb, var(--theme-primary) 75%, var(--theme-secondary))',
-      'var(--theme-primary)',
-    ],
-  },
-  {
-    name: 'PostSpark',
-    mode: 'light',
-    colorForeground: 'hsl(0 0% 12%)',
-    colorBackground: 'hsl(0 0% 100%)',
-    colorSecondary: 'hsl(60 4.8% 97%)',
-    colorPrimary: 'hsl(180 45% 45%)',
-    colorBorder: 'hsl(20 5.9% 93%)',
-    colorBackgroundContainer: 'linear-gradient(140deg, hsl(60 4.8% 97%) 0%, hsl(60 4.8% 92%) 100%)',
     levelColors: [
       'var(--theme-secondary)',
       'color-mix(in srgb, var(--theme-primary) 35%, var(--theme-secondary))',
