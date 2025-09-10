@@ -18,6 +18,7 @@ export function AppearanceSetting(props: { showYearRange?: boolean; showUnit?: b
   const { graphData, settings, dispatchSettings } = useData()
 
   const daysLabelId = useId()
+  const yearOrderId = useId()
   const safariHeader = useId()
   const attributionId = useId()
   const showCardId = useId()
@@ -51,6 +52,21 @@ export function AppearanceSetting(props: { showYearRange?: boolean; showUnit?: b
           <YearRangeSelect graphData={graphData} />
         </fieldset>
       )}
+
+      <fieldset className="flex items-center gap-2">
+        <label className="shrink-0 text-sm opacity-70" htmlFor={yearOrderId}>年份顺序</label>
+        <div className="min-w-[12rem]">
+          <RadixSelect
+            id={yearOrderId}
+            value={settings.yearOrder ?? 'asc'}
+            onValueChange={(v) => dispatchSettings({ type: 'yearOrder', payload: v as any })}
+            items={[
+              { label: '正序（旧→新）', value: 'asc' },
+              { label: '倒序（新→旧）', value: 'desc' },
+            ]}
+          />
+        </div>
+      </fieldset>
 
       <fieldset>
         <label htmlFor={daysLabelId}>显示星期标签</label>

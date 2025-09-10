@@ -80,6 +80,8 @@ export interface ResponseData {
 
 export interface GraphSettings {
   yearRange?: [start_year: string | undefined, end_year: string | undefined]
+  /** Year rendering order for heatmap. */
+  yearOrder?: 'asc' | 'desc'
   daysLabel?: boolean
   showSafariHeader?: boolean
   showAttribution?: boolean

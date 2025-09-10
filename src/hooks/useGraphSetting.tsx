@@ -27,6 +27,10 @@ type Action
     payload: State['showAttribution']
   }
   | {
+    type: 'yearOrder'
+    payload: State['yearOrder']
+  }
+  | {
     type: 'showCard'
     payload: State['showCard']
   }
@@ -78,6 +82,7 @@ const initialState: State = {
   theme: DEFAULT_THEME,
   blockShape: DEFAULT_BLOCK_SHAPE,
   daysLabel: false,
+  yearOrder: 'asc',
   showAttribution: true,
   showSafariHeader: false,
   showCard: true,
@@ -106,6 +111,9 @@ export function useGraphSetting() {
 
       case 'showAttribution':
         return { ...state, showAttribution: payload }
+
+      case 'yearOrder':
+        return { ...state, yearOrder: payload }
 
       case 'showCard':
         return { ...state, showCard: payload }

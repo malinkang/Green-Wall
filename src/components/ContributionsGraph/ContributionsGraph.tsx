@@ -87,7 +87,9 @@ function InnerContributionsGraph(
           </div>
 
           <div className="flex flex-col gap-y-6 p-6">
-            {graphData.contributionCalendars.map((calendar) => {
+            {([...graphData.contributionCalendars]
+              .sort((a, b) => (settings.yearOrder === 'desc' ? b.year - a.year : a.year - b.year))
+            ).map((calendar) => {
               let [startYear, endYear] = settings.yearRange ?? []
               startYear = startYear && Number.isInteger(Number(startYear)) ? startYear : firstYear
               endYear = endYear && Number.isInteger(Number(endYear)) ? endYear : lastYear
