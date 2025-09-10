@@ -3,6 +3,7 @@ import { useId } from 'react'
 import { CircleHelpIcon } from 'lucide-react'
 
 import { ThemeLevelSelector, ThemeSelector } from '~/components/ThemeSelector'
+import { THEMES } from '~/constants'
 import { RadixSwitch } from '~/components/ui-kit/RadixSwitch'
 import { RadixToggleGroup } from '~/components/ui-kit/RadixToggleGroup'
 import { RadixSelect } from '~/components/ui-kit/RadixSelect'
@@ -23,19 +24,7 @@ export function AppearanceSetting(props: { showYearRange?: boolean; showUnit?: b
 
   return (
     <div className="appearance-setting min-w-[min(40vw,220px)] max-w-[min(90vw,280px)] text-main-400">
-      <fieldset>
-        <label>热力图背景模式</label>
-        <RadixToggleGroup
-          options={[
-            { label: '白天', value: 'day' },
-            { label: '夜间', value: 'night' },
-          ]}
-          size="small"
-          type="single"
-          value={settings.heatmapMode ?? 'day'}
-          onValueChange={(v) => dispatchSettings({ type: 'heatmapMode', payload: v as any })}
-        />
-      </fieldset>
+      {null}
       {showUnit && (
         <fieldset className="flex items-center gap-2">
           <label className="shrink-0 text-sm opacity-70">单位</label>
@@ -169,6 +158,10 @@ export function AppearanceSetting(props: { showYearRange?: boolean; showUnit?: b
           onChange={(theme) => {
             trackEvent('切换单元配色', { themeName: theme })
             dispatchSettings({ type: 'themePalette', payload: theme })
+            // 自动根据配色推断日/夜模式：列表第一项为白天，其余为夜间
+            const firstName = THEMES[0].name
+            const mode = theme === firstName ? 'day' : 'night'
+            dispatchSettings({ type: 'heatmapMode', payload: mode as any })
           }}
         />
       </fieldset>
