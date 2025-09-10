@@ -13,54 +13,19 @@ type NeonMe = { name?: string; avatar_url?: string }
 const Avatar = ({ neonAvatarUrl }: { neonAvatarUrl?: string }) => {
   const { graphData } = useData()
   const { settings } = useData()
-
-  const init = useRef(false)
-  const avatarRoot = useRef<HTMLSpanElement>(null)
-  const [status, setStatus] = useState<'loading' | 'loaded' | 'error'>()
-
-  useEffect(() => {
-    const root = avatarRoot.current
-    if (!root || !graphData) return
-
-    // Desired source priority: user override > neon > graphData
-    const src = settings.avatarUrl || neonAvatarUrl || graphData.avatarUrl
-
-    // If an <img> already exists, update it; otherwise create it
-    const existing = root.querySelector('img') as HTMLImageElement | null
-    if (existing) {
-      if (existing.src !== src) existing.src = src
-      existing.alt = `${graphData.login}'s avatar.`
-      setStatus('loaded')
-      return
-    }
-
-    setStatus('loading')
-    const avatarImg = new window.Image()
-    // Do not set crossOrigin to avoid CORS-related failures inside embeds (e.g., Notion iframe)
-
-    avatarImg.onload = () => {
-      root.appendChild(avatarImg)
-      setStatus('loaded')
-    }
-
-    avatarImg.onerror = () => {
-      setStatus('error')
-    }
-
-    avatarImg.src = src
-    avatarImg.alt = `${graphData.login}'s avatar.`
-    avatarImg.classList.add('h-full', 'w-full')
-    init.current = true
-  }, [graphData, settings.avatarUrl, neonAvatarUrl])
-
+  const [error, setError] = useState(false)
+  if (!graphData) return null
+  const src = settings.avatarUrl || neonAvatarUrl || graphData.avatarUrl
   return (
-    <span
-      ref={avatarRoot}
-      className={`size-full overflow-hidden rounded-full bg-[var(--level-0)] ${
-        status === 'loading' ? 'animate-pulse' : ''
-      }`}
-    >
-      {status === 'error' && (
+    <span className="size-full overflow-hidden rounded-full bg-[var(--level-0)]">
+      {!error ? (
+        <img
+          src={src}
+          alt={`${graphData.login}'s avatar.`}
+          className="h-full w-full"
+          onError={() => setError(true)}
+        />
+      ) : (
         <span className="inline-block size-full bg-gradient-to-br from-[var(--level-1)] to-[var(--level-2)]" />
       )}
     </span>
