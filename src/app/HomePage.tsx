@@ -185,11 +185,11 @@ export function HomePage() {
   const SIDEBAR_WIDTH = 320
   return (
     <div className="relative">
-      <AppearanceSidebar open={appearanceOpen} width={SIDEBAR_WIDTH}>
+      <AppearanceSidebar open={appearanceOpen} width={SIDEBAR_WIDTH} side="right">
         <AppearanceSetting />
       </AppearanceSidebar>
 
-      <div className="py-10 md:py-14" style={{ marginLeft: appearanceOpen ? SIDEBAR_WIDTH + 16 : 0 }}>
+      <div className="py-10 md:py-14" style={{ marginRight: appearanceOpen ? SIDEBAR_WIDTH + 16 : 0 }}>
       <h1 className="text-center text-3xl font-bold md:mx-auto md:px-20 md:text-4xl md:leading-[1.2] lg:text-6xl">
         Review the contributions you have made on GitHub over the years.
       </h1>

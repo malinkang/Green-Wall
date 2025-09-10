@@ -23,6 +23,7 @@ export function NotionAppearanceControls(props: {
   children?: React.ReactNode
 }) {
   const COUNT_NONE = '__NONE__'
+  const [user, setUser] = React.useState<{ name?: string; avatar_url?: string } | null>(null)
   const {
     authChecked,
     databases,
@@ -39,9 +40,48 @@ export function NotionAppearanceControls(props: {
     onGenerate,
   } = props
 
+  React.useEffect(() => {
+    // fetch Notion user after auth check
+    const run = async () => {
+      try {
+        const res = await fetch('/api/notion/me', { cache: 'no-store' })
+        if (!res.ok) return setUser(null)
+        const json = await res.json()
+        setUser({ name: json?.name, avatar_url: json?.avatar_url })
+      } catch { setUser(null) }
+    }
+    if (authChecked && databases !== null) run()
+  }, [authChecked, databases])
+
   return (
     <div className="mb-4">
       <div className="flex flex-col gap-3">
+        <div className="flex items-center justify-between">
+          {user ? (
+            <button
+              type="button"
+              title="点击退出登录"
+              className="flex items-center gap-2"
+              onClick={async () => {
+                try { await fetch('/api/notion/logout', { method: 'POST' }) } catch {}
+                try { window.location.reload() } catch {}
+              }}
+            >
+              <img
+                alt={user.name ?? 'Notion User'}
+                src={user.avatar_url ?? '/favicon.svg'}
+                className="h-7 w-7 rounded-full border border-[var(--theme-border)] object-cover"
+              />
+              <span className="text-sm font-medium">{user.name || 'Notion 用户'}</span>
+            </button>
+          ) : (
+            <a href="/api/auth/notion/login" className="select-none text-white">
+              <span className="relative inline-block min-w-[max(30vw,200px)] rounded-[12px] bg-accent-500 px-4 py-2 text-center text-lg font-medium shadow md:min-w-[120px] md:text-base">
+                使用 Notion 登录
+              </span>
+            </a>
+          )}
+        </div>
         <fieldset className="flex items-center gap-2">
           <label className="shrink-0 text-sm opacity-70">数据库</label>
           <div className="min-w-[12rem]">

@@ -249,8 +249,8 @@ export function NotionHome() {
   return (
     <div className="relative">
       {/* global toaster for notifications */}
-      <Toaster position="bottom-center" toastOptions={{ duration: 2800 }} />
-      <AppearanceSidebar open={appearanceOpen} width={SIDEBAR_WIDTH}>
+      <Toaster position="top-center" toastOptions={{ duration: 2800 }} />
+      <AppearanceSidebar open={appearanceOpen} width={SIDEBAR_WIDTH} side="right">
         <NotionAppearanceControls
           authChecked={authChecked}
           databases={databases}
@@ -282,7 +282,7 @@ export function NotionHome() {
         <AppearanceSetting showYearRange={false} showUnit={false} />
       </AppearanceSidebar>
 
-      <div className="py-10 md:py-14" style={{ marginLeft: appearanceOpen ? SIDEBAR_WIDTH + 16 : 0 }}>
+      <div className="py-10 md:py-14" style={{ marginRight: appearanceOpen ? SIDEBAR_WIDTH + 16 : 0 }}>
       <h1 className="sr-only">Turn your Notion database into a contributions heatmap.</h1>
 
       {/* Appearance sidebar is always open by default; removed toggle button section */}
