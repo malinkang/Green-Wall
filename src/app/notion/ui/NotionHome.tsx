@@ -9,9 +9,6 @@ import { AppearanceSetting } from '~/components/AppearanceSetting'
 import { AppearanceSidebar } from '~/components/AppearanceSetting/AppearanceSidebar'
 import { NotionAppearanceControls } from '~/components/AppearanceSetting/NotionAppearanceControls'
 import { UnitSelector } from '~/components/AppearanceSetting/UnitSelector'
-import { LogoUploader } from '~/components/AppearanceSetting/LogoUploader'
-import { AvatarUploader } from '~/components/AppearanceSetting/AvatarUploader'
-import { TitleSubtitleInputs } from '~/components/AppearanceSetting/TitleSubtitleInputs'
 import { YearRangeSelect } from '~/components/AppearanceSetting/YearRangeSelect'
 import { NotionShareButton } from '~/components/NotionShareButton'
 import { ContributionsGraph } from '~/components/ContributionsGraph'
@@ -258,11 +255,8 @@ export function NotionHome() {
           loading={loading}
           onGenerate={() => void handleSubmit()}
         >
-          {/* Place unit, avatar and custom logo below Count prop and above Year Range */}
+          {/* Keep unit selector here; avatar/logo/title/subtitle moved to AppearanceSetting */}
           <UnitSelector />
-          <AvatarUploader />
-          <LogoUploader />
-          <TitleSubtitleInputs />
           <div className="mt-1">
             <fieldset className="flex items-center gap-2">
               <label className="shrink-0 text-sm opacity-70">年份范围</label>

@@ -3,6 +3,9 @@ import { useEffect, useId } from 'react'
 import { CircleHelpIcon } from 'lucide-react'
 
 import { ThemeSelector } from '~/components/ThemeSelector'
+import { AvatarUploader } from '~/components/AppearanceSetting/AvatarUploader'
+import { LogoUploader } from '~/components/AppearanceSetting/LogoUploader'
+import { TitleSubtitleInputs } from '~/components/AppearanceSetting/TitleSubtitleInputs'
 import { RadixSwitch } from '~/components/ui-kit/RadixSwitch'
 import { RadixToggleGroup } from '~/components/ui-kit/RadixToggleGroup'
 import { RadixSelect } from '~/components/ui-kit/RadixSelect'
@@ -174,6 +177,13 @@ export function AppearanceSetting(props: { showYearRange?: boolean; showUnit?: b
           }}
         />
       </fieldset>
+
+      {/* Moved: Avatar/Logo/Title/SubTitle above theme selector */}
+      <div className="mt-2 flex flex-col gap-2">
+        <AvatarUploader />
+        <LogoUploader />
+        <TitleSubtitleInputs />
+      </div>
 
       <fieldset className="flex-col !items-start">
         <label>主题</label>
