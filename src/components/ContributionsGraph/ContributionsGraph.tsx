@@ -1,7 +1,7 @@
 import { forwardRef, memo, useImperativeHandle, useMemo, useRef } from 'react'
 
 import { MockupSafari } from '~/components/mockup/MockupSafari'
-import { DEFAULT_SIZE, DEFAULT_THEME, sizeProperties, THEME_PRESETS } from '~/constants'
+import { DEFAULT_SIZE, DEFAULT_THEME, sizeProperties, THEME_PRESETS, THEMES } from '~/constants'
 import { useData } from '~/DataContext'
 import { BlockShape } from '~/enums'
 
@@ -33,31 +33,36 @@ function InnerContributionsGraph(
 
   useImperativeHandle<HTMLDivElement | null, HTMLDivElement | null>(ref, () => graphRef.current)
 
-  const applyingTheme = useMemo(
-    () =>
-      THEME_PRESETS.find(
-        (item) => item.name.toLowerCase() === (settings.theme ?? DEFAULT_THEME).toLowerCase(),
-      ),
-    [settings.theme],
+  // Split background theme and cell palette selection
+  const backgroundThemeName = settings.themeBackground ?? settings.theme ?? DEFAULT_THEME
+  const paletteThemeName = settings.themePalette ?? settings.theme ?? DEFAULT_THEME
+
+  const applyingBackground = useMemo(
+    () => THEME_PRESETS.find((item) => item.name.toLowerCase() === backgroundThemeName.toLowerCase()),
+    [backgroundThemeName],
+  )
+  const applyingPalette = useMemo(
+    () => THEMES.find((item) => item.name.toLowerCase() === paletteThemeName.toLowerCase()),
+    [paletteThemeName],
   )
 
   if (!graphData) {
     return null
   }
 
-  const themeProperties = applyingTheme
+  const themeProperties = applyingBackground && applyingPalette
     ? {
-        '--theme-foreground': applyingTheme.colorForeground,
-        '--theme-background': applyingTheme.colorBackground,
-        '--theme-background-container': applyingTheme.colorBackgroundContainer,
-        '--theme-secondary': applyingTheme.colorSecondary,
-        '--theme-primary': applyingTheme.colorPrimary,
-        '--theme-border': applyingTheme.colorBorder,
-        '--level-0': applyingTheme.levelColors[0],
-        '--level-1': applyingTheme.levelColors[1],
-        '--level-2': applyingTheme.levelColors[2],
-        '--level-3': applyingTheme.levelColors[3],
-        '--level-4': applyingTheme.levelColors[4],
+        '--theme-foreground': applyingBackground.colorForeground,
+        '--theme-background': applyingBackground.colorBackground,
+        '--theme-background-container': applyingBackground.colorBackgroundContainer,
+        '--theme-secondary': applyingBackground.colorSecondary,
+        '--theme-primary': applyingBackground.colorPrimary,
+        '--theme-border': applyingBackground.colorBorder,
+        '--level-0': applyingPalette.levelColors[0],
+        '--level-1': applyingPalette.levelColors[1],
+        '--level-2': applyingPalette.levelColors[2],
+        '--level-3': applyingPalette.levelColors[3],
+        '--level-4': applyingPalette.levelColors[4],
       }
     : {}
 

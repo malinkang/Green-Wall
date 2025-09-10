@@ -2,7 +2,7 @@ import { useId } from 'react'
 
 import { CircleHelpIcon } from 'lucide-react'
 
-import { ThemeSelector } from '~/components/ThemeSelector'
+import { ThemeLevelSelector, ThemeSelector } from '~/components/ThemeSelector'
 import { RadixSwitch } from '~/components/ui-kit/RadixSwitch'
 import { RadixToggleGroup } from '~/components/ui-kit/RadixToggleGroup'
 import { RadixSelect } from '~/components/ui-kit/RadixSelect'
@@ -126,13 +126,25 @@ export function AppearanceSetting(props: { showYearRange?: boolean; showUnit?: b
       </fieldset>
 
       <fieldset className="flex-col !items-start">
-        <label>主题</label>
+        <label>背景主题</label>
         <ThemeSelector
           className="mt-3 pl-1"
-          value={settings.theme}
+          value={settings.themeBackground ?? settings.theme}
           onChange={(theme) => {
-            trackEvent('切换主题', { themeName: theme })
-            dispatchSettings({ type: 'theme', payload: theme })
+            trackEvent('切换背景主题', { themeName: theme })
+            dispatchSettings({ type: 'themeBackground', payload: theme })
+          }}
+        />
+      </fieldset>
+
+      <fieldset className="flex-col !items-start">
+        <label>单元配色</label>
+        <ThemeLevelSelector
+          className="mt-2 pl-1"
+          value={settings.themePalette ?? settings.theme}
+          onChange={(theme) => {
+            trackEvent('切换单元配色', { themeName: theme })
+            dispatchSettings({ type: 'themePalette', payload: theme })
           }}
         />
       </fieldset>
