@@ -52,6 +52,14 @@ export function NotionHome() {
   const [doingCopy, setDoingCopy] = useState(false)
   const [copySuccess, setCopySuccess] = useState(false)
 
+  // lightweight toast notifications (local to Notion page)
+  const [toasts, setToasts] = useState<{ id: number; text: string }[]>([])
+  const addToast = (text: string) => {
+    const id = Date.now() + Math.random()
+    setToasts((prev) => [...prev, { id, text }])
+    setTimeout(() => setToasts((prev) => prev.filter((t) => t.id !== id)), 2800)
+  }
+
   const reset = () => {
     // Do not reset settings to preserve Notion-detected year range and user preferences
     setGraphData(undefined)
@@ -104,11 +112,15 @@ export function NotionHome() {
         setNumberCandidates(ns)
         const defaultDate = ds.includes('Date') ? 'Date' : (ds[0] || '')
         setDateProp(prev => prev || defaultDate)
+        // toast if missing expected properties
+        if (ds.length === 0) addToast('所选数据库没有日期属性，请检查 Notion 数据库。')
+        if (ns.length === 0) addToast('所选数据库没有数值属性（可选），如需计数请添加一个 Number 属性。')
       } else {
         setDateCandidates([])
         setNumberCandidates([])
         setDateProp('')
         setCountProp('')
+        addToast('无法读取数据库属性，请重试或检查权限。')
       }
     }
     void loadProps()
@@ -235,6 +247,17 @@ export function NotionHome() {
   const SIDEBAR_WIDTH = 320
   return (
     <div className="relative">
+      {/* Toast stack */}
+      <div className="pointer-events-none fixed inset-x-0 bottom-4 z-50 mx-auto flex w-full max-w-[min(90vw,560px)] flex-col items-end gap-2 px-4">
+        {toasts.map((t) => (
+          <div
+            key={t.id}
+            className="pointer-events-auto rounded-md border border-[var(--theme-border)] bg-[var(--theme-background)] px-3 py-2 text-sm text-[var(--theme-foreground)] shadow-md"
+          >
+            {t.text}
+          </div>
+        ))}
+      </div>
       <AppearanceSidebar open={appearanceOpen} width={SIDEBAR_WIDTH} onClose={() => setAppearanceOpen(false)}>
         <NotionAppearanceControls
           authChecked={authChecked}
