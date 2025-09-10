@@ -82,7 +82,7 @@ export function GraphHeader() {
   const displayName = (neonMe?.name?.trim() || username)
 
   return (
-    <div className="mb-4 flex w-full items-center">
+    <div className="mb-4 flex w-full items-center bg-[var(--heatmap-background)] text-[var(--heatmap-foreground)]">
       <Link
         className="graph-header-name flex items-center"
         href={`https://github.com/${username}`}
