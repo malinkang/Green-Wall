@@ -52,7 +52,7 @@ export function SharePage() {
     }
   }, [query])
 
-  const { graphData, setGraphData, dispatchSettings } = useData()
+  const { graphData, setGraphData, dispatchSettings, settings } = useData()
 
   const { run, loading, error } = useGraphRequest()
 
@@ -83,6 +83,11 @@ export function SharePage() {
     )
   }
 
+  // Plain wrapper without card when showCard=false
+  const PlainMockup = ({ className = '', children }: { className?: string; children?: React.ReactNode }) => (
+    <div className={className}>{children}</div>
+  )
+
   if (graphData) {
     return (
       <div className="py-10 md:py-14">
@@ -104,7 +109,7 @@ export function SharePage() {
         </div>
 
         <div className="flex w-full overflow-x-auto py-5 md:justify-center md:py-14">
-          <ContributionsGraph />
+          <ContributionsGraph Mockup={settings.showCard === false ? (PlainMockup as any) : undefined} />
         </div>
       </div>
     )
