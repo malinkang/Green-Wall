@@ -48,6 +48,16 @@ export function ShareButton() {
         Url.searchParams.set('showAttribution', 'false')
       }
 
+      // Share card visibility (default true): only include when turned off
+      if (settings.showCard === false) {
+        Url.searchParams.set('showCard', 'false')
+      }
+
+      // Share year order (default asc): only include when 'desc'
+      if (settings.yearOrder === 'desc') {
+        Url.searchParams.set('yearOrder', 'desc')
+      }
+
       if (settings.unit && settings.unit !== 'contributions') {
         Url.searchParams.set('unit', settings.unit)
       }

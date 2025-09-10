@@ -32,6 +32,9 @@ export function SharePage() {
     // 默认不展示浏览器标题栏；仅当参数为 'true' 时展示
     const showSafariHeader = query.get('showSafariHeader') === 'true'
     const showAttribution = query.get('showAttribution') !== 'false'
+    const showCardParam = query.get('showCard')
+    const showCard = showCardParam === null ? true : showCardParam !== 'false'
+    const yearOrder = (query.get('yearOrder') === 'desc' ? 'desc' : 'asc') as GraphSettings['yearOrder']
 
     return {
       yearRange: [start, end] as GraphSettings['yearRange'],
@@ -44,6 +47,8 @@ export function SharePage() {
       logoUrl: logo ?? undefined,
       showSafariHeader,
       showAttribution,
+      showCard,
+      yearOrder,
     }
   }, [query])
 
