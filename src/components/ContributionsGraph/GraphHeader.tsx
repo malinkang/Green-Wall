@@ -36,11 +36,7 @@ const Avatar = ({ neonAvatarUrl }: { neonAvatarUrl?: string }) => {
 
     setStatus('loading')
     const avatarImg = new window.Image()
-    try {
-      if (!settings.avatarUrl) {
-        avatarImg.crossOrigin = 'anonymous'
-      }
-    } catch {}
+    // Do not set crossOrigin to avoid CORS-related failures inside embeds (e.g., Notion iframe)
 
     avatarImg.onload = () => {
       root.appendChild(avatarImg)
