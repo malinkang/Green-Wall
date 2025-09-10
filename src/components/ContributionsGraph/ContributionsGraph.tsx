@@ -34,13 +34,15 @@ function InnerContributionsGraph(
   useImperativeHandle<HTMLDivElement | null, HTMLDivElement | null>(ref, () => graphRef.current)
 
   // Split background theme and cell palette selection
-  const backgroundThemeName = settings.themeBackground ?? settings.theme ?? DEFAULT_THEME
+  // Background is optional: when not set, do not apply background variables
+  const backgroundThemeName = settings.themeBackground
+  // Palette falls back to combined theme, then default
   const paletteThemeName = settings.themePalette ?? settings.theme ?? DEFAULT_THEME
 
-  const applyingBackground = useMemo(
-    () => THEME_PRESETS.find((item) => item.name.toLowerCase() === backgroundThemeName.toLowerCase()),
-    [backgroundThemeName],
-  )
+  const applyingBackground = useMemo(() => {
+    if (!backgroundThemeName) return undefined
+    return THEME_PRESETS.find((item) => item.name.toLowerCase() === backgroundThemeName.toLowerCase())
+  }, [backgroundThemeName])
   const applyingPalette = useMemo(
     () => THEMES.find((item) => item.name.toLowerCase() === paletteThemeName.toLowerCase()),
     [paletteThemeName],
@@ -50,21 +52,28 @@ function InnerContributionsGraph(
     return null
   }
 
-  const themeProperties = applyingBackground && applyingPalette
-    ? {
-        '--theme-foreground': applyingBackground.colorForeground,
-        '--theme-background': applyingBackground.colorBackground,
-        '--theme-background-container': applyingBackground.colorBackgroundContainer,
-        '--theme-secondary': applyingBackground.colorSecondary,
-        '--theme-primary': applyingBackground.colorPrimary,
-        '--theme-border': applyingBackground.colorBorder,
-        '--level-0': applyingPalette.levelColors[0],
-        '--level-1': applyingPalette.levelColors[1],
-        '--level-2': applyingPalette.levelColors[2],
-        '--level-3': applyingPalette.levelColors[3],
-        '--level-4': applyingPalette.levelColors[4],
-      }
-    : {}
+  const themeProperties: React.CSSProperties = {}
+  // Apply palette always (has fallback)
+  if (applyingPalette) {
+    Object.assign(themeProperties, {
+      '--level-0': applyingPalette.levelColors[0],
+      '--level-1': applyingPalette.levelColors[1],
+      '--level-2': applyingPalette.levelColors[2],
+      '--level-3': applyingPalette.levelColors[3],
+      '--level-4': applyingPalette.levelColors[4],
+    } as React.CSSProperties)
+  }
+  // Apply background only when explicitly selected
+  if (applyingBackground) {
+    Object.assign(themeProperties, {
+      '--theme-foreground': applyingBackground.colorForeground,
+      '--theme-background': applyingBackground.colorBackground,
+      '--theme-background-container': applyingBackground.colorBackgroundContainer,
+      '--theme-secondary': applyingBackground.colorSecondary,
+      '--theme-primary': applyingBackground.colorPrimary,
+      '--theme-border': applyingBackground.colorBorder,
+    } as React.CSSProperties)
+  }
 
   const cssProperties = {
     ...themeProperties,

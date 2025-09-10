@@ -126,10 +126,21 @@ export function AppearanceSetting(props: { showYearRange?: boolean; showUnit?: b
       </fieldset>
 
       <fieldset className="flex-col !items-start">
-        <label>背景主题</label>
+        <label className="flex items-center gap-2">
+          背景主题
+          {settings.themeBackground && (
+            <button
+              type="button"
+              className="rounded bg-main-100 px-1.5 text-xs text-main-600 hover:bg-main-200"
+              onClick={() => dispatchSettings({ type: 'themeBackground', payload: undefined })}
+            >
+              清除
+            </button>
+          )}
+        </label>
         <ThemeSelector
           className="mt-3 pl-1"
-          value={settings.themeBackground ?? settings.theme}
+          value={settings.themeBackground}
           onChange={(theme) => {
             trackEvent('切换背景主题', { themeName: theme })
             dispatchSettings({ type: 'themeBackground', payload: theme })
