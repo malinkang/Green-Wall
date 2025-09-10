@@ -9,10 +9,11 @@ export function UnitSelector() {
       <label className="shrink-0 text-sm opacity-70">单位</label>
       <div className="min-w-[12rem]">
         <RadixSelect
-          value={(settings.unit as string) || 'contributions'}
+          value={(settings.unit as string) || 'piece'}
           onValueChange={(unit) => dispatchSettings({ type: 'unit', payload: unit as any })}
           items={[
-            { label: '次（默认）', value: 'contributions' },
+            { label: '个（默认）', value: 'piece' },
+            { label: '次', value: 'contributions' },
             { label: '秒', value: 'second' },
             { label: '分钟', value: 'minute' },
             { label: '小时', value: 'hour' },

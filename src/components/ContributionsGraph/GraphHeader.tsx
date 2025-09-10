@@ -96,6 +96,7 @@ export function GraphHeader() {
 
   const unitLabel = (() => {
     switch (settings.unit) {
+      case 'piece': return '个'
       case 'second': return '秒'
       case 'minute': return '分钟'
       case 'hour': return '小时'

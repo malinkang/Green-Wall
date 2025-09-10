@@ -58,7 +58,7 @@ export function ShareButton() {
         Url.searchParams.set('yearOrder', 'desc')
       }
 
-      if (settings.unit && settings.unit !== 'contributions') {
+      if (settings.unit && settings.unit !== 'piece') {
         Url.searchParams.set('unit', settings.unit)
       }
 

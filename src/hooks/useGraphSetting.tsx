@@ -87,7 +87,7 @@ const initialState: State = {
   showSafariHeader: false,
   showCard: true,
   showHeader: true,
-  unit: 'contributions',
+  unit: 'piece',
   logoUrl: undefined,
   avatarUrl: undefined,
   titleOverride: undefined,

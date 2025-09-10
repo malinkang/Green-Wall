@@ -38,7 +38,7 @@ export function NotionShareButton(props: { databaseId: string; dateProp: string;
       if (settings.showCard === false) Url.searchParams.set('showCard', 'false')
       if (settings.yearOrder === 'desc') Url.searchParams.set('yearOrder', 'desc')
 
-      if (settings.unit && settings.unit !== 'contributions') Url.searchParams.set('unit', settings.unit)
+      if (settings.unit && settings.unit !== 'piece') Url.searchParams.set('unit', settings.unit)
       if (settings.titleOverride && settings.titleOverride.trim()) Url.searchParams.set('title', settings.titleOverride.trim())
       if (settings.subtitleOverride && settings.subtitleOverride.trim()) Url.searchParams.set('subtitle', settings.subtitleOverride.trim())
       if (settings.avatarUrl && settings.avatarUrl.trim()) Url.searchParams.set('avatar', settings.avatarUrl.trim())
