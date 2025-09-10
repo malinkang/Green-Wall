@@ -74,6 +74,14 @@ function InnerContributionsGraph(
       '--theme-border': applyingBackground.colorBorder,
     } as React.CSSProperties)
   }
+  else {
+    // Ensure borders are hidden when no card background is selected
+    Object.assign(themeProperties, {
+      '--theme-border': 'transparent',
+      '--theme-background': 'transparent',
+      '--theme-background-container': 'transparent',
+    } as React.CSSProperties)
+  }
 
   const cssProperties = {
     ...themeProperties,
