@@ -42,10 +42,10 @@ export function NotionAppearanceControls(props: {
   } = props
 
   React.useEffect(() => {
-    // fetch Notion user after auth check
+    // fetch user info from Neon API after auth check
     const run = async () => {
       try {
-        const res = await fetch('/api/notion/me', { cache: 'no-store' })
+        const res = await fetch('/api/neon/me', { cache: 'no-store' })
         if (!res.ok) return setUser(null)
         const json = await res.json()
         setUser({ name: json?.name, avatar_url: json?.avatar_url })
