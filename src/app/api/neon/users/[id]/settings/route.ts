@@ -28,6 +28,8 @@ export async function PUT(req: NextRequest, context: { params: Promise<{ id: str
       days_label,
       show_attribution,
       show_safari_header,
+      show_card,
+      year_order,
       year_start,
       year_end,
     } = body
@@ -35,11 +37,11 @@ export async function PUT(req: NextRequest, context: { params: Promise<{ id: str
     const rows = await neonSql`
       INSERT INTO user_settings (
         user_id, unit, title_override, subtitle_override, avatar_url, logo_url, theme, size, block_shape,
-        days_label, show_attribution, show_safari_header, year_start, year_end, updated_at
+        days_label, show_attribution, show_safari_header, show_card, year_order, year_start, year_end, updated_at
       ) VALUES (
         ${id}, ${unit ?? null}, ${title_override ?? null}, ${subtitle_override ?? null}, ${avatar_url ?? null}, ${logo_url ?? null},
         ${theme ?? null}, ${size ?? null}, ${block_shape ?? null}, ${days_label ?? null}, ${show_attribution ?? null},
-        ${show_safari_header ?? null}, ${year_start ?? null}, ${year_end ?? null}, NOW()
+        ${show_safari_header ?? null}, ${show_card ?? null}, ${year_order ?? null}, ${year_start ?? null}, ${year_end ?? null}, NOW()
       )
       ON CONFLICT (user_id)
       DO UPDATE SET
@@ -54,6 +56,8 @@ export async function PUT(req: NextRequest, context: { params: Promise<{ id: str
         days_label = EXCLUDED.days_label,
         show_attribution = EXCLUDED.show_attribution,
         show_safari_header = EXCLUDED.show_safari_header,
+        show_card = EXCLUDED.show_card,
+        year_order = EXCLUDED.year_order,
         year_start = EXCLUDED.year_start,
         year_end = EXCLUDED.year_end,
         updated_at = NOW()
@@ -66,4 +70,3 @@ export async function PUT(req: NextRequest, context: { params: Promise<{ id: str
     return NextResponse.json({ message }, { status: 400 })
   }
 }
-

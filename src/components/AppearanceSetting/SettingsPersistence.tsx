@@ -47,6 +47,8 @@ export function SettingsPersistence() {
         days_label: settings.daysLabel,
         show_attribution: settings.showAttribution,
         show_safari_header: settings.showSafariHeader,
+        show_card: settings.showCard,
+        year_order: settings.yearOrder,
         year_start: settings.yearRange?.[0] ?? null,
         year_end: settings.yearRange?.[1] ?? null,
       }
@@ -97,6 +99,8 @@ export function SettingsPersistence() {
         daysLabel: s.days_label ?? settings.daysLabel,
         showAttribution: s.show_attribution ?? settings.showAttribution,
         showSafariHeader: s.show_safari_header ?? settings.showSafariHeader,
+        showCard: s.show_card ?? settings.showCard,
+        yearOrder: s.year_order ?? settings.yearOrder,
         yearRange: [s.year_start ?? undefined, s.year_end ?? undefined],
       } as any })
       setStatus('已加载')
@@ -131,4 +135,3 @@ export function SettingsPersistence() {
     </div>
   )
 }
-
