@@ -90,6 +90,8 @@ export interface GraphSettings {
   themeBackground?: Themes
   /** Optional cell palette theme (when set, overrides level colors of combined theme). */
   themePalette?: Themes
+  /** Heatmap area background mode. */
+  heatmapMode?: 'day' | 'night'
   /** Display unit for totals and labels. */
   unit?: 'contributions' | 'second' | 'minute' | 'hour' | 'meter' | 'kilometer'
   /** Custom logo URL (data URL or external); when set, shows on header right. */

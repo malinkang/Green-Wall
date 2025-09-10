@@ -23,6 +23,19 @@ export function AppearanceSetting(props: { showYearRange?: boolean; showUnit?: b
 
   return (
     <div className="appearance-setting min-w-[min(40vw,220px)] max-w-[min(90vw,280px)] text-main-400">
+      <fieldset>
+        <label>热力图背景模式</label>
+        <RadixToggleGroup
+          options={[
+            { label: '白天', value: 'day' },
+            { label: '夜间', value: 'night' },
+          ]}
+          size="small"
+          type="single"
+          value={settings.heatmapMode ?? 'day'}
+          onValueChange={(v) => dispatchSettings({ type: 'heatmapMode', payload: v as any })}
+        />
+      </fieldset>
       {showUnit && (
         <fieldset className="flex items-center gap-2">
           <label className="shrink-0 text-sm opacity-70">单位</label>

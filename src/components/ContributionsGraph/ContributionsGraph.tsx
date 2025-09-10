@@ -83,6 +83,15 @@ function InnerContributionsGraph(
           '--block-round': '999px',
         }
       : {}),
+    ...(settings.heatmapMode === 'night'
+      ? {
+          '--heatmap-background': '#000',
+          '--heatmap-foreground': '#fff',
+        }
+      : {
+          '--heatmap-background': '#fff',
+          '--heatmap-foreground': '#24292f',
+        }),
   }
 
   return (

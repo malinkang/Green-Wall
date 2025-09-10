@@ -43,6 +43,10 @@ type Action
     payload: State['themePalette']
   }
   | {
+    type: 'heatmapMode'
+    payload: State['heatmapMode']
+  }
+  | {
     type: 'unit'
     payload: State['unit']
   }
@@ -86,6 +90,7 @@ const initialState: State = {
   subtitleOverride: undefined,
   themeBackground: undefined,
   themePalette: undefined,
+  heatmapMode: 'day',
 }
 
 export function useGraphSetting() {
@@ -120,6 +125,9 @@ export function useGraphSetting() {
 
       case 'unit':
         return { ...state, unit: payload }
+
+      case 'heatmapMode':
+        return { ...state, heatmapMode: payload }
 
       case 'logoUrl':
         return { ...state, logoUrl: payload }

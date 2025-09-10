@@ -8,6 +8,8 @@
     'null months'
     'days blocks';
   grid-template-columns: auto 1fr;
+  background: var(--heatmap-background, transparent);
+  color: var(--heatmap-foreground, inherit);
 }
 
 .months {
