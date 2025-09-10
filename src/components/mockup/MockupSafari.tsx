@@ -19,9 +19,11 @@ export function MockupSafari(props: MockupSafariProps) {
 
   if (settings.showCard === false) {
     // Hide outer card and borders, but preserve inner content background and rounded corners
+    const radius = settings.contentRadius ?? '2xl'
+    const radiusClass = radius === '3xl' ? 'rounded-3xl' : radius === 'xl' ? 'rounded-xl' : 'rounded-2xl'
     return (
       <div className={`relative ${className}`}>
-        <div className="overflow-hidden rounded-2xl bg-[var(--theme-background)] text-[var(--theme-foreground)]">
+        <div className={`overflow-hidden ${radiusClass} bg-[var(--theme-background)] text-[var(--theme-foreground)]`}>
           {children}
         </div>
       </div>
