@@ -35,11 +35,12 @@ export async function GET(request: NextRequest) {
     if (metaRes.ok) {
       meta = await metaRes.json() as any
       lastEditedTime = meta?.last_edited_time
+      const lastEditedAt = lastEditedTime ? new Date(lastEditedTime) : null
       // upsert meta cache
       try {
         await neonSql`
           INSERT INTO notion_meta_cache (database_id, last_edited_time, meta_json, updated_at)
-          VALUES (${databaseId}, ${lastEditedTime ? `${lastEditedTime}::timestamptz` : null}::timestamptz, ${meta as any}, NOW())
+          VALUES (${databaseId}, ${lastEditedAt}, ${meta as any}, NOW())
           ON CONFLICT (database_id)
           DO UPDATE SET last_edited_time = EXCLUDED.last_edited_time, meta_json = EXCLUDED.meta_json, updated_at = NOW()
         `
@@ -69,9 +70,10 @@ export async function GET(request: NextRequest) {
       // upsert per-year cache
       for (const cal of fresh.contributionCalendars) {
         const perYearKey = `${dateProp}|${countProp ?? ''}|${cal.year}|${lastEditedTime ?? 'unknown'}`
+        const lastEditedAt = lastEditedTime ? new Date(lastEditedTime) : null
         await neonSql`
           INSERT INTO notion_year_cache (database_id, cache_key_year, last_edited_time, calendar_json, updated_at)
-          VALUES (${databaseId}, ${perYearKey}, ${lastEditedTime ? `${lastEditedTime}::timestamptz` : null}::timestamptz, ${cal as any}, NOW())
+          VALUES (${databaseId}, ${perYearKey}, ${lastEditedAt}, ${cal as any}, NOW())
           ON CONFLICT (database_id, cache_key_year)
           DO UPDATE SET last_edited_time = EXCLUDED.last_edited_time, calendar_json = EXCLUDED.calendar_json, updated_at = NOW()
         `

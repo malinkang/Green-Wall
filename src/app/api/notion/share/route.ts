@@ -62,9 +62,10 @@ export async function GET(request: NextRequest) {
       })
       for (const cal of fresh.contributionCalendars) {
         const perYearKey = `${parsed.dp}|${parsed.cp ?? ''}|${cal.year}|${lastEditedTime ?? 'unknown'}`
+        const lastEditedAt = lastEditedTime ? new Date(lastEditedTime) : null
         await neonSql`
           INSERT INTO notion_year_cache (database_id, cache_key_year, last_edited_time, calendar_json, updated_at)
-          VALUES (${parsed.db}, ${perYearKey}, ${lastEditedTime ? `${lastEditedTime}::timestamptz` : null}::timestamptz, ${cal as any}, NOW())
+          VALUES (${parsed.db}, ${perYearKey}, ${lastEditedAt}, ${cal as any}, NOW())
           ON CONFLICT (database_id, cache_key_year)
           DO UPDATE SET last_edited_time = EXCLUDED.last_edited_time, calendar_json = EXCLUDED.calendar_json, updated_at = NOW()
         `

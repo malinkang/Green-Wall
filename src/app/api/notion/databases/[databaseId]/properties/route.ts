@@ -30,10 +30,11 @@ export async function GET(_req: NextRequest, context: { params: Promise<{ databa
     json = await res.json() as any
     // upsert meta cache
     const lastEditedTime = json?.last_edited_time ?? null
+    const lastEditedAt = lastEditedTime ? new Date(lastEditedTime) : null
     try {
       await neonSql`
         INSERT INTO notion_meta_cache (database_id, last_edited_time, meta_json, updated_at)
-        VALUES (${databaseId}, ${lastEditedTime ? `${lastEditedTime}::timestamptz` : null}::timestamptz, ${json as any}, NOW())
+        VALUES (${databaseId}, ${lastEditedAt}, ${json as any}, NOW())
         ON CONFLICT (database_id)
         DO UPDATE SET last_edited_time = EXCLUDED.last_edited_time, meta_json = EXCLUDED.meta_json, updated_at = NOW()
       `
