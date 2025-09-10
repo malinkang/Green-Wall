@@ -120,9 +120,12 @@ export function NotionHome() {
   // Auto-detect earliest and latest years from Notion and set year range
   useEffect(() => {
     const setYearRangeFromNotion = async () => {
-      if (!databaseId || !dateProp) return
+      // Only fetch range when database, date property and count property are all selected
+      if (!databaseId || !dateProp || !countProp) return
       try {
-        const res = await fetch(`/api/notion/databases/${encodeURIComponent(databaseId)}/range?dateProp=${encodeURIComponent(dateProp)}`)
+        const q = new URLSearchParams({ dateProp })
+        if (countProp) q.set('countProp', countProp)
+        const res = await fetch(`/api/notion/databases/${encodeURIComponent(databaseId)}/range?${q.toString()}`)
         if (!res.ok) return
         const json = await res.json() as { startYear?: number; endYear?: number }
         const start = json.startYear?.toString()
@@ -135,7 +138,7 @@ export function NotionHome() {
       }
     }
     void setYearRangeFromNotion()
-  }, [databaseId, dateProp, dispatchSettings])
+  }, [databaseId, dateProp, countProp, dispatchSettings])
 
   // Refresh databases after successful auth (triggered by header)
   useEffect(() => {

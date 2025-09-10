@@ -7,6 +7,8 @@ export async function GET(_req: NextRequest, context: { params: Promise<{ databa
   const { databaseId } = await context.params
   const { searchParams } = new URL(_req.url)
   const dateProp = searchParams.get('dateProp') || ''
+  // Optional numeric/count property to further constrain results
+  const countProp = searchParams.get('countProp') || ''
 
   const token = _req.cookies.get('notion_token')?.value
   if (!token) return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
@@ -22,8 +24,19 @@ export async function GET(_req: NextRequest, context: { params: Promise<{ databa
     cache: 'no-store',
   }
 
+  // Build filter: date is not empty AND (if provided) number is not empty AND number > 0
+  const andFilters: any[] = [
+    { property: dateProp, date: { is_not_empty: true } },
+  ]
+  if (countProp) {
+    andFilters.push(
+      { property: countProp, number: { is_not_empty: true } },
+      { property: countProp, number: { greater_than: 0 } },
+    )
+  }
+
   const bodyBase = {
-    filter: { property: dateProp, date: { is_not_empty: true } },
+    filter: andFilters.length > 1 ? { and: andFilters } : andFilters[0],
     page_size: 1,
   }
 
@@ -48,4 +61,3 @@ export async function GET(_req: NextRequest, context: { params: Promise<{ databa
     return NextResponse.json({ message: 'Failed to fetch range' }, { status: 400 })
   }
 }
-

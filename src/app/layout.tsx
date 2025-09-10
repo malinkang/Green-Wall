@@ -22,18 +22,18 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL('https://green-wall.leoku.dev'),
   icons: [{ url: '/favicon.svg', type: 'image/svg+xml', media: '(prefers-color-scheme: light)' }],
-  title: 'Green Wall · GitHub contribution graph generator',
-  description: 'Green Wall is a GitHub contribution graph generator.',
+  title: 'Notion Heatmap · GitHub contribution graph generator',
+  description: 'Notion Heatmap is a GitHub contribution graph generator.',
   openGraph: {
     type: 'website',
-    title: 'Green Wall',
+    title: 'Notion Heatmap',
     description: 'GitHub contribution graph generator.',
     url: 'https://green-wall.leoku.dev',
     images:
       'https://user-images.githubusercontent.com/47730755/188365689-c8bfbccc-01d6-45e7-ae8e-084fbbdce75f.jpg',
   },
   twitter: {
-    title: 'Green Wall',
+    title: 'Notion Heatmap',
     description: 'GitHub contribution graph generator.',
     card: 'summary_large_image',
     images:
@@ -59,7 +59,7 @@ export default function Layout(props: React.PropsWithChildren) {
                       <Image fill alt="LOGO" className="object-contain" src="/favicon.svg" />
                     </span>
                     <span className="ml-3 hidden md:inline" translate="no">
-                      Green Wall
+                      Notion Heatmap
                     </span>
                   </span>
                 </Link>
