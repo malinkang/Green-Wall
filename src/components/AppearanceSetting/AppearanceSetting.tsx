@@ -1,4 +1,4 @@
-import { useId } from 'react'
+import { useEffect, useId } from 'react'
 
 import { CircleHelpIcon } from 'lucide-react'
 
@@ -25,6 +25,24 @@ export function AppearanceSetting(props: { showYearRange?: boolean; showUnit?: b
 
   return (
     <div className="appearance-setting min-w-[min(40vw,220px)] max-w-[min(90vw,280px)] text-main-400">
+      {/* Sync selected options to URL for easy sharing (only new options to avoid noisy URLs) */}
+      {(() => {
+        // use IIFE to keep hooks order intact
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        useEffect(() => {
+          try {
+            const url = new URL(window.location.href)
+            // showCard: include only when false
+            if (settings.showCard === false) url.searchParams.set('showCard', 'false')
+            else url.searchParams.delete('showCard')
+            // yearOrder: include only when desc
+            if (settings.yearOrder === 'desc') url.searchParams.set('yearOrder', 'desc')
+            else url.searchParams.delete('yearOrder')
+            window.history.replaceState({}, '', url.toString())
+          } catch {}
+        }, [settings.showCard, settings.yearOrder])
+        return null
+      })()}
       
       {showUnit && (
         <fieldset className="flex items-center gap-2">
