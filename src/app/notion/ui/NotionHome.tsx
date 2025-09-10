@@ -109,8 +109,12 @@ export function NotionHome() {
         const ns = json.numberProps.map(p => p.name)
         setDateCandidates(ds)
         setNumberCandidates(ns)
-        const defaultDate = ds.includes('Date') ? 'Date' : (ds[0] || '')
+        // Randomly pick defaults (when available) per TODO
+        const randomPick = (arr: string[]) => (arr.length ? arr[Math.floor(Math.random() * arr.length)] : '')
+        const defaultDate = randomPick(ds)
+        const defaultCount = randomPick(ns)
         setDateProp(prev => prev || defaultDate)
+        setCountProp(prev => prev || defaultCount)
         // toast if missing expected properties
         if (ds.length === 0) addToast('所选数据库没有日期属性，请检查 Notion 数据库。')
         if (ns.length === 0) addToast('所选数据库没有数值属性（可选），如需计数请添加一个 Number 属性。')

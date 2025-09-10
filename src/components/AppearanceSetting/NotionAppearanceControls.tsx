@@ -41,8 +41,6 @@ export function NotionAppearanceControls(props: {
 
   return (
     <div className="mb-4">
-      <div className="mb-2 text-sm font-medium text-main-500">Notion 设置</div>
-
       <div className="flex flex-col gap-3">
         <fieldset className="flex items-center gap-2">
           <label className="shrink-0 text-sm opacity-70">数据库</label>
