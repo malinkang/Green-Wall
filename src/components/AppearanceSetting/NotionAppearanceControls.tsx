@@ -2,6 +2,7 @@ import React from 'react'
 
 import GenerateButton from '~/components/GenerateButton'
 import { RadixSelect } from '~/components/ui-kit/RadixSelect'
+import { RadixPopover } from '~/components/ui-kit/RadixPopover'
 
 export function NotionAppearanceControls(props: {
   // Auth and database selection
