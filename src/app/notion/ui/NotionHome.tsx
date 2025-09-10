@@ -195,7 +195,11 @@ export function NotionHome() {
         setDownloading(true)
         trackEvent('Click Download Notion')
 
-        const dataURL = await toPng(graphRef.current, { cacheBust: true, useCORS: true })
+        const dataURL = await toPng(graphRef.current, {
+          cacheBust: true,
+          useCORS: true,
+          filter: (node) => !(node instanceof Element && node.getAttribute('data-export-ignore') === 'true'),
+        })
         const trigger = document.createElement('a')
         trigger.href = dataURL
         trigger.download = `${graphData.login}_notion_heatmap`
@@ -212,14 +216,14 @@ export function NotionHome() {
       try {
         setDoingCopy(true)
         trackEvent('Click Copy Image Notion')
-        const item = new ClipboardItem({
-          'image/png': (async () => {
-            if (!graphRef.current) throw new Error('no-ref')
-            const blobData = await toBlob(graphRef.current, { cacheBust: true, useCORS: true })
-            if (!blobData) throw new Error('no-blob')
-            return blobData
-          })(),
+        const dataUrl = await toPng(graphRef.current, {
+          cacheBust: true,
+          useCORS: true,
+          filter: (node) => !(node instanceof Element && node.getAttribute('data-export-ignore') === 'true'),
         })
+        const res = await fetch(dataUrl)
+        const blobData = await res.blob()
+        const item = new ClipboardItem({ 'image/png': Promise.resolve(blobData) })
         await navigator.clipboard.write([item])
         setCopySuccess(true)
         setTimeout(() => setCopySuccess(false), 1500)

@@ -23,6 +23,7 @@ const Avatar = ({ neonAvatarUrl }: { neonAvatarUrl?: string }) => {
           src={src}
           alt={`${graphData.login}'s avatar.`}
           className="h-full w-full"
+          data-export-ignore="true"
           onError={() => setError(true)}
         />
       ) : (
@@ -151,7 +152,7 @@ export function GraphHeader() {
       <div className="ml-auto flex shrink-0 flex-col items-end gap-0.5 text-xs">
         {settings.logoUrl && (
           <span className="pb-2 inline-block size-9">
-            <img alt="logo" className="h-9 w-9 object-contain" src={settings.logoUrl} />
+            <img alt="logo" className="h-9 w-9 object-contain" src={settings.logoUrl} data-export-ignore="true" />
           </span>
         )}
 

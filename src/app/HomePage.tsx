@@ -3,6 +3,7 @@
 import { useCallback, useId, useRef, useState } from 'react'
 
 import { toBlob, toPng } from 'html-to-image'
+import { Toaster, toast } from 'react-hot-toast'
 import { DotIcon, FileCheck2Icon, ImageIcon, ImagesIcon } from 'lucide-react'
 
 import { AppearanceSetting } from '~/components/AppearanceSetting'
@@ -98,7 +99,11 @@ export function HomePage() {
         setDownloading(true)
         trackEvent('Click Download')
 
-        const dataURL = await toPng(graphRef.current, { cacheBust: true, useCORS: true })
+        const dataURL = await toPng(graphRef.current, {
+          cacheBust: true,
+          useCORS: true,
+          filter: (node) => !(node instanceof Element && node.getAttribute('data-export-ignore') === 'true'),
+        })
         const trigger = document.createElement('a')
         trigger.href = dataURL
         trigger.download = `${graphData.login}_contributions`
@@ -107,6 +112,7 @@ export function HomePage() {
       catch (err) {
         if (err instanceof Error) {
           trackEvent('Error: Download Image', { msg: err.message })
+          toast.error('保存图片失败，尝试隐藏头像或更换浏览器重试。')
         }
       }
       finally {
@@ -123,25 +129,14 @@ export function HomePage() {
         setDoingCopy(true)
         trackEvent('Click Copy Image')
 
-        const item = new ClipboardItem({
-          'image/png': (async () => {
-            /**
-             * To be able to use `ClipboardItem` in safari, need to pass promise directly into it.
-             * @see https://stackoverflow.com/questions/66312944/javascript-clipboard-api-write-does-not-work-in-safari
-             */
-            if (!graphRef.current) {
-              throw new Error()
-            }
-
-            const blobData = await toBlob(graphRef.current, { cacheBust: true, useCORS: true })
-
-            if (!blobData) {
-              throw new Error()
-            }
-
-            return blobData
-          })(),
+        const dataUrl = await toPng(graphRef.current, {
+          cacheBust: true,
+          useCORS: true,
+          filter: (node) => !(node instanceof Element && node.getAttribute('data-export-ignore') === 'true'),
         })
+        const res = await fetch(dataUrl)
+        const blobData = await res.blob()
+        const item = new ClipboardItem({ 'image/png': Promise.resolve(blobData) })
 
         await navigator.clipboard.write([item])
 
@@ -154,6 +149,7 @@ export function HomePage() {
       catch (err) {
         if (err instanceof Error) {
           trackEvent('Error: Copy Image', { msg: err.message })
+          toast.error('复制图片失败，尝试使用 Chrome 桌面版或手动保存。')
         }
       }
       finally {
@@ -190,6 +186,7 @@ export function HomePage() {
       </AppearanceSidebar>
 
       <div className="py-10 md:py-14" style={{ marginRight: appearanceOpen ? SIDEBAR_WIDTH + 16 : 0 }}>
+      <Toaster position="top-center" toastOptions={{ duration: 2800 }} />
       <h1 className="text-center text-3xl font-bold md:mx-auto md:px-20 md:text-4xl md:leading-[1.2] lg:text-6xl">
         Review the contributions you have made on GitHub over the years.
       </h1>
