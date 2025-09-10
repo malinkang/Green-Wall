@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { ArrowUpRightIcon, Share2Icon } from 'lucide-react'
 
 import { DEFAULT_SIZE, DEFAULT_THEME } from '~/constants'
+import { encodeShareSettings } from '~/lib/shareParams'
 import { useData } from '~/DataContext'
 import { RadixPopover } from './ui-kit/RadixPopover'
 
@@ -26,24 +27,26 @@ export function NotionShareButton(props: { databaseId: string; dateProp: string;
       const Url = new URL(`${window.location.origin}/share/notion`)
       Url.searchParams.set('payload', json.payload)
 
+      const payload: any = {}
       if (Array.isArray(settings.yearRange)) {
         const [startYear, endYear] = settings.yearRange
-        if (startYear && startYear !== firstYear) Url.searchParams.set('start', startYear)
-        if (endYear && endYear !== lastYear) Url.searchParams.set('end', endYear)
+        if (startYear && startYear !== firstYear) payload.start = startYear
+        if (endYear && endYear !== lastYear) payload.end = endYear
       }
-      if (settings.size && settings.size !== DEFAULT_SIZE) Url.searchParams.set('size', settings.size)
-      if (settings.theme && settings.theme !== DEFAULT_THEME) Url.searchParams.set('theme', settings.theme)
-      if (settings.showSafariHeader === true) Url.searchParams.set('showSafariHeader', 'true')
-      if (settings.showAttribution === false) Url.searchParams.set('showAttribution', 'false')
-      if (settings.showHeader === false) Url.searchParams.set('showHeader', 'false')
-      if (settings.showCard === false) Url.searchParams.set('showCard', 'false')
-      if (settings.yearOrder === 'desc') Url.searchParams.set('yearOrder', 'desc')
-
-      if (settings.unit && settings.unit !== 'piece') Url.searchParams.set('unit', settings.unit)
-      if (settings.titleOverride && settings.titleOverride.trim()) Url.searchParams.set('title', settings.titleOverride.trim())
-      if (settings.subtitleOverride && settings.subtitleOverride.trim()) Url.searchParams.set('subtitle', settings.subtitleOverride.trim())
-      if (settings.avatarUrl && settings.avatarUrl.trim()) Url.searchParams.set('avatar', settings.avatarUrl.trim())
-      if (settings.logoUrl && settings.logoUrl.trim()) Url.searchParams.set('logo', settings.logoUrl.trim())
+      if (settings.size && settings.size !== DEFAULT_SIZE) payload.size = settings.size
+      if (settings.theme && settings.theme !== DEFAULT_THEME) payload.theme = settings.theme
+      if (settings.showSafariHeader === true) payload.showSafariHeader = true
+      if (settings.showAttribution === false) payload.showAttribution = false
+      if (settings.showHeader === false) payload.showHeader = false
+      if (settings.showCard === false) payload.showCard = false
+      if (settings.yearOrder === 'desc') payload.yearOrder = 'desc'
+      if (settings.unit && settings.unit !== 'piece') payload.unit = settings.unit
+      if (settings.titleOverride && settings.titleOverride.trim()) payload.title = settings.titleOverride.trim()
+      if (settings.subtitleOverride && settings.subtitleOverride.trim()) payload.subtitle = settings.subtitleOverride.trim()
+      if (settings.avatarUrl && settings.avatarUrl.trim()) payload.avatar = settings.avatarUrl.trim()
+      if (settings.logoUrl && settings.logoUrl.trim()) payload.logo = settings.logoUrl.trim()
+      const s = encodeShareSettings(payload)
+      if (s) Url.searchParams.set('s', s)
 
       setShareUrl(Url)
     }

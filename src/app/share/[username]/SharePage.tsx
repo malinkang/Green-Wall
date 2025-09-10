@@ -13,6 +13,7 @@ import { useData } from '~/DataContext'
 import type { GraphSize } from '~/enums'
 import { useGraphRequest } from '~/hooks/useGraphRequest'
 import type { GraphSettings, Themes } from '~/types'
+import { decodeShareSettings } from '~/lib/shareParams'
 
 export function SharePage() {
   const query = useSearchParams()
@@ -35,22 +36,24 @@ export function SharePage() {
     const showCardParam = query.get('showCard')
     const showCard = showCardParam === null ? true : showCardParam !== 'false'
     const showHeader = query.get('showHeader') === 'false' ? false : true
+    const sParam = query.get('s')
+    const compact = sParam ? decodeShareSettings(sParam) : null
     const yearOrder = (query.get('yearOrder') === 'desc' ? 'desc' : 'asc') as GraphSettings['yearOrder']
 
     return {
       yearRange: [start, end] as GraphSettings['yearRange'],
       size: size as GraphSize | undefined,
       theme: theme as Themes | undefined,
-      unit: (unit as any) ?? undefined,
-      titleOverride: title ?? undefined,
-      subtitleOverride: subtitle ?? undefined,
-      avatarUrl: avatar ?? undefined,
-      logoUrl: logo ?? undefined,
-      showSafariHeader,
-      showAttribution,
-      showCard,
-      showHeader,
-      yearOrder,
+      unit: (unit as any) ?? (compact?.unit as any) ?? undefined,
+      titleOverride: title ?? compact?.title ?? undefined,
+      subtitleOverride: subtitle ?? compact?.subtitle ?? undefined,
+      avatarUrl: avatar ?? compact?.avatar ?? undefined,
+      logoUrl: logo ?? compact?.logo ?? undefined,
+      showSafariHeader: compact?.showSafariHeader ?? showSafariHeader,
+      showAttribution: compact?.showAttribution ?? showAttribution,
+      showCard: compact?.showCard ?? showCard,
+      showHeader: compact?.showHeader ?? showHeader,
+      yearOrder: (compact?.yearOrder as any) ?? yearOrder,
     }
   }, [query])
 

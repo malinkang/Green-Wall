@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 
 import { DotIcon } from 'lucide-react'
-import { RadixPopover } from '~/components/ui-kit/RadixPopover'
+// removed logout popover on avatar per requirement
 
 import { useData } from '~/DataContext'
 import { GraphSize } from '~/enums'
@@ -137,40 +137,9 @@ export function GraphHeader() {
   return (
     <div className="flex w-full items-center">
       <span className="mr-4 flex shrink-0 items-center">
-        <RadixPopover
-          title={undefined}
-          content={(
-            <div className="flex flex-col gap-2">
-              <button
-                className="inline-flex items-center rounded bg-red-100 px-3 py-1 text-sm text-red-600 hover:bg-red-200"
-                type="button"
-                onClick={async () => {
-                  try {
-                    await fetch('/api/notion/logout', { method: 'POST' })
-                  } catch {}
-                  try {
-                    // 回到 Notion 页面或刷新当前页
-                    if (window.location.pathname.startsWith('/notion')) {
-                      window.location.reload()
-                    } else {
-                      window.location.href = '/notion'
-                    }
-                  } catch {}
-                }}
-              >
-                退出登录
-              </button>
-            </div>
-          )}
-        >
-          <button
-            type="button"
-            aria-haspopup="dialog"
-            className="flex size-20 items-center cursor-pointer rounded-full focus:outline-none focus:ring-2 focus:ring-accent-400/60"
-          >
-            <Avatar neonAvatarUrl={neonMe?.avatar_url} />
-          </button>
-        </RadixPopover>
+        <span className="flex size-20 items-center rounded-full">
+          <Avatar neonAvatarUrl={neonMe?.avatar_url} />
+        </span>
       </span>
 
       <div className="flex basis-1/2 flex-col gap-1">
