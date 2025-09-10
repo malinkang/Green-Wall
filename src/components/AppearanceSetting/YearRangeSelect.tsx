@@ -29,10 +29,13 @@ export function YearRangeSelect(props: YearRangeSelectProps) {
     return arr
   }
 
-  const availableYears
-    = graphData?.contributionYears
-    ?? buildYearsFromRange(startYear, endYear)
-    ?? [Number(currentYearStr)]
+  // Build available years preferring the selected settings range, then union with graphData years
+  const fromSettings = buildYearsFromRange(startYear, endYear) ?? []
+  const set = new Set<number>(fromSettings)
+  if (Array.isArray(graphData?.contributionYears)) {
+    for (const y of graphData!.contributionYears) set.add(y)
+  }
+  const availableYears = (set.size > 0 ? Array.from(set) : [Number(currentYearStr)]).sort((a, b) => a - b)
 
   const handleYearChange = (se: 'start' | 'end', year: string) => {
     let payload: GraphSettings['yearRange'] = undefined
