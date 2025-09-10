@@ -35,10 +35,6 @@ type Action
     payload: State['showCard']
   }
   | {
-    type: 'contentRadius'
-    payload: State['contentRadius']
-  }
-  | {
     type: 'blockShape'
     payload: State['blockShape']
   }
@@ -86,7 +82,6 @@ const initialState: State = {
   showAttribution: true,
   showSafariHeader: false,
   showCard: true,
-  contentRadius: '2xl',
   unit: 'contributions',
   logoUrl: undefined,
   avatarUrl: undefined,
@@ -118,8 +113,6 @@ export function useGraphSetting() {
       case 'showCard':
         return { ...state, showCard: payload }
 
-      case 'contentRadius':
-        return { ...state, contentRadius: payload }
 
       case 'blockShape':
         return { ...state, blockShape: payload }

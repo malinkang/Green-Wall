@@ -87,8 +87,6 @@ export interface GraphSettings {
   showAttribution?: boolean
   /** Show the outer card (container with background and borders). */
   showCard?: boolean
-  /** Corner radius when card is hidden. One of: xl | 2xl | 3xl */
-  contentRadius?: 'xl' | '2xl' | '3xl'
   size?: GraphSize
   blockShape?: BlockShape
   theme?: Themes

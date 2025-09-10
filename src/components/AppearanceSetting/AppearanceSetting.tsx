@@ -22,7 +22,6 @@ export function AppearanceSetting(props: { showYearRange?: boolean; showUnit?: b
   const safariHeader = useId()
   const attributionId = useId()
   const showCardId = useId()
-  const contentRadiusId = useId()
 
   return (
     <div className="appearance-setting min-w-[min(40vw,220px)] max-w-[min(90vw,280px)] text-main-400">
@@ -92,21 +91,7 @@ export function AppearanceSetting(props: { showYearRange?: boolean; showUnit?: b
         />
       </fieldset>
 
-      <fieldset className="flex items-center gap-2">
-        <label className="shrink-0 text-sm opacity-70" htmlFor={contentRadiusId}>圆角半径（隐藏卡片时）</label>
-        <div className="min-w-[10rem]">
-          <RadixSelect
-            id={contentRadiusId}
-            value={settings.contentRadius ?? '2xl'}
-            onValueChange={(v) => dispatchSettings({ type: 'contentRadius', payload: v as any })}
-            items={[
-              { label: '小 (xl)', value: 'xl' },
-              { label: '中 (2xl)', value: '2xl' },
-              { label: '大 (3xl)', value: '3xl' },
-            ]}
-          />
-        </div>
-      </fieldset>
+      {null}
 
       {/* 隐藏“显示浏览器标题栏”选项，按默认不展示处理 */}
 
