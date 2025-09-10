@@ -141,7 +141,11 @@ export function GraphHeader() {
     )
   }, 0)
 
-  const { maxStreak } = getLongestContributionStreak(graphData)
+  const filteredGraphData = {
+    ...graphData,
+    contributionCalendars: filteredCalendars,
+  }
+  const { maxStreak } = getLongestContributionStreak(filteredGraphData as any)
 
   return (
     <div className="flex w-full items-center">
