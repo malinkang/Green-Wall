@@ -6,6 +6,7 @@ import { toBlob, toPng } from 'html-to-image'
 import { DotIcon, FileCheck2Icon, ImageIcon, ImagesIcon } from 'lucide-react'
 
 import { AppearanceSetting } from '~/components/AppearanceSetting'
+import { AppearanceSidebar } from '~/components/AppearanceSetting/AppearanceSidebar'
 import { ContributionsGraph } from '~/components/ContributionsGraph'
 import { ErrorMessage } from '~/components/ErrorMessage'
 import GenerateButton from '~/components/GenerateButton'
@@ -37,7 +38,8 @@ export function HomePage() {
   const { graphData, setGraphData, dispatchSettings } = useData()
   const [searchName, setSearchName] = useState<GitHubUsername>('')
 
-  // remove sidebar settings; render controls inline
+  // Restore sidebar settings (always open; hide title/close button in component)
+  const [appearanceOpen] = useState(true)
 
   const [downloading, setDownloading] = useState(false)
 
@@ -180,13 +182,14 @@ export function HomePage() {
     [graphWrapperId],
   )
 
+  const SIDEBAR_WIDTH = 320
   return (
     <div className="relative">
-      <div className="mb-4">
+      <AppearanceSidebar open={appearanceOpen} width={SIDEBAR_WIDTH}>
         <AppearanceSetting />
-      </div>
+      </AppearanceSidebar>
 
-      <div className="py-10 md:py-14">
+      <div className="py-10 md:py-14" style={{ marginLeft: appearanceOpen ? SIDEBAR_WIDTH + 16 : 0 }}>
       <h1 className="text-center text-3xl font-bold md:mx-auto md:px-20 md:text-4xl md:leading-[1.2] lg:text-6xl">
         Review the contributions you have made on GitHub over the years.
       </h1>

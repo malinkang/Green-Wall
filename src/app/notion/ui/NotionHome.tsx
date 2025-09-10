@@ -7,6 +7,7 @@ import { DotIcon, FileCheck2Icon, ImageIcon, ImagesIcon } from 'lucide-react'
 
 import { AppearanceSetting } from '~/components/AppearanceSetting'
 import { NotionAppearanceControls } from '~/components/AppearanceSetting/NotionAppearanceControls'
+import { AppearanceSidebar } from '~/components/AppearanceSetting/AppearanceSidebar'
 import { UnitSelector } from '~/components/AppearanceSetting/UnitSelector'
 import { YearRangeSelect } from '~/components/AppearanceSetting/YearRangeSelect'
 import { NotionShareButton } from '~/components/NotionShareButton'
@@ -247,6 +248,7 @@ export function NotionHome() {
     [graphWrapperId],
   )
 
+  const SIDEBAR_WIDTH = 320
   return (
     <div className="relative">
       {/* Toast stack */}
@@ -260,7 +262,7 @@ export function NotionHome() {
           </div>
         ))}
       </div>
-      <div className="mb-4">
+      <AppearanceSidebar open={appearanceOpen} width={SIDEBAR_WIDTH}>
         <NotionAppearanceControls
           authChecked={authChecked}
           databases={databases}
@@ -290,9 +292,9 @@ export function NotionHome() {
           </div>
         </NotionAppearanceControls>
         <AppearanceSetting showYearRange={false} showUnit={false} />
-      </div>
+      </AppearanceSidebar>
 
-      <div className="py-10 md:py-14">
+      <div className="py-10 md:py-14" style={{ marginLeft: appearanceOpen ? SIDEBAR_WIDTH + 16 : 0 }}>
       <h1 className="sr-only">Turn your Notion database into a contributions heatmap.</h1>
 
       {/* Appearance sidebar is always open by default; removed toggle button section */}
