@@ -51,6 +51,29 @@ const nextConfig: NextConfig = {
         ],
       },
       {
+        source: '/share/(.*)',
+        headers: [
+          ...createSecureHeaders({
+            frameGuard: false,
+            contentSecurityPolicy: {
+              directives: {
+                frameAncestors: [
+                  "'self'",
+                  'https://notion.so',
+                  'https://www.notion.so',
+                  'https://*.notion.so',
+                  'https://*.notion.site',
+                ],
+                imgSrc: ["'self'", 'data:', 'https:', 'blob:'],
+                mediaSrc: ["'self'", 'data:', 'https:', 'blob:'],
+                connectSrc: ["'self'", 'https:', 'http:'],
+              },
+            },
+          }),
+          { key: 'Cache-Control', value: 'no-store' },
+        ],
+      },
+      {
         source: '/share/notion/(.*)',
         headers: [
           ...createSecureHeaders({
