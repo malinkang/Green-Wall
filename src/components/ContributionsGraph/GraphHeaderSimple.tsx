@@ -6,7 +6,9 @@ import { useData } from '~/DataContext'
 
 import { GraphLegend } from './GraphLegend'
 
-const Avatar = () => {
+type NeonMe = { name?: string; avatar_url?: string }
+
+const Avatar = ({ neonAvatarUrl }: { neonAvatarUrl?: string }) => {
   const { graphData } = useData()
 
   const init = useRef(false)
@@ -15,28 +17,32 @@ const Avatar = () => {
 
   useEffect(() => {
     const root = avatarRoot.current
+    if (!root || !graphData) return
 
-    if (root && graphData && !init.current) {
-      if (!root.hasChildNodes()) {
-        setStatus('loading')
-        const avatarImg = new window.Image()
+    const src = neonAvatarUrl || graphData.avatarUrl
 
-        avatarImg.onload = () => {
-          root.appendChild(avatarImg)
-          setStatus('loaded')
-        }
-
-        avatarImg.onerror = () => {
-          setStatus('error')
-        }
-
-        avatarImg.src = graphData.avatarUrl
-        avatarImg.alt = `${graphData.login}'s avatar.`
-        avatarImg.classList.add('h-full', 'w-full')
-        init.current = true
-      }
+    const existing = root.querySelector('img') as HTMLImageElement | null
+    if (existing) {
+      if (existing.src !== src) existing.src = src
+      existing.alt = `${graphData.login}'s avatar.`
+      setStatus('loaded')
+      return
     }
-  }, [graphData])
+
+    setStatus('loading')
+    const avatarImg = new window.Image()
+    avatarImg.onload = () => {
+      root.appendChild(avatarImg)
+      setStatus('loaded')
+    }
+    avatarImg.onerror = () => {
+      setStatus('error')
+    }
+    avatarImg.src = src
+    avatarImg.alt = `${graphData.login}'s avatar.`
+    avatarImg.classList.add('h-full', 'w-full')
+    init.current = true
+  }, [graphData, neonAvatarUrl])
 
   return (
     <span
@@ -54,12 +60,26 @@ const Avatar = () => {
 
 export function GraphHeader() {
   const { graphData } = useData()
+  const [neonMe, setNeonMe] = useState<NeonMe | null>(null)
+
+  useEffect(() => {
+    const run = async () => {
+      try {
+        const res = await fetch('/api/neon/me')
+        if (!res.ok) return
+        const json = (await res.json()) as NeonMe
+        setNeonMe(json)
+      } catch {}
+    }
+    void run()
+  }, [])
 
   if (!graphData) {
     return null
   }
 
   const username = graphData.login
+  const displayName = (neonMe?.name?.trim() || username)
 
   return (
     <div className="mb-4 flex w-full items-center">
@@ -82,11 +102,11 @@ export function GraphHeader() {
         <span className="mr-3 text-xl">·</span>
 
         <span className="mr-3 flex items-center">
-          <Avatar />
+          <Avatar neonAvatarUrl={neonMe?.avatar_url} />
         </span>
 
         <span className="text-xl font-bold" translate="no">
-          {graphData.login}
+          {displayName}
         </span>
       </Link>
 
