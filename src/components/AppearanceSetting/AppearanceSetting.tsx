@@ -25,6 +25,7 @@ export function AppearanceSetting(props: { showYearRange?: boolean; showUnit?: b
   const safariHeader = useId()
   const attributionId = useId()
   const showCardId = useId()
+  const showHeaderId = useId()
 
   return (
     <div className="appearance-setting min-w-[min(40vw,220px)] max-w-[min(90vw,280px)] text-main-400">
@@ -108,6 +109,18 @@ export function AppearanceSetting(props: { showYearRange?: boolean; showUnit?: b
           id={showCardId}
           onCheckedChange={(checked) => {
             dispatchSettings({ type: 'showCard', payload: checked })
+          }}
+        />
+      </fieldset>
+
+      <fieldset>
+        <label htmlFor={showHeaderId}>显示头部</label>
+        <RadixSwitch
+          checked={settings.showHeader !== false}
+          defaultChecked={true}
+          id={showHeaderId}
+          onCheckedChange={(checked) => {
+            dispatchSettings({ type: 'showHeader', payload: checked })
           }}
         />
       </fieldset>

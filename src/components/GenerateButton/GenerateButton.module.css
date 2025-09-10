@@ -31,15 +31,15 @@
   border-radius: 12px;
   background: linear-gradient(
     to left,
-    rgb(4 120 87) 0%,
-    rgb(5 150 105) 8%,
-    rgb(5 150 105) 92%,
-    rgb(4 120 87) 100%
+    rgb(0 0 0) 0%,
+    rgb(20 20 20) 8%,
+    rgb(20 20 20) 92%,
+    rgb(0 0 0) 100%
   );
 }
 
 .front {
-  @apply bg-accent-500;
+  @apply bg-black;
 
   will-change: transform;
   position: relative;

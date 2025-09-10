@@ -42,6 +42,7 @@ export async function POST() {
         days_label BOOLEAN,
         show_attribution BOOLEAN,
         show_safari_header BOOLEAN,
+        show_header BOOLEAN,
         show_card BOOLEAN,
         year_order TEXT,
         year_start TEXT,
@@ -52,6 +53,7 @@ export async function POST() {
 
     // Backfill columns for persistence when table already exists
     try { await neonSql`ALTER TABLE user_settings ADD COLUMN IF NOT EXISTS show_card BOOLEAN;` } catch {}
+    try { await neonSql`ALTER TABLE user_settings ADD COLUMN IF NOT EXISTS show_header BOOLEAN;` } catch {}
     try { await neonSql`ALTER TABLE user_settings ADD COLUMN IF NOT EXISTS year_order TEXT;` } catch {}
 
     // Notion database cache table

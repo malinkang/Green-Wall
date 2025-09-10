@@ -87,6 +87,8 @@ export interface GraphSettings {
   showAttribution?: boolean
   /** Show the outer card (container with background and borders). */
   showCard?: boolean
+  /** Show contributions graph header */
+  showHeader?: boolean
   size?: GraphSize
   blockShape?: BlockShape
   theme?: Themes

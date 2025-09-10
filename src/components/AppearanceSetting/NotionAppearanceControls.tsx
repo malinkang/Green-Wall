@@ -90,8 +90,8 @@ export function NotionAppearanceControls(props: {
               <div className="text-center text-sm font-medium leading-tight">{user.name || 'Notion 用户'}</div>
             </div>
           ) : (
-            <a href="/api/auth/notion/login" className="select-none text-white">
-              <span className="relative inline-block min-w-[max(30vw,200px)] rounded-[12px] bg-accent-500 px-4 py-2 text-center text-lg font-medium shadow md:min-w-[120px] md:text-base">
+            <a href="/api/auth/notion/login" className="select-none">
+              <span className="relative inline-block min-w-[max(30vw,200px)] rounded-[12px] bg-black px-4 py-2 text-center text-lg font-medium text-white shadow md:min-w-[120px] md:text-base">
                 使用 Notion 登录
               </span>
             </a>
@@ -104,7 +104,7 @@ export function NotionAppearanceControls(props: {
               <div className="text-sm opacity-70">正在检查 Notion 登录…</div>
             ) : databases === null ? (
               <a
-                className="inline-flex items-center rounded-md bg-main-100 px-3 py-1.5 text-sm font-medium text-main-600 hover:bg-main-200"
+                className="inline-flex items-center rounded-[12px] bg-black px-3 py-1.5 text-sm font-medium text-white"
                 href="/api/auth/notion/login"
               >
                 使用 Notion 登录

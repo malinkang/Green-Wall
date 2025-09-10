@@ -82,9 +82,11 @@ function InnerContributionsGraph(
     >
       <Mockup className={mockupClassName}>
         <div>
-          <div className={`px-6 ${settings.showSafariHeader ? 'pt-2' : 'pt-6'}`}>
-            <GraphHeader />
-          </div>
+          {settings.showHeader !== false && (
+            <div className={`px-6 ${settings.showSafariHeader ? 'pt-2' : 'pt-6'}`}>
+              <GraphHeader />
+            </div>
+          )}
 
           <div className="flex flex-col gap-y-6 p-6">
             {([...graphData.contributionCalendars]
