@@ -112,14 +112,16 @@ export function NotionHome() {
         setDateProp(prev => prev || defaultDate)
         setCountProp(prev => prev || defaultCount)
         // toast if missing expected properties
-        if (ds.length === 0) toast.error('所选数据库没有日期属性，请检查 Notion 数据库。')
-        if (ns.length === 0) toast('所选数据库没有数值属性（可选），如需计数请添加一个 Number 属性。')
+        const dbTitle = (databases || []).find(d => d.id === databaseId)?.title || '所选数据库'
+        if (ds.length === 0) toast.error(`${dbTitle}没有日期属性，请检查 Notion 数据库。`)
+        if (ns.length === 0) toast(`${dbTitle}没有数值属性（可选），如需计数请添加一个 Number 属性。`)
       } else {
         setDateCandidates([])
         setNumberCandidates([])
         setDateProp('')
         setCountProp('')
-        toast.error('无法读取数据库属性，请重试或检查权限。')
+        const dbTitle = (databases || []).find(d => d.id === databaseId)?.title || '所选数据库'
+        toast.error(`无法读取${dbTitle}的属性，请重试或检查权限。`)
       }
     }
     void loadProps()
