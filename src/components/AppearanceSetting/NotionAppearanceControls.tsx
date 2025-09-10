@@ -56,24 +56,38 @@ export function NotionAppearanceControls(props: {
   return (
     <div className="mb-4">
       <div className="flex flex-col gap-3">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col items-center justify-center gap-2">
           {user ? (
-            <button
-              type="button"
-              title="点击退出登录"
-              className="flex items-center gap-2"
-              onClick={async () => {
-                try { await fetch('/api/notion/logout', { method: 'POST' }) } catch {}
-                try { window.location.reload() } catch {}
-              }}
-            >
-              <img
-                alt={user.name ?? 'Notion User'}
-                src={user.avatar_url ?? '/favicon.svg'}
-                className="h-7 w-7 rounded-full border border-[var(--theme-border)] object-cover"
-              />
-              <span className="text-sm font-medium">{user.name || 'Notion 用户'}</span>
-            </button>
+            <div className="flex flex-col items-center">
+              {/* Avatar + name centered; click avatar to open actions */}
+              <div className="mb-1">
+                <RadixPopover
+                  content={(
+                    <div className="flex flex-col gap-2">
+                      <button
+                        className="inline-flex items-center rounded bg-red-100 px-3 py-1 text-sm text-red-600 hover:bg-red-200"
+                        type="button"
+                        onClick={async () => {
+                          try { await fetch('/api/notion/logout', { method: 'POST' }) } catch {}
+                          try { window.location.reload() } catch {}
+                        }}
+                      >
+                        退出登录
+                      </button>
+                    </div>
+                  )}
+                >
+                  <button type="button" title="账户操作" className="rounded-full">
+                    <img
+                      alt={user.name ?? 'Notion User'}
+                      src={user.avatar_url ?? '/favicon.svg'}
+                      className="h-12 w-12 rounded-full border border-[var(--theme-border)] object-cover"
+                    />
+                  </button>
+                </RadixPopover>
+              </div>
+              <div className="text-center text-sm font-medium leading-tight">{user.name || 'Notion 用户'}</div>
+            </div>
           ) : (
             <a href="/api/auth/notion/login" className="select-none text-white">
               <span className="relative inline-block min-w-[max(30vw,200px)] rounded-[12px] bg-accent-500 px-4 py-2 text-center text-lg font-medium shadow md:min-w-[120px] md:text-base">
