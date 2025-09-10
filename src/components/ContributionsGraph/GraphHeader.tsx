@@ -124,8 +124,17 @@ export function GraphHeader() {
     return `${numberWithCommas(value)} ${unitLabel}`
   }
 
-  // Calculate active days (count > 0) and longest streak
-  const activeDays = graphData.contributionCalendars.reduce((sum, cal) => {
+  // Determine display year range based on settings
+  let [startYear, endYear] = settings.yearRange ?? []
+  startYear = startYear && Number.isInteger(Number(startYear)) ? startYear : undefined
+  endYear = endYear && Number.isInteger(Number(endYear)) ? endYear : undefined
+  const filteredCalendars = graphData.contributionCalendars.filter((cal) => {
+    if (startYear && endYear) return cal.year >= Number(startYear) && cal.year <= Number(endYear)
+    return true
+  })
+
+  // Calculate active days (count > 0) within selected range and longest streak
+  const activeDays = filteredCalendars.reduce((sum, cal) => {
     return (
       sum
       + cal.weeks.reduce((s, w) => s + w.days.filter((d) => d.level !== 'NONE' && d.count > 0).length, 0)
@@ -182,13 +191,16 @@ export function GraphHeader() {
         )}
 
         <span className="opacity-70">
-          {typeof totalContributions === 'number' ? (formatByUnit(totalContributions) || '') : ''}
+          {formatByUnit(filteredCalendars.reduce((s, c) => s + c.total, 0))}
         </span>
 
         <span className="opacity-70">
-          {firstYear && lastYear
-            ? (firstYear === lastYear ? `${firstYear}` : `${firstYear}-${lastYear}`)
-            : '-'}
+          {(() => {
+            const fy = (startYear ?? firstYear) as string | undefined
+            const ly = (endYear ?? lastYear) as string | undefined
+            if (fy && ly) return fy === ly ? `${fy}` : `${fy}-${ly}`
+            return '-'
+          })()}
         </span>
       </div>
     </div>
