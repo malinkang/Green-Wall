@@ -18,9 +18,12 @@ export function MockupSafari(props: MockupSafariProps) {
   const { graphData, settings } = useData()
 
   if (settings.showCard === false) {
+    // Hide outer card and borders, but preserve inner content background (theme background)
     return (
       <div className={`relative ${className}`}>
-        <div>{children}</div>
+        <div className="bg-[var(--theme-background)] text-[var(--theme-foreground)]">
+          {children}
+        </div>
       </div>
     )
   }
