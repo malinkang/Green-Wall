@@ -27,6 +27,10 @@ type Action
     payload: State['showAttribution']
   }
   | {
+    type: 'showCard'
+    payload: State['showCard']
+  }
+  | {
     type: 'blockShape'
     payload: State['blockShape']
   }
@@ -72,6 +76,7 @@ const initialState: State = {
   daysLabel: false,
   showAttribution: true,
   showSafariHeader: false,
+  showCard: true,
   unit: 'contributions',
   logoUrl: undefined,
   avatarUrl: undefined,
@@ -96,6 +101,9 @@ export function useGraphSetting() {
 
       case 'showAttribution':
         return { ...state, showAttribution: payload }
+
+      case 'showCard':
+        return { ...state, showCard: payload }
 
       case 'blockShape':
         return { ...state, blockShape: payload }

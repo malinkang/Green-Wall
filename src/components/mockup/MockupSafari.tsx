@@ -17,6 +17,14 @@ export function MockupSafari(props: MockupSafariProps) {
 
   const { graphData, settings } = useData()
 
+  if (settings.showCard === false) {
+    return (
+      <div className={`relative ${className}`}>
+        <div>{children}</div>
+      </div>
+    )
+  }
+
   return (
     <div className="relative overflow-hidden rounded-3xl p-[calc(var(--block-size)_*_3.5)]">
       <div className={`relative z-10 overflow-hidden ${className}`}>

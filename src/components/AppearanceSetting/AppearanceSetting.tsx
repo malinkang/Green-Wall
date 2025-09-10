@@ -20,6 +20,7 @@ export function AppearanceSetting(props: { showYearRange?: boolean; showUnit?: b
   const daysLabelId = useId()
   const safariHeader = useId()
   const attributionId = useId()
+  const showCardId = useId()
 
   return (
     <div className="appearance-setting min-w-[min(40vw,220px)] max-w-[min(90vw,280px)] text-main-400">
@@ -58,6 +59,18 @@ export function AppearanceSetting(props: { showYearRange?: boolean; showUnit?: b
           id={daysLabelId}
           onCheckedChange={(checked) => {
             dispatchSettings({ type: 'daysLabel', payload: checked })
+          }}
+        />
+      </fieldset>
+
+      <fieldset>
+        <label htmlFor={showCardId}>显示外层卡片</label>
+        <RadixSwitch
+          checked={settings.showCard}
+          defaultChecked={true}
+          id={showCardId}
+          onCheckedChange={(checked) => {
+            dispatchSettings({ type: 'showCard', payload: checked })
           }}
         />
       </fieldset>

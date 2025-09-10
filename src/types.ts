@@ -83,6 +83,8 @@ export interface GraphSettings {
   daysLabel?: boolean
   showSafariHeader?: boolean
   showAttribution?: boolean
+  /** Show the outer card (container with background and borders). */
+  showCard?: boolean
   size?: GraphSize
   blockShape?: BlockShape
   theme?: Themes
