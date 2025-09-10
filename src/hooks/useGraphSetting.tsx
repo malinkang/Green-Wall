@@ -34,18 +34,7 @@ type Action
     type: 'theme'
     payload: State['theme']
   }
-  | {
-    type: 'themeBackground'
-    payload: State['themeBackground']
-  }
-  | {
-    type: 'themePalette'
-    payload: State['themePalette']
-  }
-  | {
-    type: 'heatmapMode'
-    payload: State['heatmapMode']
-  }
+  
   | {
     type: 'unit'
     payload: State['unit']
@@ -88,9 +77,6 @@ const initialState: State = {
   avatarUrl: undefined,
   titleOverride: undefined,
   subtitleOverride: undefined,
-  themeBackground: undefined,
-  themePalette: undefined,
-  heatmapMode: 'day',
 }
 
 export function useGraphSetting() {
@@ -117,17 +103,8 @@ export function useGraphSetting() {
       case 'theme':
         return { ...state, theme: payload }
 
-      case 'themeBackground':
-        return { ...state, themeBackground: payload }
-
-      case 'themePalette':
-        return { ...state, themePalette: payload }
-
       case 'unit':
         return { ...state, unit: payload }
-
-      case 'heatmapMode':
-        return { ...state, heatmapMode: payload }
 
       case 'logoUrl':
         return { ...state, logoUrl: payload }

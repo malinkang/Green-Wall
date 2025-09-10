@@ -2,8 +2,7 @@ import { useId } from 'react'
 
 import { CircleHelpIcon } from 'lucide-react'
 
-import { ThemeLevelSelector, ThemeSelector } from '~/components/ThemeSelector'
-import { THEMES } from '~/constants'
+import { ThemeSelector } from '~/components/ThemeSelector'
 import { RadixSwitch } from '~/components/ui-kit/RadixSwitch'
 import { RadixToggleGroup } from '~/components/ui-kit/RadixToggleGroup'
 import { RadixSelect } from '~/components/ui-kit/RadixSelect'
@@ -24,7 +23,7 @@ export function AppearanceSetting(props: { showYearRange?: boolean; showUnit?: b
 
   return (
     <div className="appearance-setting min-w-[min(40vw,220px)] max-w-[min(90vw,280px)] text-main-400">
-      {null}
+      
       {showUnit && (
         <fieldset className="flex items-center gap-2">
           <label className="shrink-0 text-sm opacity-70">单位</label>
@@ -128,40 +127,13 @@ export function AppearanceSetting(props: { showYearRange?: boolean; showUnit?: b
       </fieldset>
 
       <fieldset className="flex-col !items-start">
-        <label className="flex items-center gap-2">
-          背景主题
-          {settings.themeBackground && (
-            <button
-              type="button"
-              className="rounded bg-main-100 px-1.5 text-xs text-main-600 hover:bg-main-200"
-              onClick={() => dispatchSettings({ type: 'themeBackground', payload: undefined })}
-            >
-              清除
-            </button>
-          )}
-        </label>
+        <label>主题</label>
         <ThemeSelector
           className="mt-3 pl-1"
-          value={settings.themeBackground}
+          value={settings.theme}
           onChange={(theme) => {
-            trackEvent('切换背景主题', { themeName: theme })
-            dispatchSettings({ type: 'themeBackground', payload: theme })
-          }}
-        />
-      </fieldset>
-
-      <fieldset className="flex-col !items-start">
-        <label>单元配色</label>
-        <ThemeLevelSelector
-          className="mt-2 pl-1"
-          value={settings.themePalette ?? settings.theme}
-          onChange={(theme) => {
-            trackEvent('切换单元配色', { themeName: theme })
-            dispatchSettings({ type: 'themePalette', payload: theme })
-            // 自动根据配色推断日/夜模式：列表第一项为白天，其余为夜间
-            const firstName = THEMES[0].name
-            const mode = theme === firstName ? 'day' : 'night'
-            dispatchSettings({ type: 'heatmapMode', payload: mode as any })
+            trackEvent('切换主题', { themeName: theme })
+            dispatchSettings({ type: 'theme', payload: theme })
           }}
         />
       </fieldset>

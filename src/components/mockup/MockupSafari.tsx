@@ -16,12 +16,11 @@ export function MockupSafari(props: MockupSafariProps) {
   const { children, className = '' } = props
 
   const { graphData, settings } = useData()
-  const hasCardBackground = !!settings.themeBackground
 
   return (
     <div className="relative overflow-hidden rounded-3xl p-[calc(var(--block-size)_*_3.5)]">
       <div className={`relative z-10 overflow-hidden ${className}`}>
-        <div className={`rounded-2xl ${hasCardBackground ? 'border-2 border-double border-[var(--theme-border)] bg-[var(--theme-background)]' : 'border-0 bg-transparent'}`}>
+        <div className="rounded-2xl border-2 border-double border-[var(--theme-border)] bg-[var(--theme-background)]">
           {settings.showSafariHeader && (
             <div className="relative flex h-14 items-center gap-x-2 px-6">
               <div className="flex items-center gap-2">
@@ -55,12 +54,12 @@ export function MockupSafari(props: MockupSafariProps) {
         </div>
       </div>
 
-      {hasCardBackground && (
-        <div
-          className="absolute inset-0"
-          style={{ background: 'var(--theme-background-container)' }}
-        />
-      )}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: 'var(--theme-background-container)',
+        }}
+      />
     </div>
   )
 }

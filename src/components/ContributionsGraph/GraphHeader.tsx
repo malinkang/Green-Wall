@@ -134,7 +134,7 @@ export function GraphHeader() {
   const { maxStreak } = getLongestContributionStreak(graphData)
 
   return (
-    <div className="flex w-full items-center bg-[var(--heatmap-background)] text-[var(--heatmap-foreground)]">
+    <div className="flex w-full items-center">
       <span className="mr-4 flex shrink-0 items-center">
         <RadixPopover
           title={undefined}

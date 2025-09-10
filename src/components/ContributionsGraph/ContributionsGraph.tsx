@@ -1,7 +1,7 @@
 import { forwardRef, memo, useImperativeHandle, useMemo, useRef } from 'react'
 
 import { MockupSafari } from '~/components/mockup/MockupSafari'
-import { DEFAULT_SIZE, DEFAULT_THEME, sizeProperties, THEME_PRESETS, THEMES } from '~/constants'
+import { DEFAULT_SIZE, DEFAULT_THEME, sizeProperties, THEME_PRESETS } from '~/constants'
 import { useData } from '~/DataContext'
 import { BlockShape } from '~/enums'
 
@@ -33,55 +33,33 @@ function InnerContributionsGraph(
 
   useImperativeHandle<HTMLDivElement | null, HTMLDivElement | null>(ref, () => graphRef.current)
 
-  // Split background theme and cell palette selection
-  // Background is optional: when not set, do not apply background variables
-  const backgroundThemeName = settings.themeBackground
-  // Palette falls back to combined theme, then default
-  const paletteThemeName = settings.themePalette ?? settings.theme ?? DEFAULT_THEME
-
-  const applyingBackground = useMemo(() => {
-    if (!backgroundThemeName) return undefined
-    return THEME_PRESETS.find((item) => item.name.toLowerCase() === backgroundThemeName.toLowerCase())
-  }, [backgroundThemeName])
-  const applyingPalette = useMemo(
-    () => THEMES.find((item) => item.name.toLowerCase() === paletteThemeName.toLowerCase()),
-    [paletteThemeName],
+  const applyingTheme = useMemo(
+    () =>
+      THEME_PRESETS.find(
+        (item) => item.name.toLowerCase() === (settings.theme ?? DEFAULT_THEME).toLowerCase(),
+      ),
+    [settings.theme],
   )
 
   if (!graphData) {
     return null
   }
 
-  const themeProperties: React.CSSProperties = {}
-  // Apply palette always (has fallback)
-  if (applyingPalette) {
-    Object.assign(themeProperties, {
-      '--level-0': applyingPalette.levelColors[0],
-      '--level-1': applyingPalette.levelColors[1],
-      '--level-2': applyingPalette.levelColors[2],
-      '--level-3': applyingPalette.levelColors[3],
-      '--level-4': applyingPalette.levelColors[4],
-    } as React.CSSProperties)
-  }
-  // Apply background only when explicitly selected
-  if (applyingBackground) {
-    Object.assign(themeProperties, {
-      '--theme-foreground': applyingBackground.colorForeground,
-      '--theme-background': applyingBackground.colorBackground,
-      '--theme-background-container': applyingBackground.colorBackgroundContainer,
-      '--theme-secondary': applyingBackground.colorSecondary,
-      '--theme-primary': applyingBackground.colorPrimary,
-      '--theme-border': applyingBackground.colorBorder,
-    } as React.CSSProperties)
-  }
-  else {
-    // Ensure borders are hidden when no card background is selected
-    Object.assign(themeProperties, {
-      '--theme-border': 'transparent',
-      '--theme-background': 'transparent',
-      '--theme-background-container': 'transparent',
-    } as React.CSSProperties)
-  }
+  const themeProperties = applyingTheme
+    ? {
+        '--theme-foreground': applyingTheme.colorForeground,
+        '--theme-background': applyingTheme.colorBackground,
+        '--theme-background-container': applyingTheme.colorBackgroundContainer,
+        '--theme-secondary': applyingTheme.colorSecondary,
+        '--theme-primary': applyingTheme.colorPrimary,
+        '--theme-border': applyingTheme.colorBorder,
+        '--level-0': applyingTheme.levelColors[0],
+        '--level-1': applyingTheme.levelColors[1],
+        '--level-2': applyingTheme.levelColors[2],
+        '--level-3': applyingTheme.levelColors[3],
+        '--level-4': applyingTheme.levelColors[4],
+      }
+    : {}
 
   const cssProperties = {
     ...themeProperties,
@@ -91,15 +69,6 @@ function InnerContributionsGraph(
           '--block-round': '999px',
         }
       : {}),
-    ...(settings.heatmapMode === 'night'
-      ? {
-          '--heatmap-background': '#000',
-          '--heatmap-foreground': '#fff',
-        }
-      : {
-          '--heatmap-background': '#fff',
-          '--heatmap-foreground': '#24292f',
-        }),
   }
 
   return (
