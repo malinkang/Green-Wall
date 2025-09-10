@@ -8,7 +8,9 @@ import { GraphSize } from '~/enums'
 import { numberWithCommas, getLongestContributionStreak } from '~/helpers'
 
 
-const Avatar = () => {
+type NeonMe = { name?: string; avatar_url?: string }
+
+const Avatar = ({ neonAvatarUrl }: { neonAvatarUrl?: string }) => {
   const { graphData } = useData()
   const { settings } = useData()
 
@@ -18,40 +20,42 @@ const Avatar = () => {
 
   useEffect(() => {
     const root = avatarRoot.current
+    if (!root || !graphData) return
 
-    // Dynamically load and append the avatar image:
-    // 1. Shows loading state while fetching
-    // 2. Handles successful load by appending img to container
-    // 3. Shows fallback UI on error
-    // 4. Uses ref to prevent multiple loads
-    if (root && graphData && !init.current) {
-      if (!root.hasChildNodes()) {
-        setStatus('loading')
+    // Desired source priority: user override > neon > graphData
+    const src = settings.avatarUrl || neonAvatarUrl || graphData.avatarUrl
 
-        const avatarImg = new window.Image()
-        try {
-          if (!settings.avatarUrl) {
-            avatarImg.crossOrigin = 'anonymous'
-          }
-        } catch {}
-
-        avatarImg.onload = () => {
-          root.appendChild(avatarImg)
-          setStatus('loaded')
-        }
-
-        avatarImg.onerror = () => {
-          setStatus('error')
-        }
-
-        const src = settings.avatarUrl || graphData.avatarUrl
-        avatarImg.src = src
-        avatarImg.alt = `${graphData.login}'s avatar.`
-        avatarImg.classList.add('h-full', 'w-full')
-        init.current = true
-      }
+    // If an <img> already exists, update it; otherwise create it
+    const existing = root.querySelector('img') as HTMLImageElement | null
+    if (existing) {
+      if (existing.src !== src) existing.src = src
+      existing.alt = `${graphData.login}'s avatar.`
+      setStatus('loaded')
+      return
     }
-  }, [graphData])
+
+    setStatus('loading')
+    const avatarImg = new window.Image()
+    try {
+      if (!settings.avatarUrl) {
+        avatarImg.crossOrigin = 'anonymous'
+      }
+    } catch {}
+
+    avatarImg.onload = () => {
+      root.appendChild(avatarImg)
+      setStatus('loaded')
+    }
+
+    avatarImg.onerror = () => {
+      setStatus('error')
+    }
+
+    avatarImg.src = src
+    avatarImg.alt = `${graphData.login}'s avatar.`
+    avatarImg.classList.add('h-full', 'w-full')
+    init.current = true
+  }, [graphData, settings.avatarUrl, neonAvatarUrl])
 
   return (
     <span
@@ -69,6 +73,20 @@ const Avatar = () => {
 
 export function GraphHeader() {
   const { graphData, firstYear, lastYear, totalYears, totalContributions, settings } = useData()
+  const [neonMe, setNeonMe] = useState<NeonMe | null>(null)
+
+  // Fetch current user from Neon when available (silently ignore 401/404)
+  useEffect(() => {
+    const run = async () => {
+      try {
+        const res = await fetch('/api/neon/me')
+        if (!res.ok) return
+        const json = (await res.json()) as NeonMe
+        setNeonMe(json)
+      } catch {}
+    }
+    void run()
+  }, [])
 
   if (!graphData) {
     return null
@@ -149,7 +167,7 @@ export function GraphHeader() {
             aria-haspopup="dialog"
             className="flex size-20 items-center cursor-pointer rounded-full focus:outline-none focus:ring-2 focus:ring-accent-400/60"
           >
-            <Avatar />
+            <Avatar neonAvatarUrl={neonMe?.avatar_url} />
           </button>
         </RadixPopover>
       </span>
@@ -159,7 +177,7 @@ export function GraphHeader() {
           <span className="text-xl font-semibold" translate="no">
             {settings.titleOverride?.trim()
               ? settings.titleOverride.trim()
-              : (graphData.login || graphData.name)}
+              : (neonMe?.name?.trim() || graphData.login || graphData.name)}
           </span>
         </div>
 
