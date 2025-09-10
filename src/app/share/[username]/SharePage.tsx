@@ -17,7 +17,7 @@ import type { GraphSettings, Themes } from '~/types'
 export function SharePage() {
   const query = useSearchParams()
 
-  const settings = useMemo<GraphSettings | null>(() => {
+  const parsedSettings = useMemo<GraphSettings | null>(() => {
     const start = query.get('start') ?? undefined
     const end = query.get('end') ?? undefined
     const size = query.get('size') ?? undefined
@@ -57,10 +57,10 @@ export function SharePage() {
   const { run, loading, error } = useGraphRequest()
 
   useEffect(() => {
-    if (settings) {
-      dispatchSettings({ type: 'replace', payload: settings })
+    if (parsedSettings) {
+      dispatchSettings({ type: 'replace', payload: parsedSettings })
     }
-  }, [dispatchSettings, settings])
+  }, [dispatchSettings, parsedSettings])
 
   const params = useParams()
   const username = typeof params.username === 'string' ? params.username : undefined
