@@ -91,7 +91,7 @@ export interface GraphSettings {
   blockShape?: BlockShape
   theme?: Themes
   /** Display unit for totals and labels. */
-  unit?: 'contributions' | 'second' | 'minute' | 'hour' | 'meter' | 'kilometer'
+  unit?: 'contributions' | 'second' | 'minute' | 'hour' | 'day' | 'meter' | 'kilometer'
   /** Custom logo URL (data URL or external); when set, shows on header right. */
   logoUrl?: string
   /** Custom avatar URL (data URL or external); when set, overrides source avatar. */

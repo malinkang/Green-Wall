@@ -89,7 +89,7 @@ export function NotionAppearanceControls(props: {
 
         {props.children}
 
-        <div>
+        <div className="flex w-full justify-center">
           <GenerateButton loading={!!loading} type="button" onClick={onGenerate} />
         </div>
       </div>

@@ -16,6 +16,7 @@ export function UnitSelector() {
             { label: '秒', value: 'second' },
             { label: '分钟', value: 'minute' },
             { label: '小时', value: 'hour' },
+            { label: '天', value: 'day' },
             { label: '米', value: 'meter' },
             { label: '千米', value: 'kilometer' },
           ]}
