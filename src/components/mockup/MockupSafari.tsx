@@ -18,10 +18,10 @@ export function MockupSafari(props: MockupSafariProps) {
   const { graphData, settings } = useData()
 
   if (settings.showCard === false) {
-    // Hide outer card and borders, but preserve inner content background (theme background)
+    // Hide outer card and borders, but preserve inner content background and rounded corners
     return (
       <div className={`relative ${className}`}>
-        <div className="bg-[var(--theme-background)] text-[var(--theme-foreground)]">
+        <div className="overflow-hidden rounded-2xl bg-[var(--theme-background)] text-[var(--theme-foreground)]">
           {children}
         </div>
       </div>
