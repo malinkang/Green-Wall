@@ -48,6 +48,10 @@ export function ShareButton() {
         Url.searchParams.set('showAttribution', 'false')
       }
 
+      if (settings.showHeader === false) {
+        Url.searchParams.set('showHeader', 'false')
+      }
+
       // Share card visibility (default true): only include when turned off
       if (settings.showCard === false) {
         Url.searchParams.set('showCard', 'false')

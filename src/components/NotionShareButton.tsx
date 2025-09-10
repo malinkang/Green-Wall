@@ -35,6 +35,7 @@ export function NotionShareButton(props: { databaseId: string; dateProp: string;
       if (settings.theme && settings.theme !== DEFAULT_THEME) Url.searchParams.set('theme', settings.theme)
       if (settings.showSafariHeader === true) Url.searchParams.set('showSafariHeader', 'true')
       if (settings.showAttribution === false) Url.searchParams.set('showAttribution', 'false')
+      if (settings.showHeader === false) Url.searchParams.set('showHeader', 'false')
       if (settings.showCard === false) Url.searchParams.set('showCard', 'false')
       if (settings.yearOrder === 'desc') Url.searchParams.set('yearOrder', 'desc')
 

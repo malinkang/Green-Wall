@@ -34,6 +34,7 @@ export function SharePage() {
     const showAttribution = query.get('showAttribution') !== 'false'
     const showCardParam = query.get('showCard')
     const showCard = showCardParam === null ? true : showCardParam !== 'false'
+    const showHeader = query.get('showHeader') === 'false' ? false : true
     const yearOrder = (query.get('yearOrder') === 'desc' ? 'desc' : 'asc') as GraphSettings['yearOrder']
 
     return {
@@ -48,6 +49,7 @@ export function SharePage() {
       showSafariHeader,
       showAttribution,
       showCard,
+      showHeader,
       yearOrder,
     }
   }, [query])

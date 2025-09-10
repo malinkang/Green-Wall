@@ -32,6 +32,7 @@ export function NotionSharePage() {
     const showCardParam = query.get('showCard')
     const showCard = showCardParam === null ? true : showCardParam !== 'false'
     const yearOrder = (query.get('yearOrder') === 'desc' ? 'desc' : 'asc') as GraphSettings['yearOrder']
+    const showHeader = query.get('showHeader') === 'false' ? false : true
     return {
       yearRange: [start, end] as GraphSettings['yearRange'],
       size: size as GraphSize | undefined,
@@ -44,6 +45,7 @@ export function NotionSharePage() {
       showSafariHeader,
       showAttribution,
       showCard,
+      showHeader,
       yearOrder,
     }
   }, [query])
