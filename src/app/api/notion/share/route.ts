@@ -64,10 +64,10 @@ export async function GET(request: NextRequest) {
         const perYearKey = `${parsed.dp}|${parsed.cp ?? ''}|${cal.year}|${lastEditedTime ?? 'unknown'}`
         const lastEditedAt = lastEditedTime ? new Date(lastEditedTime) : null
         await neonSql`
-          INSERT INTO notion_year_cache (database_id, cache_key_year, last_edited_time, calendar_json, updated_at)
-          VALUES (${parsed.db}, ${perYearKey}, ${lastEditedAt}, ${cal as any}, NOW())
+          INSERT INTO notion_year_cache (database_id, cache_key_year, year, last_edited_time, calendar_json, updated_at)
+          VALUES (${parsed.db}, ${perYearKey}, ${cal.year}, ${lastEditedAt}, ${cal as any}, NOW())
           ON CONFLICT (database_id, cache_key_year)
-          DO UPDATE SET last_edited_time = EXCLUDED.last_edited_time, calendar_json = EXCLUDED.calendar_json, updated_at = NOW()
+          DO UPDATE SET year = EXCLUDED.year, last_edited_time = EXCLUDED.last_edited_time, calendar_json = EXCLUDED.calendar_json, updated_at = NOW()
         `
       }
       const calendars = [...cachedCalendars, ...fresh.contributionCalendars].sort((a, b) => a.year - b.year)
