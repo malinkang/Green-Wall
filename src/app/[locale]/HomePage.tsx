@@ -81,7 +81,7 @@ export function HomePage() {
   // })
 
   const loadingUsername = null
-  const error = null
+  // const error = null
   const isLoading = false
 
 
@@ -104,9 +104,9 @@ export function HomePage() {
   }
 
   const renderContent = () => {
-    if (error) {
-      return <ErrorMessage errorType={error.errorType} text={error.message} />
-    }
+    // if (error) {
+    //   return <ErrorMessage errorType={error.errorType} text={error.message} />
+    // }
 
     const showLoading = isLoading || isGlobalLoading
 
