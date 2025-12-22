@@ -71,7 +71,6 @@ export function GraphHeader() {
 
   const username = graphData.login
 
-  return (
   const { totalReadingDays, longestStreak } = (() => {
     let readingDays = 0
     let currentStreak = 0
@@ -102,6 +101,11 @@ export function GraphHeader() {
 
     return { totalReadingDays: readingDays, longestStreak: maxStreak }
   })()
+
+
+  return (
+
+
 
   return (
     <div className="flex w-full items-center">
