@@ -72,11 +72,12 @@ export function MainNav({ locale, className }: MainNavProps) {
       {/* 移动端菜单 */}
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger
-          render={(
+          render={(props) => (
             <Button
               className="md:hidden"
               size="icon-sm"
               variant="ghost"
+              {...props}
             />
           )}
         >

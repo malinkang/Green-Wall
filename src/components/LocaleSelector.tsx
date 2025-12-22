@@ -39,10 +39,11 @@ export function LocaleSelector() {
   return (
     <Menu>
       <MenuTrigger
-        render={(
+        render={(props) => (
           <Button
             size="icon"
             variant="outline"
+            {...props}
           >
             <LanguagesIcon />
           </Button>

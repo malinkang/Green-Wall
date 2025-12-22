@@ -13,6 +13,20 @@ export function numberWithCommas(num: number): string {
   return new Intl.NumberFormat('en-US').format(num)
 }
 
+/**
+ * 将秒数转换为 "xx小时xx分钟" 格式
+ */
+export function formatSecondsToDuration(seconds: number): string {
+  const h = Math.floor(seconds / 3600)
+  let m = Math.floor((seconds % 3600) / 60)
+
+  if (seconds > 0 && h === 0 && m === 0) {
+    m = 1
+  }
+
+  return `${h}小时${m}分钟`
+}
+
 function getLocalIsoDateString(date: Date): string {
   const year = date.getFullYear()
   const month = String(date.getMonth() + 1).padStart(2, '0')
@@ -139,7 +153,7 @@ export function getLongestContributionGap(
       week.days.forEach((day) => {
         const shouldIncludeDay
           = calendar.year !== currentYear
-            || day.date <= todayLocalIso
+          || day.date <= todayLocalIso
 
         if (shouldIncludeDay) {
           if (day.level === 'NONE') {
@@ -274,7 +288,7 @@ export function getValuableStatistics(
       week.days.forEach((day) => {
         const shouldIncludeDay
           = calendar.year !== currentYear
-            || day.date <= todayLocalIso
+          || day.date <= todayLocalIso
 
         if (shouldIncludeDay) {
           totalDays++

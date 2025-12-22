@@ -10,7 +10,7 @@ import { GraphTooltip } from '~/components/ContributionsGraph/GraphTooltip'
 import { GraphTooltipLabel } from '~/components/ContributionsGraph/GraphTooltipLabel'
 import { Button } from '~/components/ui/button'
 import { useData } from '~/DataContext'
-import { numberWithCommas } from '~/helpers'
+import { formatSecondsToDuration, numberWithCommas } from '~/helpers'
 import { cn } from '~/lib/utils'
 import type { ContributionCalendar, ContributionDay } from '~/types'
 
@@ -38,7 +38,7 @@ function InnerGraph(props: GraphProps) {
     ...rest
   } = props
 
-  const { username } = useData()
+  const { username, graphData } = useData()
   const t = useTranslations('graph')
   const tMonths = useTranslations('months')
   const tWeekdays = useTranslations('weekdays')
@@ -93,22 +93,24 @@ function InnerGraph(props: GraphProps) {
       <div className="mb-2 flex items-center">
         {typeof titleRender === 'function'
           ? (
-              titleRender({
-                year: calendar.year,
-                total: calendar.total,
-                isNewYear,
-              })
-            )
+            titleRender({
+              year: calendar.year,
+              total: calendar.total,
+              isNewYear,
+            })
+          )
           : (
-              <div className="text-sm tabular-nums">
-                <span className="mr-2 font-medium">{calendar.year}:</span>
-                <span className="opacity-80">
-                  {isNewYear && calendar.total === 0
-                    ? t('newYearText')
+            <div className="text-sm tabular-nums">
+              <span className="mr-2 font-medium">{calendar.year}:</span>
+              <span className="opacity-80">
+                {isNewYear && calendar.total === 0
+                  ? t('newYearText')
+                  : graphData?.usageUnit === 'seconds'
+                    ? formatSecondsToDuration(calendar.total)
                     : `${numberWithCommas(calendar.total)} ${t('contributions')}`}
-                </span>
-              </div>
-            )}
+              </span>
+            </div>
+          )}
 
         {showInspect && (
           <Button
@@ -133,11 +135,11 @@ function InnerGraph(props: GraphProps) {
         label={
           tooltipInfo
             ? (
-                <GraphTooltipLabel
-                  count={tooltipInfo.count}
-                  date={tooltipInfo.date}
-                />
-              )
+              <GraphTooltipLabel
+                count={tooltipInfo.count}
+                date={tooltipInfo.date}
+              />
+            )
             : null
         }
         refElement={refEle}

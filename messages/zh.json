@@ -37,7 +37,7 @@
     "madeBy": "由 {author} 开发"
   },
   "home": {
-    "title": "一键回顾你在 GitHub 多年来的贡献轨迹。",
+    "title": "回顾你在微信读书多年来的阅读时长。",
     "searchPlaceholder": "输入 GitHub 用户名",
     "generate": "生成贡献墙",
     "generating": "正在生成…"
@@ -50,6 +50,8 @@
     "generateYours": "我也要生成一张"
   },
   "graph": {
+    "readingDays": "阅读 {count} 天",
+    "longestStreak": "最长连续 {count} 天",
     "followers": "关注者",
     "following": "关注中",
     "commits": "共 {count} 次贡献",
@@ -284,6 +286,7 @@
     "signInWithWeRead": "微信读书登录",
     "scanQrCodeDescription": "请使用微信扫描二维码登录",
     "retry": "重试",
-    "scanWithWeChat": "请使用微信扫码登录微信读书"
+    "scanWithWeChat": "请使用微信扫码登录微信读书",
+    "logoutSuccess": "已退出登录"
   }
 }

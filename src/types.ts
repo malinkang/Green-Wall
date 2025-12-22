@@ -54,15 +54,16 @@ export interface ContributionCalendar {
 export interface GraphData extends ContributionBasic {
   contributionCalendars: ContributionCalendar[]
   statistics?: ValuableStatistics
+  usageUnit?: 'contributions' | 'seconds'
 }
 
 export type DataMode = 'public' | 'authorized'
 
 export type FallbackReason
   = | 'not_logged_in'
-    | 'username_mismatch'
-    | 'token_missing'
-    | 'token_invalid'
+  | 'username_mismatch'
+  | 'token_missing'
+  | 'token_invalid'
 
 export interface ResponseMeta {
   /** 数据获取模式 */

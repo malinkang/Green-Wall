@@ -21,7 +21,7 @@ export const AppearanceSetting = memo(function AppearanceSetting() {
   const { graphData, settings, dispatchSettings } = useData()
 
   const daysLabelId = useId()
-  const safariHeader = useId()
+
   const attributionId = useId()
 
   const handleDaysLabelChange = useEvent(
@@ -31,12 +31,7 @@ export const AppearanceSetting = memo(function AppearanceSetting() {
     },
   )
 
-  const handleSafariHeaderChange = useEvent(
-    (checked: boolean) => {
-      eventTracker.ui.settings.change('show_safari_header', checked)
-      dispatchSettings({ type: 'showSafariHeader', payload: checked })
-    },
-  )
+
 
   const handleAttributionChange = useEvent(
     (checked: boolean) => {
@@ -91,15 +86,7 @@ export const AppearanceSetting = memo(function AppearanceSetting() {
         />
       </fieldset>
 
-      <fieldset>
-        <label htmlFor={safariHeader}>{t('safariHeader')}</label>
-        <Switch
-          checked={settings.showSafariHeader}
-          defaultChecked={true}
-          id={safariHeader}
-          onCheckedChange={handleSafariHeaderChange}
-        />
-      </fieldset>
+
 
       <fieldset>
         <label htmlFor={attributionId}>{t('attribution')}</label>

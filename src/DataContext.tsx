@@ -19,6 +19,8 @@ interface SettingContextData {
   username: GitHubUsername
   graphData: GraphData | undefined
   setGraphData: Dispatch<SetStateAction<GraphData | undefined>>
+  isLoading: boolean
+  setIsLoading: Dispatch<SetStateAction<boolean>>
   settings: GraphSettings
   dispatchSettings: DispatchSettings
   firstYear: string | undefined
@@ -32,12 +34,26 @@ interface DataProviderProps extends React.PropsWithChildren {
   overrideSettings?: Partial<GraphSettings>
 }
 
-const Setting = createContext({} as SettingContextData)
+const Setting = createContext({
+  username: '',
+  graphData: undefined,
+  setGraphData: () => { },
+  isLoading: false,
+  setIsLoading: () => { },
+  settings: {} as GraphSettings,
+  dispatchSettings: () => { },
+  firstYear: undefined,
+  lastYear: undefined,
+  totalYears: undefined,
+  totalContributions: undefined,
+  applyingTheme: undefined,
+} as SettingContextData)
 
 export function DataProvider(props: DataProviderProps) {
   const { children, overrideSettings } = props
 
   const [graphData, setGraphData] = useState<GraphData>()
+  const [isLoading, setIsLoading] = useState(false)
 
   const [settings, dispatchSettings] = useGraphSetting()
 
@@ -82,6 +98,8 @@ export function DataProvider(props: DataProviderProps) {
       username: derivedValues.username,
       graphData,
       setGraphData,
+      isLoading,
+      setIsLoading,
       settings: finalSettings,
       dispatchSettings,
       firstYear: derivedValues.firstYear,
@@ -90,7 +108,7 @@ export function DataProvider(props: DataProviderProps) {
       totalContributions: derivedValues.totalContributions,
       applyingTheme,
     }),
-    [graphData, finalSettings, dispatchSettings, applyingTheme, derivedValues],
+    [graphData, finalSettings, dispatchSettings, applyingTheme, derivedValues, isLoading],
   )
 
   return (

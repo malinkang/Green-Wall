@@ -37,7 +37,7 @@ export function HomePage() {
   const settingPopoverContentId = useId()
   const graphWrapperId = useId()
 
-  const { graphData, setGraphData, dispatchSettings, settings } = useData()
+  const { graphData, setGraphData, dispatchSettings, settings, isLoading: isGlobalLoading } = useData()
 
   const {
     urlUsername,
@@ -59,28 +59,31 @@ export function HomePage() {
     handleSettingPopOut,
   } = useSettingPopup(graphWrapperId)
 
-  const {
-    searchName,
-    setSearchName,
-    isLoading,
-    error,
-    handleSubmit,
-    handleQuickSearch,
-  } = useContributionSearch({
-    urlUsername,
-    isInvalidUrlUsername,
-    setUsernameInUrl,
-    graphData,
-    setGraphData,
-    resetSettings: () => {
-      closeSettingPopup()
-      dispatchSettings({ type: 'reset' })
-    },
-    addRecentUser,
-    yearRange: settings.yearRange,
-  })
+  // const {
+  //   searchName,
+  //   setSearchName,
+  //   isLoading,
+  //   error,
+  //   handleSubmit,
+  //   handleQuickSearch,
+  // } = useContributionSearch({
+  //   urlUsername,
+  //   isInvalidUrlUsername,
+  //   setUsernameInUrl,
+  //   graphData,
+  //   setGraphData,
+  //   resetSettings: () => {
+  //     closeSettingPopup()
+  //     dispatchSettings({ type: 'reset' })
+  //   },
+  //   addRecentUser,
+  //   yearRange: settings.yearRange,
+  // })
 
-  const loadingUsername = isLoading ? urlUsername : null
+  const loadingUsername = null
+  const error = null
+  const isLoading = false
+
 
   const handleRemoveRecentUser = (login: string) => {
     removeRecentUser(login)
@@ -105,9 +108,11 @@ export function HomePage() {
       return <ErrorMessage errorType={error.errorType} text={error.message} />
     }
 
-    if (isLoading || graphData) {
+    const showLoading = isLoading || isGlobalLoading
+
+    if (showLoading || graphData) {
       return (
-        <Loading active={isLoading}>
+        <Loading active={showLoading}>
           {graphData && (
             <>
               <div
@@ -146,7 +151,7 @@ export function HomePage() {
             isLoading={isLoading}
             loadingLogin={loadingUsername}
             onSelect={(login) => {
-              handleQuickSearch(login, 'famous_user')
+              // handleQuickSearch(login, 'famous_user')
             }}
           />
         </div>
@@ -162,18 +167,7 @@ export function HomePage() {
         {t('title')}
       </h1>
 
-      <SearchForm
-        isLoading={isLoading}
-        loadingLogin={loadingUsername}
-        recentUsers={recentUsers}
-        value={searchName}
-        onChange={setSearchName}
-        onRemoveUser={handleRemoveRecentUser}
-        onSelectUser={(login) => {
-          handleQuickSearch(login, 'recent_user')
-        }}
-        onSubmit={handleSubmit}
-      />
+
 
       {renderContent()}
     </div>

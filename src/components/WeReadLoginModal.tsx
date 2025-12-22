@@ -1,6 +1,6 @@
 'use client'
 
-import { type ReactElement, useState, useEffect } from 'react'
+import { type ReactElement, useState, useEffect, cloneElement } from 'react'
 import { useTranslations } from 'next-intl'
 import { Loader2 } from 'lucide-react'
 import { Button } from '~/components/ui/button'
@@ -109,7 +109,7 @@ export function WeReadLoginModal({ children, onLoginSuccess }: WeReadLoginModalP
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger render={children} />
+            <DialogTrigger render={(props) => cloneElement(children, props as any)} />
             <DialogContent className="sm:max-w-[425px]">
                 <div className="sr-only">
                     <DialogTitle>{t('signInWithWeRead')}</DialogTitle>

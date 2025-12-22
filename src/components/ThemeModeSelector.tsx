@@ -61,7 +61,7 @@ export function ThemeModeSelector() {
   const currentTheme = (theme ?? DEFAULT_THEME_MODE) as ThemeMode
   const currentMode
     = modes.find((mode) => mode.value === currentTheme)
-      ?? modes.find((mode) => mode.value === DEFAULT_THEME_MODE)!
+    ?? modes.find((mode) => mode.value === DEFAULT_THEME_MODE)!
   const CurrentIcon = currentMode.icon
 
   const handleThemeChange = (value: string) => {
@@ -71,10 +71,11 @@ export function ThemeModeSelector() {
   return (
     <Menu>
       <MenuTrigger
-        render={(
+        render={(props) => (
           <Button
             size="icon"
             variant="outline"
+            {...props}
           >
             <CurrentIcon />
           </Button>

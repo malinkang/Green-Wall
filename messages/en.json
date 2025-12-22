@@ -37,7 +37,7 @@
     "madeBy": "Made by {author}"
   },
   "home": {
-    "title": "Review the contributions you have made on GitHub over the years.",
+    "title": "Review your WeRead reading time over the years.",
     "searchPlaceholder": "GitHub Username",
     "generate": "Generate",
     "generating": "Generating..."
@@ -50,6 +50,8 @@
     "generateYours": "Generate Yours"
   },
   "graph": {
+    "readingDays": "Read {count} Days",
+    "longestStreak": "Longest Streak {count} Days",
     "followers": "followers",
     "following": "following",
     "commits": "{count} Commits",
@@ -284,6 +286,7 @@
     "signInWithWeRead": "Sign in with WeRead",
     "scanQrCodeDescription": "Scan the QR code with your WeChat app to log in.",
     "retry": "Retry",
-    "scanWithWeChat": "Use WeChat to scan the QR code"
+    "scanWithWeChat": "Use WeChat to scan the QR code",
+    "logoutSuccess": "Logged out successfully"
   }
 }

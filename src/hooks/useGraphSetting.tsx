@@ -50,7 +50,7 @@ const initialState: State = {
   blockShape: DEFAULT_BLOCK_SHAPE,
   daysLabel: false,
   showAttribution: true,
-  showSafariHeader: true,
+  showSafariHeader: false,
 }
 
 export function useGraphSetting() {

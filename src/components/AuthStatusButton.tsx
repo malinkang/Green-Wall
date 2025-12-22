@@ -4,10 +4,12 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useTranslations, useLocale } from 'next-intl'
 import { toastManager } from '~/components/ui/toast'
-import { WeReadUser, CheckScanLoginResult } from '~/services/weread-auth'
+import { WeReadUser, CheckScanLoginResult, fetchWeReadSummary } from '~/services/weread-auth'
+import { transformWeReadDataToGraphData } from '~/services/weread-transformer'
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
 import { Button } from '~/components/ui/button'
 import { CalendarIcon, LogInIcon, LogOutIcon } from 'lucide-react'
+import { useData } from '~/DataContext'
 
 import { LoginBenefitsPopoverContent } from '~/components/LoginBenefitsPopoverContent'
 import { WeReadLoginModal } from '~/components/WeReadLoginModal'
@@ -47,12 +49,53 @@ export function AuthStatusButton() {
   // We'll prioritize WeRead login if active
   const [weReadUser, setWeReadUser] = useState<WeReadUser | null>(null)
 
+  const { setGraphData, setIsLoading } = useData()
+
+  // Function to load WeRead data
+  const loadWeReadData = async (user: WeReadUser, accessToken: string, vid: number) => {
+    try {
+      console.log("Loading WeRead data...")
+      setIsLoading(true)
+      const storedRefreshToken = localStorage.getItem('weread_refresh_token') || ""
+
+      // For now, let's use a deviceId filler and try fetch
+      const summary = await fetchWeReadSummary({
+        vid,
+        accessToken,
+        refreshToken: storedRefreshToken,
+        deviceId: "web_device"
+      })
+
+      console.log("WeRead Summary:", summary)
+
+      if (summary) {
+        const graphData = transformWeReadDataToGraphData(summary, user.name || "WeRead User", user.avatar || "")
+        setGraphData(graphData)
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          ; (toastManager as any).add({ title: "WeRead Data Loaded", type: 'success' })
+      }
+
+    } catch (e) {
+      console.error("Failed to load WeRead data", e)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ; (toastManager as any).add({ title: "Failed to load reading data", type: 'error' })
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   useEffect(() => {
     // Load from local storage
     const stored = localStorage.getItem('weread_user')
-    if (stored) {
+    const storedToken = localStorage.getItem('weread_token')
+    const storedVid = localStorage.getItem('weread_vid')
+
+    if (stored && storedToken && storedVid) {
       try {
-        setWeReadUser(JSON.parse(stored))
+        const user = JSON.parse(stored)
+        setWeReadUser(user)
+        // Auto load data on mount if logged in
+        loadWeReadData(user, storedToken, Number(storedVid))
       } catch (e) {
         console.error("Failed to parse stored user", e)
       }
@@ -66,25 +109,33 @@ export function AuthStatusButton() {
       // Also store tokens if needed for creating heatmaps later?
       if (result.accessToken) localStorage.setItem('weread_token', result.accessToken);
       if (result.vid) localStorage.setItem('weread_vid', String(result.vid));
+      if (result.refreshToken) localStorage.setItem('weread_refresh_token', result.refreshToken); // Store refresh token
 
       // Assuming toastManager.add takes a single object argument based on linter feedback
       // and checking toast.tsx implying toast has a 'type' property.
       // We cast if necessary or just pass the object.
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (toastManager as any).add({
+      ; (toastManager as any).add({
         title: t('loginSuccess') || "Login Successful",
         type: 'success'
       })
+
+      // Load data immediately
+      if (result.accessToken && result.vid) {
+        loadWeReadData(result.user, result.accessToken, result.vid)
+      }
     }
   }
 
   const handleWeReadLogout = () => {
     setWeReadUser(null);
+    setGraphData(undefined); // Clear graph data
     localStorage.removeItem('weread_user');
     localStorage.removeItem('weread_token');
     localStorage.removeItem('weread_vid');
+    localStorage.removeItem('weread_refresh_token');
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (toastManager as any).add({
+    ; (toastManager as any).add({
       title: t('logoutSuccess') || "Logged out",
       type: 'success'
     })

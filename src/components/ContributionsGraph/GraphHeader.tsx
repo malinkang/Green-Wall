@@ -2,11 +2,12 @@ import { useEffect, useState } from 'react'
 
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
-import { AtSignIcon, DotIcon, UserIcon } from 'lucide-react'
+import { AtSignIcon, BookOpenIcon, DotIcon, FlameIcon } from 'lucide-react'
+
 
 import { useData } from '~/DataContext'
 import { GraphSize } from '~/enums'
-import { numberWithCommas } from '~/helpers'
+import { formatSecondsToDuration, numberWithCommas } from '~/helpers'
 import { cn } from '~/lib/utils'
 
 const GitHubIcon = () => {
@@ -71,6 +72,38 @@ export function GraphHeader() {
   const username = graphData.login
 
   return (
+  const { totalReadingDays, longestStreak } = (() => {
+    let readingDays = 0
+    let currentStreak = 0
+    let maxStreak = 0
+
+    // Flatten all days from all calendars within range
+    const allDays = graphData.contributionCalendars
+      .filter(calendar => {
+        if (!settings.yearRange) return true
+        const [start, end] = settings.yearRange
+        const year = calendar.year
+        if (start && end) return year >= Number(start) && year <= Number(end)
+        return true
+      })
+      .flatMap(c => c.weeks)
+      .flatMap(w => w.contributionDays)
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+
+    for (const day of allDays) {
+      if (day.contributionCount > 0) {
+        readingDays++
+        currentStreak++
+        maxStreak = Math.max(maxStreak, currentStreak)
+      } else {
+        currentStreak = 0
+      }
+    }
+
+    return { totalReadingDays: readingDays, longestStreak: maxStreak }
+  })()
+
+  return (
     <div className="flex w-full items-center">
       <Link
         className="mr-4 flex shrink-0 items-center"
@@ -100,18 +133,18 @@ export function GraphHeader() {
           <DotIcon className="size-5" />
 
           <span className="flex items-center gap-1 whitespace-nowrap">
-            <UserIcon className="size-4" />
-            <span>{numberWithCommas(graphData.followers.totalCount)}</span>
-            <span className="opacity-70">{t('followers')}</span>
+            <BookOpenIcon className="size-4" />
+            <span>{t('readingDays', { count: numberWithCommas(totalReadingDays) })}</span>
           </span>
 
           <DotIcon className="size-5" />
 
           <span className="flex items-center gap-1 whitespace-nowrap">
-            <span>{numberWithCommas(graphData.following.totalCount)}</span>
-            <span className="opacity-70">{t('following')}</span>
+            <FlameIcon className="size-4" />
+            <span>{t('longestStreak', { count: numberWithCommas(longestStreak) })}</span>
           </span>
         </div>
+
 
         {!!graphData.bio && (
           <div
@@ -134,7 +167,9 @@ export function GraphHeader() {
 
         <span className="opacity-70">
           {typeof totalContributions === 'number'
-            ? t('commits', { count: numberWithCommas(totalContributions) })
+            ? graphData.usageUnit === 'seconds'
+              ? formatSecondsToDuration(totalContributions)
+              : t('commits', { count: numberWithCommas(totalContributions) })
             : '-'}
         </span>
 

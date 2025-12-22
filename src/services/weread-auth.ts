@@ -85,3 +85,31 @@ export async function checkScanAndLogin(
 
     return responseData as CheckScanLoginResult;
 }
+
+export interface WeReadSummaryParams {
+    vid: number
+    accessToken: string
+    deviceId?: string // Optional, can use default or generated
+    refreshToken: string
+}
+
+export async function fetchWeReadSummary(params: WeReadSummaryParams) {
+    try {
+        const response = await fetch('/api/auth/weread/summary', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(params),
+        })
+
+        if (!response.ok) {
+            throw new Error(`Summary fetch failed: ${response.status}`)
+        }
+
+        return await response.json()
+    } catch (error) {
+        console.error("fetchWeReadSummary error:", error)
+        throw error
+    }
+}
