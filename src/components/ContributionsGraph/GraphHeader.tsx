@@ -104,10 +104,6 @@ export function GraphHeader() {
 
 
   return (
-
-
-
-  return (
     <div className="flex w-full items-center">
       <Link
         className="mr-4 flex shrink-0 items-center"
