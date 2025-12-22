@@ -31,7 +31,13 @@ export function useImageExport(
       try {
         setIsDownloading(true)
 
-        const dataURL = await toPng(graphRef.current)
+        const dataURL = await toPng(graphRef.current, {
+          cacheBust: true,
+          skipOnError: true,
+          style: {
+            backgroundColor: settings.theme?.toLowerCase() === 'greenwall' ? '#060606' : undefined,
+          },
+        })
         const trigger = document.createElement('a')
         trigger.href = dataURL
         trigger.download = options?.filename ?? `${username}_contributions`
@@ -46,6 +52,7 @@ export function useImageExport(
         )
       }
       catch (err) {
+        console.error('Download failed:', err)
         if (err instanceof Error) {
           eventTracker.image.download.error(err.message, context)
         }
@@ -73,7 +80,13 @@ export function useImageExport(
               throw new Error()
             }
 
-            const blobData = await toBlob(graphRef.current)
+            const blobData = await toBlob(graphRef.current, {
+              cacheBust: true,
+              skipOnError: true,
+              style: {
+                backgroundColor: settings.theme?.toLowerCase() === 'greenwall' ? '#060606' : undefined,
+              },
+            })
 
             if (!blobData) {
               throw new Error()
@@ -99,6 +112,8 @@ export function useImageExport(
         }, 2000)
       }
       catch (err) {
+        console.error('Copy failed:', err)
+
         if (err instanceof Error) {
           eventTracker.image.copy.error(err.message, context)
         }
