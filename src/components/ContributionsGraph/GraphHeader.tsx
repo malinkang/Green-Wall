@@ -86,7 +86,7 @@ export function GraphHeader() {
         return true
       })
       .flatMap(c => c.weeks)
-      .flatMap(w => w.contributionDays)
+      .flatMap(w => w.days)
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
 
     for (const day of allDays) {
