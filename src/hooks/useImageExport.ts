@@ -33,7 +33,6 @@ export function useImageExport(
 
         const dataURL = await toPng(graphRef.current, {
           cacheBust: true,
-          skipOnError: true,
           style: {
             backgroundColor: settings.theme?.toLowerCase() === 'greenwall' ? '#060606' : undefined,
           },
@@ -82,7 +81,6 @@ export function useImageExport(
 
             const blobData = await toBlob(graphRef.current, {
               cacheBust: true,
-              skipOnError: true,
               style: {
                 backgroundColor: settings.theme?.toLowerCase() === 'greenwall' ? '#060606' : undefined,
               },
