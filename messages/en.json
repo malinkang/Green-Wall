@@ -280,6 +280,10 @@
     "signInBenefitsItemYearWrapped": "Open your Year Wrapped and deeper stats",
     "signInBenefitsItemPrivateContrib": "Include private contributions (authorized mode)",
     "signInBenefitsItemDeeperInsights": "Get more accurate language/repo/issue insights",
-    "signInBenefitsFooter": "We only read your contribution data. We can’t modify your repositories."
+    "signInBenefitsFooter": "We only read your contribution data. We can’t modify your repositories.",
+    "signInWithWeRead": "Sign in with WeRead",
+    "scanQrCodeDescription": "Scan the QR code with your WeChat app to log in.",
+    "retry": "Retry",
+    "scanWithWeChat": "Use WeChat to scan the QR code"
   }
 }

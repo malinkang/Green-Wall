@@ -1,11 +1,16 @@
 'use client'
 
-import { useTranslations } from 'next-intl'
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
+import { useTranslations, useLocale } from 'next-intl'
+import { toastManager } from '~/components/ui/toast'
+import { WeReadUser, CheckScanLoginResult } from '~/services/weread-auth'
+import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
+import { Button } from '~/components/ui/button'
 import { CalendarIcon, LogInIcon, LogOutIcon } from 'lucide-react'
 
 import { LoginBenefitsPopoverContent } from '~/components/LoginBenefitsPopoverContent'
-import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
-import { Button } from '~/components/ui/button'
+import { WeReadLoginModal } from '~/components/WeReadLoginModal'
 import {
   Menu,
   MenuItem,
@@ -34,8 +39,91 @@ interface ExtendedUser {
 export function AuthStatusButton() {
   const { data: session, isPending } = useSession()
   const t = useTranslations('auth')
+  const locale = useLocale()
   const currentYear = getCurrentYear()
   const callbackURL = useCurrentPathWithSearch()
+
+  /* Existing session logic can remain or be conditionally rendered */
+  // We'll prioritize WeRead login if active
+  const [weReadUser, setWeReadUser] = useState<WeReadUser | null>(null)
+
+  useEffect(() => {
+    // Load from local storage
+    const stored = localStorage.getItem('weread_user')
+    if (stored) {
+      try {
+        setWeReadUser(JSON.parse(stored))
+      } catch (e) {
+        console.error("Failed to parse stored user", e)
+      }
+    }
+  }, [])
+
+  const handleLoginSuccess = (result: CheckScanLoginResult) => {
+    if (result.user) {
+      setWeReadUser(result.user)
+      localStorage.setItem('weread_user', JSON.stringify(result.user))
+      // Also store tokens if needed for creating heatmaps later?
+      if (result.accessToken) localStorage.setItem('weread_token', result.accessToken);
+      if (result.vid) localStorage.setItem('weread_vid', String(result.vid));
+
+      // Assuming toastManager.add takes a single object argument based on linter feedback
+      // and checking toast.tsx implying toast has a 'type' property.
+      // We cast if necessary or just pass the object.
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (toastManager as any).add({
+        title: t('loginSuccess') || "Login Successful",
+        type: 'success'
+      })
+    }
+  }
+
+  const handleWeReadLogout = () => {
+    setWeReadUser(null);
+    localStorage.removeItem('weread_user');
+    localStorage.removeItem('weread_token');
+    localStorage.removeItem('weread_vid');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (toastManager as any).add({
+      title: t('logoutSuccess') || "Logged out",
+      type: 'success'
+    })
+  }
+
+  // If WeRead user is logged in, show that
+  if (weReadUser) {
+    return (
+      <Menu>
+        <MenuTrigger
+          render={(props) => (
+            <button
+              type="button"
+              {...props}
+              className="flex items-center rounded-full p-1 bg-foreground/10 overflow-hidden"
+            >
+              <Avatar className="size-8">
+                <AvatarImage src={weReadUser.avatar} alt={weReadUser.name} />
+                <AvatarFallback>{weReadUser.name?.[0] || 'W'}</AvatarFallback>
+              </Avatar>
+            </button>
+          )}
+        />
+
+        <MenuPopup className="min-w-32">
+          <div className="px-1 text-sm">
+            <div className="font-medium">{weReadUser.name}</div>
+          </div>
+
+          <MenuSeparator />
+
+          <MenuItem onClick={handleWeReadLogout}>
+            <LogOutIcon />
+            {t('signOut')}
+          </MenuItem>
+        </MenuPopup>
+      </Menu>
+    )
+  }
 
   if (isPending) {
     return (
@@ -115,37 +203,18 @@ export function AuthStatusButton() {
 
   // 未登录状态
   return (
-    <Popover>
-      <PopoverTrigger
-        openOnHover
-        closeDelay={100}
-        delay={100}
-        render={(triggerProps) => (
-          <Button
-            {...triggerProps}
-            variant="outline"
-            onClick={(event) => {
-              const e = event as React.MouseEvent<HTMLElement> & {
-                preventBaseUIHandler?: () => void
-              }
-              e.preventBaseUIHandler?.()
-              handleSignIn()
-            }}
-          >
-            <LogInIcon />
-            <span className="hidden sm:inline">{t('signIn')}</span>
-          </Button>
-        )}
-      />
-
-      <PopoverContent
-        align="end"
-        className="w-[min(92vw,340px)]"
-        side="bottom"
-        sideOffset={8}
-      >
-        <LoginBenefitsPopoverContent />
-      </PopoverContent>
-    </Popover>
+    <div className="flex items-center gap-2">
+      <Link href={`/${locale}/year`} prefetch={false}>
+        <Button variant="ghost" size="icon">
+          <CalendarIcon />
+        </Button>
+      </Link>
+      <WeReadLoginModal onLoginSuccess={handleLoginSuccess}>
+        <Button variant="outline">
+          <LogInIcon className="mr-2 h-4 w-4" />
+          <span className="hidden sm:inline">{t('signInWithWeRead')}</span>
+        </Button>
+      </WeReadLoginModal>
+    </div>
   )
 }

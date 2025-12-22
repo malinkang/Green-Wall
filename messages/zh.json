@@ -280,6 +280,10 @@
     "signInBenefitsItemYearWrapped": "一键打开你的年度回顾与更完整的统计",
     "signInBenefitsItemPrivateContrib": "包含私有仓库贡献（授权模式）",
     "signInBenefitsItemDeeperInsights": "获取更准确的语言 / 仓库 / Issues 数据分析",
-    "signInBenefitsFooter": "我们只读取你的贡献数据，不会修改你的仓库。"
+    "signInBenefitsFooter": "我们仅读取您的贡献数据，无法修改您的仓库。",
+    "signInWithWeRead": "微信读书登录",
+    "scanQrCodeDescription": "请使用微信扫描二维码登录",
+    "retry": "重试",
+    "scanWithWeChat": "请使用微信扫码登录微信读书"
   }
 }
