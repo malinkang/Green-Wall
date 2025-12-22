@@ -90,6 +90,9 @@ export function GraphHeader() {
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
 
     for (const day of allDays) {
+      if (!day) {
+        continue
+      }
       if (day.contributionCount > 0) {
         readingDays++
         currentStreak++
