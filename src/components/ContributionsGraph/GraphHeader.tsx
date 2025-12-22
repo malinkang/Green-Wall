@@ -93,7 +93,7 @@ export function GraphHeader() {
       if (!day) {
         continue
       }
-      if (day.contributionCount > 0) {
+      if (day.count > 0) {
         readingDays++
         currentStreak++
         maxStreak = Math.max(maxStreak, currentStreak)
