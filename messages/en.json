@@ -52,6 +52,7 @@
   "graph": {
     "readingDays": "Read {count} Days",
     "longestStreak": "Longest Streak {count} Days",
+    "readingRecord": "'s WeRead Record",
     "followers": "followers",
     "following": "following",
     "commits": "{count} Commits",

@@ -131,10 +131,11 @@ export function GraphHeader() {
           <span className="flex items-center" translate="no">
             <AtSignIcon className="mr-px size-[13px]" />
             {graphData.login}
+            <span className="ml-1 opacity-70">{t('readingRecord')}</span>
           </span>
+        </div>
 
-          <DotIcon className="size-5" />
-
+        <div className="flex items-center gap-y-1 text-sm">
           <span className="flex items-center gap-1 whitespace-nowrap">
             <BookOpenIcon className="size-4" />
             <span>{t('readingDays', { count: numberWithCommas(totalReadingDays) })}</span>

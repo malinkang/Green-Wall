@@ -52,6 +52,7 @@
   "graph": {
     "readingDays": "阅读 {count} 天",
     "longestStreak": "最长连续 {count} 天",
+    "readingRecord": "的微信读书阅读记录",
     "followers": "关注者",
     "following": "关注中",
     "commits": "共 {count} 次贡献",
