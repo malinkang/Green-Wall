@@ -66,6 +66,10 @@
     "madeIn": "生成于",
     "loadingContributions": "正在拉取贡献数据…",
     "saveAsImage": "保存图片",
+    "downloadSuccess": "保存成功",
+    "downloadFailed": "保存失败",
+    "copySuccess": "复制成功",
+    "copyFailed": "复制失败",
     "copyAsImage": "复制图片",
     "copiedAsImage": "图片已复制",
     "inspect": "查看详情"

@@ -52,6 +52,7 @@ const Avatar = () => {
           onLoad={() => {
             setStatus('loaded')
           }}
+          crossOrigin="anonymous"
         />
       )}
       {status === 'error' && (

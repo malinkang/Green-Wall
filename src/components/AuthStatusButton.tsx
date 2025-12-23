@@ -52,18 +52,17 @@ export function AuthStatusButton() {
   const { setGraphData, setIsLoading } = useData()
 
   // Function to load WeRead data
-  const loadWeReadData = async (user: WeReadUser, accessToken: string, vid: number) => {
+  const loadWeReadData = async (user: WeReadUser, accessToken: string, vid: number, deviceId: string) => {
     try {
       console.log("Loading WeRead data...")
       setIsLoading(true)
       const storedRefreshToken = localStorage.getItem('weread_refresh_token') || ""
 
-      // For now, let's use a deviceId filler and try fetch
       const summary = await fetchWeReadSummary({
         vid,
         accessToken,
         refreshToken: storedRefreshToken,
-        deviceId: "web_device"
+        deviceId: deviceId || "web_device"
       })
 
       console.log("WeRead Summary:", summary)
@@ -89,13 +88,14 @@ export function AuthStatusButton() {
     const stored = localStorage.getItem('weread_user')
     const storedToken = localStorage.getItem('weread_token')
     const storedVid = localStorage.getItem('weread_vid')
+    const storedDeviceId = localStorage.getItem('weread_device_id')
 
     if (stored && storedToken && storedVid) {
       try {
         const user = JSON.parse(stored)
         setWeReadUser(user)
         // Auto load data on mount if logged in
-        loadWeReadData(user, storedToken, Number(storedVid))
+        loadWeReadData(user, storedToken, Number(storedVid), storedDeviceId || "web_device")
       } catch (e) {
         console.error("Failed to parse stored user", e)
       }
@@ -110,6 +110,7 @@ export function AuthStatusButton() {
       if (result.accessToken) localStorage.setItem('weread_token', result.accessToken);
       if (result.vid) localStorage.setItem('weread_vid', String(result.vid));
       if (result.refreshToken) localStorage.setItem('weread_refresh_token', result.refreshToken); // Store refresh token
+      if (result.generatedDeviceId) localStorage.setItem('weread_device_id', result.generatedDeviceId);
 
       // Assuming toastManager.add takes a single object argument based on linter feedback
       // and checking toast.tsx implying toast has a 'type' property.
@@ -122,7 +123,7 @@ export function AuthStatusButton() {
 
       // Load data immediately
       if (result.accessToken && result.vid) {
-        loadWeReadData(result.user, result.accessToken, result.vid)
+        loadWeReadData(result.user, result.accessToken, result.vid, result.generatedDeviceId || "web_device")
       }
     }
   }
@@ -134,6 +135,7 @@ export function AuthStatusButton() {
     localStorage.removeItem('weread_token');
     localStorage.removeItem('weread_vid');
     localStorage.removeItem('weread_refresh_token');
+    localStorage.removeItem('weread_device_id');
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ; (toastManager as any).add({
       title: t('logoutSuccess') || "Logged out",

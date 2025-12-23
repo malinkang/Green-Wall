@@ -1,9 +1,11 @@
 'use client'
 
 import { type RefObject, useState } from 'react'
+import { useTranslations } from 'next-intl'
 
 import { toBlob, toPng } from 'html-to-image'
 
+import { toastManager } from '~/components/ui/toast'
 import { eventTracker } from '~/lib/analytics'
 import type { GraphSettings } from '~/types'
 
@@ -18,6 +20,7 @@ export function useImageExport(
   options?: UseImageExportOptions & { context?: 'home' | 'year_report' },
 ) {
   const context = options?.context ?? 'home'
+  const t = useTranslations('graph')
   const canUseClipboardItem = typeof ClipboardItem !== 'undefined'
 
   const [isDownloading, setIsDownloading] = useState(false)
@@ -39,7 +42,7 @@ export function useImageExport(
         })
         const trigger = document.createElement('a')
         trigger.href = dataURL
-        trigger.download = options?.filename ?? `${username}_contributions`
+        trigger.download = options?.filename ?? `${username}_weread`
         trigger.click()
 
         eventTracker.image.download.success(
@@ -49,12 +52,21 @@ export function useImageExport(
           settings.showAttribution ?? false,
           context,
         )
+
+        toastManager.add({
+          title: t('downloadSuccess'),
+          type: 'success',
+        })
       }
       catch (err) {
         console.error('Download failed:', err)
         if (err instanceof Error) {
           eventTracker.image.download.error(err.message, context)
         }
+        toastManager.add({
+          title: t('downloadFailed'),
+          type: 'error',
+        })
       }
       finally {
         setTimeout(() => {
@@ -104,6 +116,10 @@ export function useImageExport(
         )
 
         setCopySuccess(true)
+        toastManager.add({
+          title: t('copySuccess'),
+          type: 'success',
+        })
 
         setTimeout(() => {
           setCopySuccess(false)
@@ -115,6 +131,10 @@ export function useImageExport(
         if (err instanceof Error) {
           eventTracker.image.copy.error(err.message, context)
         }
+        toastManager.add({
+          title: t('copyFailed'),
+          type: 'error',
+        })
       }
       finally {
         setIsCopying(false)

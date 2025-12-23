@@ -66,6 +66,10 @@
     "madeIn": "Made in -",
     "loadingContributions": "Loading contributions...",
     "saveAsImage": "Save as Image",
+    "downloadSuccess": "Download successful",
+    "downloadFailed": "Download failed",
+    "copySuccess": "Copied successfully",
+    "copyFailed": "Copy failed",
     "copyAsImage": "Copy as Image",
     "copiedAsImage": "Copied as Image",
     "inspect": "Inspect"

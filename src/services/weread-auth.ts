@@ -57,6 +57,7 @@ export interface CheckScanLoginResult {
     accessToken?: string
     refreshToken?: string
     openId?: string
+    generatedDeviceId?: string
     user?: WeReadUser
     [key: string]: unknown
 }
