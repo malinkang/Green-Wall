@@ -88,15 +88,7 @@ export const AppearanceSetting = memo(function AppearanceSetting() {
 
 
 
-      <fieldset>
-        <label htmlFor={attributionId}>{t('attribution')}</label>
-        <Switch
-          checked={settings.showAttribution}
-          defaultChecked={true}
-          id={attributionId}
-          onCheckedChange={handleAttributionChange}
-        />
-      </fieldset>
+
 
       <fieldset>
         <label className="flex items-center">

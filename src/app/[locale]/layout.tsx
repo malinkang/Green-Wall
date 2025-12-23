@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -67,7 +68,9 @@ export default async function LocaleLayout({ children, params }: Props) {
                       {/* <GitHubButton /> */}
                       <LocaleSelector />
                       <ThemeModeSelector />
-                      <AuthStatusButton />
+                      <Suspense fallback={null}>
+                        <AuthStatusButton />
+                      </Suspense>
                     </div>
                   </div>
                 </header>

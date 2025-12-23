@@ -19,6 +19,38 @@ const nextConfig: NextConfig = {
    * These headers are crucial for enhancing the site's security and protecting against
    * common web threats.
    */
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'avatars.githubusercontent.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.notionhub.app',
+      },
+      {
+        protocol: 'https',
+        hostname: 'thirdwx.qlogo.cn',
+      },
+      {
+        protocol: 'http',
+        hostname: 'thirdwx.qlogo.cn',
+      },
+      {
+        protocol: 'https',
+        hostname: 'res.wx.qq.com', // fallback for some wx images
+      },
+      {
+        protocol: 'https',
+        hostname: 'res.weread.qq.com',
+      },
+      {
+        protocol: 'http',
+        hostname: 'res.weread.qq.com',
+      },
+    ],
+  },
   // eslint-disable-next-line @typescript-eslint/require-await
   async headers() {
     return [{ source: '/(.*)', headers: createSecureHeaders() }]

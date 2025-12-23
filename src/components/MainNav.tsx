@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -29,6 +29,11 @@ export function MainNav({ locale, className }: MainNavProps) {
   const pathname = usePathname()
   const t = useTranslations('nav')
   const [open, setOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const navItems = [
     {
@@ -70,55 +75,58 @@ export function MainNav({ locale, className }: MainNavProps) {
       </nav>
 
       {/* 移动端菜单 */}
-      <Sheet open={open} onOpenChange={setOpen}>
-        <SheetTrigger
-          render={(props) => (
-            <Button
-              className="md:hidden"
-              size="icon-sm"
-              variant="ghost"
-              {...props}
-            />
-          )}
-        >
-          <MenuIcon className="size-5" />
-          <span className="sr-only">Toggle menu</span>
-        </SheetTrigger>
+      {/* 移动端菜单 */}
+      {mounted && (
+        <Sheet open={open} onOpenChange={setOpen}>
+          <SheetTrigger
+            render={(props) => (
+              <Button
+                className="md:hidden"
+                size="icon-sm"
+                variant="ghost"
+                {...props}
+              />
+            )}
+          >
+            <MenuIcon className="size-5" />
+            <span className="sr-only">Toggle menu</span>
+          </SheetTrigger>
 
-        <SheetPopup side="left">
-          <SheetHeader>
-            <SheetTitle>{t('home')}</SheetTitle>
-            <SheetDescription className="sr-only">
-              Navigation menu
-            </SheetDescription>
-          </SheetHeader>
+          <SheetPopup side="left">
+            <SheetHeader>
+              <SheetTitle>{t('home')}</SheetTitle>
+              <SheetDescription className="sr-only">
+                Navigation menu
+              </SheetDescription>
+            </SheetHeader>
 
-          <nav className="flex flex-col gap-2 p-6">
-            {navItems.map((item) => (
-              <SheetClose
-                key={item.href}
-                render={(
-                  <Link
-                    className={cn(
-                      'flex items-center rounded-md px-4 py-3 text-base font-medium transition-colors',
-                      'hover:bg-muted hover:text-muted-foreground',
-                      item.isActive
-                        ? 'bg-muted text-muted-foreground'
-                        : 'text-muted-foreground',
-                    )}
-                    href={item.href}
-                    onClick={() => {
-                      eventTracker.nav.click(item.label, 'mobile_nav')
-                    }}
-                  />
-                )}
-              >
-                {item.label}
-              </SheetClose>
-            ))}
-          </nav>
-        </SheetPopup>
-      </Sheet>
+            <nav className="flex flex-col gap-2 p-6">
+              {navItems.map((item) => (
+                <SheetClose
+                  key={item.href}
+                  render={(
+                    <Link
+                      className={cn(
+                        'flex items-center rounded-md px-4 py-3 text-base font-medium transition-colors',
+                        'hover:bg-muted hover:text-muted-foreground',
+                        item.isActive
+                          ? 'bg-muted text-muted-foreground'
+                          : 'text-muted-foreground',
+                      )}
+                      href={item.href}
+                      onClick={() => {
+                        eventTracker.nav.click(item.label, 'mobile_nav')
+                      }}
+                    />
+                  )}
+                >
+                  {item.label}
+                </SheetClose>
+              ))}
+            </nav>
+          </SheetPopup>
+        </Sheet>
+      )}
     </>
   )
 }
