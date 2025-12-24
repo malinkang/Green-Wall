@@ -2,7 +2,7 @@ import { memo, useEffect, useRef, useState } from 'react'
 import { useEvent } from 'react-use-event-hook'
 
 import Link from 'next/link'
-import { useTranslations } from 'next-intl'
+import { useTranslations, useLocale } from 'next-intl'
 import { ChevronRight } from 'lucide-react'
 
 import { GraphSvgBlocks } from '~/components/ContributionsGraph/GraphSvgBlocks'
@@ -42,6 +42,7 @@ function InnerGraph(props: GraphProps) {
 
   const { username, graphData } = useData()
   const t = useTranslations('graph')
+  const locale = useLocale()
   const tMonths = useTranslations('months')
   const tWeekdays = useTranslations('weekdays')
 
@@ -119,8 +120,7 @@ function InnerGraph(props: GraphProps) {
             className="group/inspect ml-auto transition-all opacity-0 group-hover:opacity-60 hover:opacity-100"
             render={(props) => (
               <Link
-                href={`/year/${calendar.year}/${username}`}
-                target="_blank"
+                href={`/${locale}/report/${calendar.year}`}
                 {...props}
               />
             )}
