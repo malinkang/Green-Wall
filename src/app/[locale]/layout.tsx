@@ -87,7 +87,7 @@ export default async function LocaleLayout({ children, params }: Props) {
                     由CarveTime开发 ❤️
                   </Link>
 
-                  <span className="mx-2 font-medium md:mx-3">·</span>
+                  {/*                   <span className="mx-2 font-medium md:mx-3">·</span> */}
                   {/* 
                   <Link className="transition-colors hover:text-foreground" href={`/${locale}/about`}>
                     {tNav('about')}

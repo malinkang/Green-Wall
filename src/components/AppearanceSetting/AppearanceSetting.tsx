@@ -15,7 +15,13 @@ import type { Themes } from '~/types'
 
 import { YearRangeSelect } from './YearRangeSelect'
 
-export const AppearanceSetting = memo(function AppearanceSetting() {
+interface AppearanceSettingProps {
+  hiddenYearRange?: boolean
+}
+
+export const AppearanceSetting = memo(function AppearanceSetting({
+  hiddenYearRange = false
+}: AppearanceSettingProps) {
   const t = useTranslations('settings')
 
   const { graphData, settings, dispatchSettings } = useData()
@@ -71,10 +77,12 @@ export const AppearanceSetting = memo(function AppearanceSetting() {
 
   return (
     <div className="appearance-setting min-w-[min(40vw,220px)] max-w-[min(90vw,280px)] text-muted-foreground space-y-2">
-      <fieldset>
-        <label>{t('yearRange')}</label>
-        <YearRangeSelect graphData={graphData} />
-      </fieldset>
+      {!hiddenYearRange && (
+        <fieldset>
+          <label>{t('yearRange')}</label>
+          <YearRangeSelect graphData={graphData} />
+        </fieldset>
+      )}
 
       <fieldset>
         <label htmlFor={daysLabelId}>{t('daysLabel')}</label>

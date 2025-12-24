@@ -28,6 +28,12 @@ export function transformWeReadDataToGraphData(
         stats = weReadData.dailyStats
     } else if (Array.isArray(weReadData?.data)) {
         stats = weReadData.data
+    } else if (weReadData?.dailyReadTimes && typeof weReadData.dailyReadTimes === 'object') {
+        // dailyReadTimes: { timestamp(seconds): duration(seconds) }
+        stats = Object.entries(weReadData.dailyReadTimes).map(([ts, duration]) => ({
+            readingDate: Number(ts),
+            readingTime: Number(duration)
+        }))
     } else if (weReadData?.readTimes && typeof weReadData.readTimes === 'object') {
         // readTimes: { timestamp(seconds): duration(ms) }
         stats = Object.entries(weReadData.readTimes).map(([ts, ms]) => ({

@@ -22,6 +22,7 @@ interface GraphActionBarProps {
   onSettingClick: () => void
   onSettingPopOut: () => void
   onSettingPopupClose: () => void
+  hiddenYearRange?: boolean
 }
 
 export const GraphActionBar = memo(function GraphActionBar({
@@ -32,6 +33,7 @@ export const GraphActionBar = memo(function GraphActionBar({
   onSettingClick,
   onSettingPopOut,
   onSettingPopupClose,
+  hiddenYearRange = false,
 }: GraphActionBarProps) {
   const t = useTranslations('graph')
   const { settings } = useData()
@@ -52,7 +54,7 @@ export const GraphActionBar = memo(function GraphActionBar({
     void handleCopyImage()
   })
 
-  const appearanceSettingContent = useMemo(() => <AppearanceSetting />, [])
+  const appearanceSettingContent = useMemo(() => <AppearanceSetting hiddenYearRange={hiddenYearRange} />, [hiddenYearRange])
 
   const draggableInitialPosition = useMemo(() => ({
     x: settingPopupPosition?.offsetX ?? 0,
