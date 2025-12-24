@@ -180,11 +180,15 @@ export function GraphHeader({ data }: GraphHeaderProps) {
         </Link>
 
         <span className="opacity-70">
-          {typeof totalContributions === 'number'
-            ? graphData.usageUnit === 'seconds'
-              ? formatSecondsToDuration(totalContributions)
-              : t('commits', { count: numberWithCommas(totalContributions) })
-            : '-'}
+          {(() => {
+            console.log('GraphHeader Render:', { unit: graphData.usageUnit, total: totalContributions })
+            const isTime = graphData.usageUnit === 'seconds' || totalContributions > 100000
+            return typeof totalContributions === 'number'
+              ? isTime
+                ? formatSecondsToDuration(totalContributions)
+                : t('commits', { count: numberWithCommas(totalContributions) })
+              : '-'
+          })()}
         </span>
 
         <span className="opacity-70">
