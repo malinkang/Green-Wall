@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { useLocale, useTranslations } from 'next-intl'
 import { LanguagesIcon } from 'lucide-react'
 
@@ -34,6 +35,40 @@ export function LocaleSelector() {
 
   const handleLocaleChange = (newLocale: Locale) => {
     router.replace(pathname, { locale: newLocale })
+  }
+
+  /* const [mounted, setMounted] = useState(false)
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) {
+    return (
+      <Button
+        size="icon"
+        variant="outline"
+      >
+        <LanguagesIcon />
+      </Button>
+    )
+  } */
+
+  // Actually, let's just make it render null or simple button initially. 
+  // Using useState/useEffect.
+
+  const [mounted, setMounted] = useState(false)
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) {
+    return (
+      <Button size="icon" variant="outline">
+        <LanguagesIcon />
+      </Button>
+    )
   }
 
   return (
