@@ -21,6 +21,7 @@ export interface GraphProps extends React.ComponentProps<'div'> {
   daysLabel?: boolean
   showInspect?: boolean
   highlightedDates?: Set<string>
+  unit?: 'seconds' | 'contributions'
   titleRender?: (params: {
     year: number
     total: number
@@ -35,6 +36,7 @@ function InnerGraph(props: GraphProps) {
     showInspect = true,
     titleRender,
     highlightedDates,
+    unit,
     ...rest
   } = props
 
@@ -105,7 +107,7 @@ function InnerGraph(props: GraphProps) {
               <span className="opacity-80">
                 {isNewYear && calendar.total === 0
                   ? t('newYearText')
-                  : graphData?.usageUnit === 'seconds'
+                  : (unit ?? graphData?.usageUnit) === 'seconds'
                     ? formatSecondsToDuration(calendar.total)
                     : `${numberWithCommas(calendar.total)} ${t('contributions')}`}
               </span>

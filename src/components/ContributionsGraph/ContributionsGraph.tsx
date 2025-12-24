@@ -157,6 +157,7 @@ function InnerContributionsGraph(
                   highlightedDates={highlightedDates}
                   showInspect={showInspect}
                   titleRender={titleRender}
+                  unit={props.unit}
                 />
               )
             })}
