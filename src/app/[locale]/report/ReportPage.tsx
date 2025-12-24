@@ -24,6 +24,12 @@ function Divider() {
     )
 }
 
+interface ReadStat {
+    stat: string
+    counts: string
+    scheme: string
+}
+
 export function ReportPage() {
     const t = useTranslations('home') // Reuse home translations for now or create new ones
     const graphRef = useRef<HTMLDivElement>(null)
@@ -41,6 +47,7 @@ export function ReportPage() {
     } = useSettingPopup(graphWrapperId)
 
     const [isLoading, setIsLoading] = useState(true)
+    const [readStats, setReadStats] = useState<ReadStat[]>([])
 
     useEffect(() => {
         // Load data from localStorage
@@ -58,16 +65,20 @@ export function ReportPage() {
                     }
 
                     // Transform data for the graph
-                    // Assuming transformWeReadDataToGraphData handles the format from get-weread-detail
-                    // The structure in a.json matches what fetchWeReadSummary returned in previous steps roughly?
-                    // Actually a.json has `readTimes` (monthly?) and `dailyReadTimes`. 
-                    // `transformWeReadDataToGraphData` expects `WeReadSummaryResponse`. 
-                    // Let's check `transformWeReadDataToGraphData` next to be sure.
-                    // But for now, we assume it works or we might need to adjust the transformer.
-                    // dailyReadTimes in a.json uses timestamps as keys.
-
                     const graphData = transformWeReadDataToGraphData(data, user.name, user.avatar)
+
+                    // Filter to only show the selected year if available
+                    if (storedYear) {
+                        const yearInt = parseInt(storedYear, 10)
+                        graphData.contributionYears = [yearInt]
+                        graphData.contributionCalendars = graphData.contributionCalendars.filter(c => c.year === yearInt)
+                    }
+
                     setGraphData(graphData)
+
+                    if (data.readStat) {
+                        setReadStats(data.readStat)
+                    }
                 }
             } catch (e) {
                 console.error("Failed to load report data", e)
@@ -122,6 +133,20 @@ export function ReportPage() {
                                     wrapperId={graphWrapperId}
                                 />
                             </div>
+
+                            {readStats.length > 0 && (
+                                <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-4 md:px-20">
+                                    {readStats.map((item, index) => (
+                                        <div
+                                            key={index}
+                                            className="rounded-lg border bg-card p-4 text-card-foreground shadow-sm flex flex-col items-center justify-center gap-2"
+                                        >
+                                            <div className="text-sm text-muted-foreground">{item.stat}</div>
+                                            <div className="text-xl font-bold">{item.counts}</div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </>
                     )}
                 </Loading>
