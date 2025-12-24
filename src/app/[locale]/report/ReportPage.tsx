@@ -147,9 +147,10 @@ export function ReportPage({ year }: ReportPageProps) {
                                             {readStats.map((item, index) => (
                                                 <div
                                                     key={index}
-                                                    className="rounded-lg border border-border/50 bg-secondary/50 p-4 text-secondary-foreground shadow-sm flex flex-col items-center justify-center gap-1"
+                                                    className="rounded-lg border p-4 shadow-sm flex flex-col items-center justify-center gap-1"
+                                                    style={{ borderColor: 'var(--theme-border)' }}
                                                 >
-                                                    <div className="text-xs text-muted-foreground">{item.stat}</div>
+                                                    <div className="text-xs opacity-70">{item.stat}</div>
                                                     <div className="text-lg font-bold">{item.counts}</div>
                                                 </div>
                                             ))}
