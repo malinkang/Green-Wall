@@ -13,32 +13,30 @@ import { cn } from '~/lib/utils'
 
 
 
-const Avatar = () => {
-  const { graphData } = useData()
-
+const Avatar = ({ avatarUrl, login }: { avatarUrl?: string, login?: string }) => {
   const [status, setStatus] = useState<'loading' | 'loaded' | 'error'>('loading')
 
   useEffect(() => {
-    if (graphData?.avatarUrl) {
+    if (avatarUrl) {
       setStatus('loading')
     }
     else {
       setStatus('loading')
     }
-  }, [graphData?.avatarUrl])
+  }, [avatarUrl])
 
   return (
     <span
       className="relative size-full overflow-hidden rounded-full bg-(--level-0)"
     >
-      {graphData && status !== 'error' && (
+      {avatarUrl && login && status !== 'error' && (
         <Image
-          alt={`${graphData.login}'s avatar.`}
+          alt={`${login}'s avatar.`}
           className="h-full w-full object-cover"
-          src={graphData.avatarUrl}
+          src={avatarUrl}
           fill
           priority
-          unoptimized={graphData.avatarUrl.startsWith('data:')} // Handle data URIs if any, though unlikely for avatars here
+          unoptimized={avatarUrl.startsWith('data:')} // Handle data URIs if any, though unlikely for avatars here
           onError={() => {
             setStatus('error')
           }}
@@ -54,13 +52,25 @@ const Avatar = () => {
   )
 }
 
-export function GraphHeader() {
+import type { GraphData } from '~/types'
+
+interface GraphHeaderProps {
+  data?: GraphData
+}
+
+export function GraphHeader({ data }: GraphHeaderProps) {
   const t = useTranslations('graph')
-  const { graphData, lastYear, totalYears, totalContributions, settings } = useData()
+  const { graphData: contextGraphData, lastYear: contextLastYear, totalYears: contextTotalYears, totalContributions: contextTotalContributions, settings } = useData()
+
+  const graphData = data ?? contextGraphData
 
   if (!graphData) {
     return null
   }
+
+  const totalYears = data ? graphData.contributionYears.length : contextTotalYears
+  const totalContributions = data ? graphData.contributionCalendars.reduce((sum, c) => sum + c.total, 0) : contextTotalContributions
+  const lastYear = data ? graphData.contributionYears.at(0)?.toString() : contextLastYear
 
   const username = graphData.login
 
@@ -107,7 +117,7 @@ export function GraphHeader() {
         target="_blank"
       >
         <span className="flex size-20 items-center">
-          <Avatar />
+          <Avatar avatarUrl={graphData.avatarUrl} login={graphData.login} />
         </span>
       </Link>
 

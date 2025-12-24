@@ -131,7 +131,7 @@ function InnerContributionsGraph(
       >
         <div>
           <div className={cn('px-6', settings.showSafariHeader ? 'pt-2' : 'pt-6')}>
-            <GraphHeader />
+            <GraphHeader data={props.data} />
           </div>
 
           <div className="flex flex-col gap-y-6 p-6">
