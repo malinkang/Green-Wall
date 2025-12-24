@@ -90,7 +90,7 @@ export const GraphActionBar = memo(function GraphActionBar({
       </div>
 
       <div className="flex flex-wrap items-center gap-x-2 md:justify-center">
-        <ShareButton />
+        {/* <ShareButton /> */}
 
         <Separator className="h-4.5" orientation="vertical" />
 

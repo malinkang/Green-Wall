@@ -51,68 +51,6 @@ export default async function AboutPage() {
   return (
     <div className="py-10 md:py-14">
       <div className="px-2 md:px-20">
-        <PageTitle>{t('pageTitle')}</PageTitle>
-        <Paragraph>
-          {t('intro')}
-        </Paragraph>
-
-        <SectionTitle>{t('whyWeBuilt')}</SectionTitle>
-        <Paragraph>
-          {t('whyWeBuiltContent')}
-        </Paragraph>
-
-        <SectionTitle>{t('howItHelps')}</SectionTitle>
-        <Paragraph>
-          {t('howItHelpsIntro')}
-        </Paragraph>
-        <ul className="list-inside list-disc py-2 pl-1 marker:text-sm marker:text-foreground/90">
-          <li className="py-1">
-            {t('howItHelpsItem1')}
-          </li>
-          <li className="py-1">
-            {t('howItHelpsItem2')}
-          </li>
-          <li className="py-1">
-            {t('howItHelpsItem3')}
-          </li>
-        </ul>
-
-        <SectionTitle>{t('inspiration')}</SectionTitle>
-        <Paragraph>
-          {t('inspirationContent')}
-        </Paragraph>
-
-        <SectionTitle>{t('finalMessage')}</SectionTitle>
-        <Paragraph>
-          {t('finalMessageContent')}
-        </Paragraph>
-
-        <SectionTitle>{t('support')}</SectionTitle>
-        <Paragraph>
-          {t.rich('supportContent', {
-            github: (chunks) => (
-              <TextLink passHref href="https://github.com/Codennnn/Green-Wall" target="_blank">
-                {chunks}
-              </TextLink>
-            ),
-            productHunt: (chunks) => (
-              <TextLink passHref href="https://www.producthunt.com/posts/green-wall" target="_blank">
-                {chunks}
-              </TextLink>
-            ),
-          })}
-        </Paragraph>
-
-        <SectionTitle>{t('reportingIssues')}</SectionTitle>
-        <Paragraph>
-          {t.rich('reportingIssuesContent', {
-            link: (chunks) => (
-              <TextLink passHref href="https://github.com/Codennnn/Green-Wall/issues" target="_blank">
-                {chunks}
-              </TextLink>
-            ),
-          })}
-        </Paragraph>
       </div>
     </div>
   )

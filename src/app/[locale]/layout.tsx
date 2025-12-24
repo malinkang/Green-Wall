@@ -81,10 +81,10 @@ export default async function LocaleLayout({ children, params }: Props) {
                   <Link
                     passHref
                     className="transition-colors hover:text-foreground"
-                    href="https://github.com/Codennnn"
+                    href="https://malinkang.com"
                     target="_blank"
                   >
-                    {tFooter('madeBy', { author: 'LeoKu' })}
+                    由CarveTime开发 ❤️
                   </Link>
 
                   <span className="mx-2 font-medium md:mx-3">·</span>
