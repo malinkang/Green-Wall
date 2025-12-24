@@ -73,6 +73,8 @@ export function ReportPage({ year }: ReportPageProps) {
 
                     // Transform data for the graph
                     const graphData = transformWeReadDataToGraphData(data, user.name, user.avatar)
+                    // Force usageUnit to be seconds to ensure correct display
+                    graphData.usageUnit = 'seconds'
 
                     // Filter to only show the selected year if available
                     if (storedYear) {
