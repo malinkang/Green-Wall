@@ -32,6 +32,7 @@ interface ContributionsGraphProps
   mockupClassName?: string
   highlightMode?: GraphHighlightMode
   highlightOptions?: GraphHighlightOptions
+  unit?: 'seconds' | 'contributions'
 }
 
 function InnerContributionsGraph(
@@ -131,7 +132,7 @@ function InnerContributionsGraph(
       >
         <div>
           <div className={cn('px-6', settings.showSafariHeader ? 'pt-2' : 'pt-6')}>
-            <GraphHeader data={props.data} />
+            <GraphHeader data={props.data} unit={props.unit} />
           </div>
 
           <div className="flex flex-col gap-y-6 p-6">

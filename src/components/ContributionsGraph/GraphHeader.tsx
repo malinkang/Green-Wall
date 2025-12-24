@@ -56,9 +56,10 @@ import type { GraphData } from '~/types'
 
 interface GraphHeaderProps {
   data?: GraphData
+  unit?: 'seconds' | 'contributions'
 }
 
-export function GraphHeader({ data }: GraphHeaderProps) {
+export function GraphHeader({ data, unit }: GraphHeaderProps) {
   const t = useTranslations('graph')
   const { graphData: contextGraphData, lastYear: contextLastYear, totalYears: contextTotalYears, totalContributions: contextTotalContributions, settings } = useData()
 
@@ -184,7 +185,8 @@ export function GraphHeader({ data }: GraphHeaderProps) {
             const val = Number(totalContributions)
             if (!Number.isFinite(val)) return '-'
 
-            const isTime = graphData.usageUnit === 'seconds' || val > 1000
+            const effectiveUnit = unit ?? graphData.usageUnit
+            const isTime = effectiveUnit === 'seconds' || val > 1000
 
             return isTime
               ? formatSecondsToDuration(val)
