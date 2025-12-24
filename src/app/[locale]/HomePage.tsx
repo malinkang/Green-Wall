@@ -145,17 +145,8 @@ export function HomePage() {
     }
 
     if (!rawUrlUsername) {
-      return (
-        <div className="mx-auto mt-10 flex max-w-5xl flex-col gap-y-6">
-          <FamousUsersSection
-            isLoading={isLoading}
-            loadingLogin={loadingUsername}
-            onSelect={(login) => {
-              // handleQuickSearch(login, 'famous_user')
-            }}
-          />
-        </div>
-      )
+      // Hidden: Famous Users Section
+      return null
     }
 
     return null
