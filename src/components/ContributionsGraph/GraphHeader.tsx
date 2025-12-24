@@ -181,13 +181,14 @@ export function GraphHeader({ data }: GraphHeaderProps) {
 
         <span className="opacity-70">
           {(() => {
-            console.log('GraphHeader Render:', { unit: graphData.usageUnit, total: totalContributions })
-            const isTime = graphData.usageUnit === 'seconds' || totalContributions > 100000
-            return typeof totalContributions === 'number'
-              ? isTime
-                ? formatSecondsToDuration(totalContributions)
-                : t('commits', { count: numberWithCommas(totalContributions) })
-              : '-'
+            const val = Number(totalContributions)
+            if (!Number.isFinite(val)) return '-'
+
+            const isTime = graphData.usageUnit === 'seconds' || val > 1000
+
+            return isTime
+              ? formatSecondsToDuration(val)
+              : t('commits', { count: numberWithCommas(val) })
           })()}
         </span>
 
