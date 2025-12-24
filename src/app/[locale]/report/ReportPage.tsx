@@ -11,6 +11,7 @@ import { Separator } from '~/components/ui/separator'
 import { useData } from '~/DataContext'
 import { useSettingPopup } from '~/hooks/useSettingPopup'
 import { transformWeReadDataToGraphData } from '~/services/weread-transformer'
+import { fetchWeReadSummary } from '~/services/weread-auth'
 import type { GraphData } from '~/types'
 
 function Divider() {
@@ -56,23 +57,66 @@ export function ReportPage({ year }: ReportPageProps) {
     const [localGraphData, setLocalGraphData] = useState<GraphData>()
 
     useEffect(() => {
-        // Load data from localStorage
-        const loadReportData = () => {
+        // Load data from different sources:
+        // 1. Heatmap data: from summary cache (weread_summary) or call summary API
+        // 2. ReadStats: from report_data (detail API response)
+        const loadReportData = async () => {
             try {
-                const storedData = localStorage.getItem('weread_report_data')
-                // const storedYear = localStorage.getItem('weread_report_year') // Use prop instead
                 const storedYear = year || localStorage.getItem('weread_report_year')
                 const currentUser = localStorage.getItem('weread_user')
+                const storedReportData = localStorage.getItem('weread_report_data')
 
-                if (storedData) {
-                    const data = JSON.parse(storedData)
-                    let user = { name: 'WeRead User', avatar: '' }
-                    if (currentUser) {
-                        user = JSON.parse(currentUser)
+                let user = { name: 'WeRead User', avatar: '' }
+                if (currentUser) {
+                    user = JSON.parse(currentUser)
+                }
+
+                // Load readStats from detail API response (weread_report_data)
+                if (storedReportData) {
+                    const reportData = JSON.parse(storedReportData)
+                    if (reportData.readStat) {
+                        setReadStats(reportData.readStat)
                     }
+                }
 
-                    // Transform data for the graph
-                    const graphData = transformWeReadDataToGraphData(data, user.name, user.avatar)
+                // Load heatmap data from summary cache or call API
+                let summaryData = null
+                const cachedSummary = localStorage.getItem('weread_summary')
+
+                if (cachedSummary) {
+                    // Use cached summary data for heatmap
+                    console.log('Using cached summary data for heatmap')
+                    summaryData = JSON.parse(cachedSummary)
+                } else {
+                    // No cache, try to call summary API
+                    console.log('No summary cache, calling summary API...')
+                    const vid = localStorage.getItem('weread_vid')
+                    const accessToken = localStorage.getItem('weread_token')
+                    const refreshToken = localStorage.getItem('weread_refresh_token') || ''
+                    const deviceId = localStorage.getItem('weread_device_id') || 'web_device'
+
+                    if (vid && accessToken) {
+                        try {
+                            summaryData = await fetchWeReadSummary({
+                                vid: Number(vid),
+                                accessToken,
+                                refreshToken,
+                                deviceId
+                            })
+                            // Cache the summary data for future use
+                            if (summaryData) {
+                                localStorage.setItem('weread_summary', JSON.stringify(summaryData))
+                                console.log('Summary data fetched and cached')
+                            }
+                        } catch (apiError) {
+                            console.error('Failed to fetch summary API:', apiError)
+                        }
+                    }
+                }
+
+                // Transform summary data to graph data for heatmap
+                if (summaryData) {
+                    const graphData = transformWeReadDataToGraphData(summaryData, user.name, user.avatar)
                     // Force usageUnit to be seconds to ensure correct display
                     graphData.usageUnit = 'seconds'
 
@@ -84,10 +128,6 @@ export function ReportPage({ year }: ReportPageProps) {
                     }
 
                     setLocalGraphData(graphData)
-
-                    if (data.readStat) {
-                        setReadStats(data.readStat)
-                    }
                 }
             } catch (e) {
                 console.error("Failed to load report data", e)

@@ -70,6 +70,9 @@ export function AuthStatusButton() {
       console.log("WeRead Summary:", summary)
 
       if (summary) {
+        // Cache summary data for report page to use for heatmap
+        localStorage.setItem('weread_summary', JSON.stringify(summary))
+
         const graphData = transformWeReadDataToGraphData(summary, user.name || "WeRead User", user.avatar || "")
         setGraphData(graphData)
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -144,6 +147,9 @@ export function AuthStatusButton() {
     localStorage.removeItem('weread_vid');
     localStorage.removeItem('weread_refresh_token');
     localStorage.removeItem('weread_device_id');
+    localStorage.removeItem('weread_summary'); // Clear summary cache
+    localStorage.removeItem('weread_report_data'); // Clear report data
+    localStorage.removeItem('weread_report_year'); // Clear report year
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ; (toastManager as any).add({
       title: t('logoutSuccess') || "Logged out",
