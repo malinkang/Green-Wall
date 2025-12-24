@@ -20,6 +20,7 @@ interface ContributionsGraphProps
   extends Pick<GraphProps, 'showInspect' | 'titleRender'> {
   /** Unique ID for the contributions graph container. */
   wrapperId?: string
+  children?: React.ReactNode
   /**
    * Custom Mockup component to wrap the contributions graph.
    * @default MockupArc
@@ -85,18 +86,18 @@ function InnerContributionsGraph(
 
   const themeProperties = applyingTheme
     ? {
-        '--theme-foreground': applyingTheme.colorForeground,
-        '--theme-background': applyingTheme.colorBackground,
-        '--theme-background-container': applyingTheme.colorBackgroundContainer,
-        '--theme-secondary': applyingTheme.colorSecondary,
-        '--theme-primary': applyingTheme.colorPrimary,
-        '--theme-border': applyingTheme.colorBorder,
-        '--level-0': applyingTheme.levelColors[0],
-        '--level-1': applyingTheme.levelColors[1],
-        '--level-2': applyingTheme.levelColors[2],
-        '--level-3': applyingTheme.levelColors[3],
-        '--level-4': applyingTheme.levelColors[4],
-      }
+      '--theme-foreground': applyingTheme.colorForeground,
+      '--theme-background': applyingTheme.colorBackground,
+      '--theme-background-container': applyingTheme.colorBackgroundContainer,
+      '--theme-secondary': applyingTheme.colorSecondary,
+      '--theme-primary': applyingTheme.colorPrimary,
+      '--theme-border': applyingTheme.colorBorder,
+      '--level-0': applyingTheme.levelColors[0],
+      '--level-1': applyingTheme.levelColors[1],
+      '--level-2': applyingTheme.levelColors[2],
+      '--level-3': applyingTheme.levelColors[3],
+      '--level-4': applyingTheme.levelColors[4],
+    }
     : {}
 
   const cssProperties = {
@@ -104,8 +105,8 @@ function InnerContributionsGraph(
     ...sizeProperties[settings.size ?? DEFAULT_SIZE],
     ...(settings.blockShape === BlockShape.Round
       ? {
-          '--block-round': '999px',
-        }
+        '--block-round': '999px',
+      }
       : {}),
   }
 
@@ -159,6 +160,7 @@ function InnerContributionsGraph(
               <GraphFooter />
             </div>
           )}
+          {props.children}
         </div>
       </Mockup>
     </div>

@@ -30,7 +30,11 @@ interface ReadStat {
     scheme: string
 }
 
-export function ReportPage() {
+interface ReportPageProps {
+    year?: string
+}
+
+export function ReportPage({ year }: ReportPageProps) {
     const t = useTranslations('home') // Reuse home translations for now or create new ones
     const graphRef = useRef<HTMLDivElement>(null)
 
@@ -54,7 +58,8 @@ export function ReportPage() {
         const loadReportData = () => {
             try {
                 const storedData = localStorage.getItem('weread_report_data')
-                const storedYear = localStorage.getItem('weread_report_year')
+                // const storedYear = localStorage.getItem('weread_report_year') // Use prop instead
+                const storedYear = year || localStorage.getItem('weread_report_year')
                 const currentUser = localStorage.getItem('weread_user')
 
                 if (storedData) {
@@ -131,22 +136,22 @@ export function ReportPage() {
                                 <ContributionsGraph
                                     ref={graphRef}
                                     wrapperId={graphWrapperId}
-                                />
-                            </div>
-
-                            {readStats.length > 0 && (
-                                <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-4 md:px-20">
-                                    {readStats.map((item, index) => (
-                                        <div
-                                            key={index}
-                                            className="rounded-lg border bg-card p-4 text-card-foreground shadow-sm flex flex-col items-center justify-center gap-2"
-                                        >
-                                            <div className="text-sm text-muted-foreground">{item.stat}</div>
-                                            <div className="text-xl font-bold">{item.counts}</div>
+                                >
+                                    {readStats.length > 0 && (
+                                        <div className="grid grid-cols-2 gap-4 px-6 pb-6">
+                                            {readStats.map((item, index) => (
+                                                <div
+                                                    key={index}
+                                                    className="rounded-lg border bg-card/50 p-4 text-card-foreground shadow-sm flex flex-col items-center justify-center gap-1"
+                                                >
+                                                    <div className="text-xs text-muted-foreground">{item.stat}</div>
+                                                    <div className="text-lg font-bold">{item.counts}</div>
+                                                </div>
+                                            ))}
                                         </div>
-                                    ))}
-                                </div>
-                            )}
+                                    )}
+                                </ContributionsGraph>
+                            </div>
                         </>
                     )}
                 </Loading>
@@ -159,8 +164,7 @@ export function ReportPage() {
     return (
         <div className="py-10 md:py-14">
             <h1 className="text-center text-3xl font-bold md:mx-auto md:px-20 md:text-4xl md:leading-[1.2] lg:text-6xl">
-                {/* Title could be dynamic based on year */}
-                微信读书年度回顾
+                {year ? `${year} ` : ''}微信读书年度回顾
             </h1>
 
             {renderContent()}

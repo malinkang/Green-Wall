@@ -155,7 +155,7 @@ export function YearSearchPage() {
       // Since we don't have router/locale in this snippet context easily without adding hooks:
       // We need to add `useRouter` and `useLocale`.
       // Navigate to report page
-      router.push(`/${locale}/report`)
+      router.push(`/${locale}/report/${year}`)
 
     } catch (err) {
       console.error(err)
