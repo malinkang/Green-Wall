@@ -28,6 +28,7 @@ import {
 import { Spinner } from '~/components/ui/spinner'
 import { getCurrentYear } from '~/helpers'
 import { useCurrentPathWithSearch } from '~/hooks/useCurrentPathWithSearch'
+import { usePathname } from '~/i18n/navigation'
 import { eventTracker } from '~/lib/analytics'
 import { authClient, useSession } from '~/lib/auth-client'
 
@@ -44,6 +45,7 @@ export function AuthStatusButton() {
   const locale = useLocale()
   const currentYear = getCurrentYear()
   const callbackURL = useCurrentPathWithSearch()
+  const pathname = usePathname()
 
   /* Existing session logic can remain or be conditionally rendered */
   // We'll prioritize WeRead login if active
@@ -84,11 +86,17 @@ export function AuthStatusButton() {
   }
 
   useEffect(() => {
+    // Skip auto-load on Report Page to avoid overwriting specific report data
+    if (pathname.includes('/report')) {
+      return
+    }
+
     // Load from local storage
     const stored = localStorage.getItem('weread_user')
     const storedToken = localStorage.getItem('weread_token')
     const storedVid = localStorage.getItem('weread_vid')
-    const storedDeviceId = localStorage.getItem('weread_device_id')
+    const storedDeviceId = localStorage.getItem('weread_device_id') // eslint-disable-next-line react-hooks/exhaustive-deps
+
 
     if (stored && storedToken && storedVid) {
       try {

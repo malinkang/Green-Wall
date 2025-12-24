@@ -11,6 +11,7 @@ import { Separator } from '~/components/ui/separator'
 import { useData } from '~/DataContext'
 import { useSettingPopup } from '~/hooks/useSettingPopup'
 import { transformWeReadDataToGraphData } from '~/services/weread-transformer'
+import type { GraphData } from '~/types'
 
 function Divider() {
     return (
@@ -41,7 +42,7 @@ export function ReportPage({ year }: ReportPageProps) {
     const settingPopoverContentId = useId()
     const graphWrapperId = useId()
 
-    const { graphData, setGraphData, isLoading: isGlobalLoading } = useData()
+    const { isLoading: isGlobalLoading } = useData()
 
     const {
         settingPopupPosition,
@@ -52,6 +53,7 @@ export function ReportPage({ year }: ReportPageProps) {
 
     const [isLoading, setIsLoading] = useState(true)
     const [readStats, setReadStats] = useState<ReadStat[]>([])
+    const [localGraphData, setLocalGraphData] = useState<GraphData>()
 
     useEffect(() => {
         // Load data from localStorage
@@ -79,7 +81,7 @@ export function ReportPage({ year }: ReportPageProps) {
                         graphData.contributionCalendars = graphData.contributionCalendars.filter(c => c.year === yearInt)
                     }
 
-                    setGraphData(graphData)
+                    setLocalGraphData(graphData)
 
                     if (data.readStat) {
                         setReadStats(data.readStat)
@@ -93,7 +95,7 @@ export function ReportPage({ year }: ReportPageProps) {
         }
 
         loadReportData()
-    }, [setGraphData])
+    }, [year])
 
 
     const handleSettingClick = () => {
@@ -109,10 +111,10 @@ export function ReportPage({ year }: ReportPageProps) {
     const renderContent = () => {
         const showLoading = isLoading || isGlobalLoading
 
-        if (showLoading || graphData) {
+        if (showLoading || localGraphData) {
             return (
                 <Loading active={showLoading}>
-                    {graphData && (
+                    {localGraphData && (
                         <>
                             <div
                                 ref={graphActionsRefCallback}
@@ -122,7 +124,7 @@ export function ReportPage({ year }: ReportPageProps) {
                                     graphRef={graphRef}
                                     settingPopoverContentId={settingPopoverContentId}
                                     settingPopupPosition={settingPopupPosition}
-                                    username={graphData.login}
+                                    username={localGraphData.login}
                                     onSettingClick={handleSettingClick}
                                     onSettingPopOut={handleSettingPopOutClick}
                                     onSettingPopupClose={closeSettingPopup}
@@ -136,6 +138,7 @@ export function ReportPage({ year }: ReportPageProps) {
                                 <ContributionsGraph
                                     ref={graphRef}
                                     wrapperId={graphWrapperId}
+                                    data={localGraphData}
                                 >
                                     {readStats.length > 0 && (
                                         <div className="grid grid-cols-2 gap-4 px-6 pb-6">

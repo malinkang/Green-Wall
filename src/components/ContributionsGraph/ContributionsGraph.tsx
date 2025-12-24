@@ -5,6 +5,7 @@ import { DEFAULT_SIZE, DEFAULT_THEME, sizeProperties, THEME_PRESETS } from '~/co
 import { useData } from '~/DataContext'
 import { BlockShape } from '~/enums'
 import { cn } from '~/lib/utils'
+import type { GraphData } from '~/types'
 
 import { Graph, type GraphProps } from './Graph'
 import { GraphFooter } from './GraphFooter'
@@ -20,6 +21,7 @@ interface ContributionsGraphProps
   extends Pick<GraphProps, 'showInspect' | 'titleRender'> {
   /** Unique ID for the contributions graph container. */
   wrapperId?: string
+  data?: GraphData
   children?: React.ReactNode
   /**
    * Custom Mockup component to wrap the contributions graph.
@@ -47,7 +49,11 @@ function InnerContributionsGraph(
     Mockup = MockupSafari,
   } = props
 
-  const { graphData, settings, firstYear, lastYear } = useData()
+  const { graphData: contextGraphData, settings, firstYear: contextFirstYear, lastYear: contextLastYear } = useData()
+
+  const graphData = props.data || contextGraphData
+  const firstYear = props.data ? props.data.contributionYears.at(-1)?.toString() : contextFirstYear
+  const lastYear = props.data ? props.data.contributionYears.at(0)?.toString() : contextLastYear
 
   const graphRef = useRef<HTMLDivElement>(null)
 
@@ -155,12 +161,12 @@ function InnerContributionsGraph(
             })}
           </div>
 
+          {props.children}
           {settings.showAttribution && (
             <div className="border-t-[1.5px] border-t-[color-mix(in_srgb,var(--theme-border)_50%,transparent)] px-6 py-3">
               <GraphFooter />
             </div>
           )}
-          {props.children}
         </div>
       </Mockup>
     </div>
