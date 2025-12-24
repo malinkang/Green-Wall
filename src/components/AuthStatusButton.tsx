@@ -271,11 +271,6 @@ export function AuthStatusButton() {
   // 未登录状态
   return (
     <div className="flex items-center gap-2">
-      <Link href={`/${locale}/year`} prefetch={false}>
-        <Button variant="ghost" size="icon">
-          <CalendarIcon />
-        </Button>
-      </Link>
       <WeReadLoginModal onLoginSuccess={handleLoginSuccess}>
         <Button variant="outline">
           <LogInIcon className="mr-2 h-4 w-4" />
