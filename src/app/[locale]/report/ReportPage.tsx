@@ -182,6 +182,7 @@ export function ReportPage({ year }: ReportPageProps) {
                                     wrapperId={graphWrapperId}
                                     data={localGraphData}
                                     unit="seconds"
+                                    showInspect={false}
                                 >
                                     {readStats.length > 0 && (
                                         <div className="grid grid-cols-2 gap-4 px-6 pb-6">
