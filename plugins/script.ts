@@ -322,7 +322,7 @@ const handler = () => {
       const openExtrnalBtn = document.createElement('button')
       const btnContent = document.createElement('span')
       btnContent.classList.add('Button-label')
-      btnContent.textContent = 'Open in Green Wall'
+      btnContent.textContent = 'Open in Notionub'
       openExtrnalBtn.classList.add('Button', 'Button--primary', 'Button--medium')
       openExtrnalBtn.addEventListener('click', () => {
         window.open(`${ORIGIN}/user/${username}`, '_blank')
@@ -373,7 +373,7 @@ const handler = () => {
 
           const title = document.createElement('h2')
           title.classList.add('h4', 'mb-2')
-          title.textContent = 'Green Wall'
+          title.textContent = 'Notionub'
 
           const openBtn = document.createElement('button')
           openBtn.classList.add('btn')
@@ -417,7 +417,7 @@ const handler = () => {
                 ? `${singleLineErrorMessage.slice(0, 140)}...`
                 : singleLineErrorMessage
 
-            console.error('[Green Wall]: load data failed', {
+            console.error('[Notionub]: load data failed', {
               timestamp: errorTimestamp,
               message: safeErrorMessage,
               stack: errorStack,
@@ -548,7 +548,7 @@ const handler = () => {
       }
     }
     else {
-      console.warn('[Green Wall]: Target node not found.')
+      console.warn('[Notionub]: Target node not found.')
     }
   }
 }

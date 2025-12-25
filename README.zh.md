@@ -1,10 +1,10 @@
 中文 | [English](./README.md)
 
-# [Green Wall](https://green-wall.leoku.dev/)
+# [Notionub](https://green-wall.leoku.dev/)
 
 _为你的 GitHub 贡献拍张快照 📸，然后分享出去！_
 
-**Green Wall** 是一个强大的 Web 工具，帮你更轻松地回顾自己在 GitHub :octocat: 上多年来的贡献记录。它可以把你的贡献数据生成一张图片，方便保存与分享。
+**Notionub** 是一个强大的 Web 工具，帮你更轻松地回顾自己在 GitHub :octocat: 上多年来的贡献记录。它可以把你的贡献数据生成一张图片，方便保存与分享。
 
 [![Screenshot](./screenshot.webp)](https://green-wall.leoku.dev/)
 
