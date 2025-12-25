@@ -280,13 +280,13 @@ export function ReportPage({ year }: ReportPageProps) {
                                         />
                                     </div>
 
-                                    {/* Book Cover Wall */}
-                                    <div className="px-6 pb-6">
+                                    {/* Book Cover Wall - temporarily hidden */}
+                                    {/* <div className="px-6 pb-6">
                                         <BookCoverWall
                                             readLongest={readLongest}
                                             isLoading={isLoading}
                                         />
-                                    </div>
+                                    </div> */}
                                 </ContributionsGraph>
                             </div>
                         </>
