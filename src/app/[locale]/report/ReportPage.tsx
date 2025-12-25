@@ -218,20 +218,32 @@ export function ReportPage({ year }: ReportPageProps) {
                                 >
                                     {readStats.length > 0 && (
                                         <div className="grid grid-cols-2 gap-4 px-6 pb-6">
-                                            {readStats.map((item, index) => (
-                                                <div
-                                                    key={index}
-                                                    className="rounded-lg border p-4 shadow-sm"
-                                                    style={{ borderColor: 'var(--theme-border)' }}
-                                                >
-                                                    <div className="flex items-center justify-center gap-2 mb-2">
-                                                        <span className="font-medium text-sm">{item.stat}</span>
+                                            {readStats.map((item, index) => {
+                                                // Split counts into number and unit (e.g., "123本" -> "123" + "本")
+                                                const match = item.counts.match(/^([\d,]+)(.*)$/)
+                                                const number = match ? match[1] : item.counts
+                                                const unit = match ? match[2] : ''
+
+                                                // Assign colors based on index
+                                                const colors = ['text-blue-500', 'text-green-500', 'text-purple-500', 'text-pink-500']
+                                                const color = colors[index % colors.length]
+
+                                                return (
+                                                    <div
+                                                        key={index}
+                                                        className="rounded-lg border p-4 shadow-sm"
+                                                        style={{ borderColor: 'var(--theme-border)' }}
+                                                    >
+                                                        <div className="flex items-center gap-2 mb-3">
+                                                            <span className="font-medium">{item.stat}</span>
+                                                        </div>
+                                                        <div className="text-center">
+                                                            <span className={`text-4xl font-bold ${color}`}>{number}</span>
+                                                            {unit && <span className="text-lg ml-1">{unit}</span>}
+                                                        </div>
                                                     </div>
-                                                    <div className="text-center">
-                                                        <span className="text-3xl font-bold">{item.counts}</span>
-                                                    </div>
-                                                </div>
-                                            ))}
+                                                )
+                                            })}
                                         </div>
                                     )}
 
