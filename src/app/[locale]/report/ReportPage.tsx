@@ -108,7 +108,7 @@ export function ReportPage({ year }: ReportPageProps) {
                     }
                 }
 
-                // Set readStats, readTimes and dailyReadTimes from report data
+                // Set readStats and readTimes from report data (detail API)
                 if (reportData) {
                     if (reportData.readStat) {
                         setReadStats(reportData.readStat)
@@ -116,9 +116,7 @@ export function ReportPage({ year }: ReportPageProps) {
                     if (reportData.readTimes) {
                         setReadTimes(reportData.readTimes)
                     }
-                    if (reportData.dailyReadTimes) {
-                        setDailyReadTimes(reportData.dailyReadTimes)
-                    }
+                    // Note: dailyReadTimes now comes from summary data for accurate streak calculation
                 }
 
                 // Load heatmap data from summary cache or call API
@@ -160,6 +158,11 @@ export function ReportPage({ year }: ReportPageProps) {
                     }
 
                     setLocalGraphData(graphData)
+
+                    // Use summary's readTimes for longest streak calculation
+                    if (summaryData.readTimes) {
+                        setDailyReadTimes(summaryData.readTimes)
+                    }
                 }
             } catch (e) {
                 console.error("Failed to load report data", e)
