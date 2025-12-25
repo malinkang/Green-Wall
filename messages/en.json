@@ -1,9 +1,9 @@
 {
   "metadata": {
-    "defaultTitle": "Notionub · GitHub contribution graph generator",
-    "defaultDescription": "Notionub is a GitHub contribution graph generator.",
+    "defaultTitle": "Notionub · Heatmap generator",
+    "defaultDescription": "Notionub is a Heatmap generator.",
     "defaultOgTitle": "Notionub",
-    "defaultOgDescription": "GitHub contribution graph generator.",
+    "defaultOgDescription": "Heatmap generator.",
     "userTitle": "{username}'s GitHub contributions in review · Notionub",
     "userOgTitle": "{username}'s GitHub contributions",
     "userOgDescription": "{username}'s GitHub contributions.",
@@ -11,7 +11,7 @@
     "shareOgTitle": "{username}'s GitHub contributions",
     "shareOgDescription": "I just made a GitHub contributions graph in review!",
     "aboutTitle": "About Notionub · Turn contributions into a story",
-    "aboutDescription": "Learn about Notionub - a GitHub contribution graph generator that helps you review and share your coding journey.",
+    "aboutDescription": "Learn about Notionub - a Heatmap generator that helps you review and share your coding journey.",
     "aboutOgTitle": "About Notionub · Your contributions, beautifully shared",
     "aboutOgDescription": "Learn how Notionub helps you visualize and share your GitHub contributions.",
     "yearTitle": "{username}'s {year} GitHub Wrapped · Notionub",

@@ -1,9 +1,9 @@
 {
   "metadata": {
-    "defaultTitle": "Notionub · GitHub 贡献图生成器",
-    "defaultDescription": "Notionub 是一个 GitHub 贡献图生成器。",
+    "defaultTitle": "Notionub · 热力图生成器",
+    "defaultDescription": "Notionub 是一个 热力图生成器。",
     "defaultOgTitle": "Notionub",
-    "defaultOgDescription": "GitHub 贡献图生成器",
+    "defaultOgDescription": "热力图生成器",
     "userTitle": "{username} 的 GitHub 贡献回顾 · Notionub",
     "userOgTitle": "{username} 的 GitHub 贡献",
     "userOgDescription": "{username} 的 GitHub 贡献记录。",
@@ -11,7 +11,7 @@
     "shareOgTitle": "{username} 的 GitHub 贡献",
     "shareOgDescription": "我刚刚用 Notionub 生成了我的 GitHub 贡献图！",
     "aboutTitle": "关于 Notionub · 让贡献墙讲出你的故事",
-    "aboutDescription": "了解 Notionub - 一个帮助你回顾和分享编程历程的 GitHub 贡献图生成器。",
+    "aboutDescription": "了解 Notionub - 一个帮助你回顾和分享编程历程的 热力图生成器。",
     "aboutOgTitle": "关于 Notionub · 贡献墙与年度回顾",
     "aboutOgDescription": "了解 Notionub 如何帮助你可视化和分享你的 GitHub 贡献。",
     "yearTitle": "{username} 的 {year} 年度报告 · Notionub",

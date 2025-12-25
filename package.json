@@ -1,7 +1,7 @@
 {
   "name": "green-wall",
   "private": true,
-  "description": "GitHub contribution graph generator. Review all the contributions you've made to GitHub over the years.",
+  "description": "Heatmap generator. Review all the contributions you've made to GitHub over the years.",
   "license": "MIT",
   "author": "LeoKu <leokudev@gmail.com> (https://leoku.dev)",
   "scripts": {
