@@ -2,7 +2,7 @@
 
 import { useId, useRef, useEffect, useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { DotIcon } from 'lucide-react'
+import { DotIcon, BookOpenIcon, BookCheckIcon, CalendarDaysIcon, PenLineIcon } from 'lucide-react'
 
 import { ContributionsGraph } from '~/components/ContributionsGraph/ContributionsGraph'
 import { GraphActionBar } from '~/components/GraphActionBar'
@@ -224,9 +224,14 @@ export function ReportPage({ year }: ReportPageProps) {
                                                 const number = match ? match[1] : item.counts
                                                 const unit = match ? match[2] : ''
 
-                                                // Assign colors based on index
-                                                const colors = ['text-blue-500', 'text-green-500', 'text-purple-500', 'text-pink-500']
-                                                const color = colors[index % colors.length]
+                                                // Assign icons and colors based on stat type
+                                                const iconMap: Record<string, { icon: React.ReactNode; color: string }> = {
+                                                    '读过': { icon: <BookOpenIcon className="size-5 text-blue-500" />, color: 'text-blue-500' },
+                                                    '读完': { icon: <BookCheckIcon className="size-5 text-green-500" />, color: 'text-green-500' },
+                                                    '阅读': { icon: <CalendarDaysIcon className="size-5 text-purple-500" />, color: 'text-purple-500' },
+                                                    '笔记': { icon: <PenLineIcon className="size-5 text-pink-500" />, color: 'text-pink-500' },
+                                                }
+                                                const { icon, color } = iconMap[item.stat] || { icon: null, color: 'text-blue-500' }
 
                                                 return (
                                                     <div
@@ -235,6 +240,7 @@ export function ReportPage({ year }: ReportPageProps) {
                                                         style={{ borderColor: 'var(--theme-border)' }}
                                                     >
                                                         <div className="flex items-center gap-2 mb-3">
+                                                            {icon}
                                                             <span className="font-medium">{item.stat}</span>
                                                         </div>
                                                         <div className="text-center">
