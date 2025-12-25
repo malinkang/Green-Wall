@@ -248,9 +248,9 @@
   },
   "yearSearch": {
     "title": "Explore yearly GitHub contributions",
-    "titleWithYear": "{year} GitHub Wrapped",
+    "titleWithYear": "{year} WeRead Wrapped",
     "description": "Enter a username and select a year to view detailed contribution statistics.",
-    "descriptionWithYear": "Explore {year} GitHub contribution data with detailed analytics and annual reports.",
+    "descriptionWithYear": "Explore {year} WeRead reading history with detailed analytics and annual reports.",
     "usernamePlaceholder": "GitHub Username",
     "searchPlaceholder": "GitHub Username",
     "selectYear": "Select Year",
