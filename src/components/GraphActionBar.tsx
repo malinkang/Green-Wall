@@ -94,8 +94,6 @@ export const GraphActionBar = memo(function GraphActionBar({
       <div className="flex flex-wrap items-center gap-x-2 md:justify-center">
         {/* <ShareButton /> */}
 
-        <Separator className="h-4.5" orientation="vertical" />
-
         <SettingButton
           content={appearanceSettingContent}
           popoverContentId={settingPopoverContentId}
