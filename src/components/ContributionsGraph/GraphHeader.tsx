@@ -125,7 +125,17 @@ export function GraphHeader({ data, unit }: GraphHeaderProps) {
       <div className="flex basis-1/2 flex-col gap-1">
         {/* WeRead Branding */}
         <div>
-          <span className="text-xl font-semibold" style={{ color: '#3399FF' }}>微信读书</span>
+          <span
+            className="text-xl font-semibold"
+            style={{
+              background: 'linear-gradient(90deg, #3399FF 0%, #66CCFF 50%, #99DDFF 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text'
+            }}
+          >
+            微信读书
+          </span>
         </div>
 
         {/* User Name */}
