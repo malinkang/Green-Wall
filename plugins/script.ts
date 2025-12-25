@@ -322,7 +322,7 @@ const handler = () => {
       const openExtrnalBtn = document.createElement('button')
       const btnContent = document.createElement('span')
       btnContent.classList.add('Button-label')
-      btnContent.textContent = 'Open in Notionub'
+      btnContent.textContent = 'Open in Notionhub'
       openExtrnalBtn.classList.add('Button', 'Button--primary', 'Button--medium')
       openExtrnalBtn.addEventListener('click', () => {
         window.open(`${ORIGIN}/user/${username}`, '_blank')
@@ -373,7 +373,7 @@ const handler = () => {
 
           const title = document.createElement('h2')
           title.classList.add('h4', 'mb-2')
-          title.textContent = 'Notionub'
+          title.textContent = 'Notionhub'
 
           const openBtn = document.createElement('button')
           openBtn.classList.add('btn')
@@ -417,7 +417,7 @@ const handler = () => {
                 ? `${singleLineErrorMessage.slice(0, 140)}...`
                 : singleLineErrorMessage
 
-            console.error('[Notionub]: load data failed', {
+            console.error('[Notionhub]: load data failed', {
               timestamp: errorTimestamp,
               message: safeErrorMessage,
               stack: errorStack,
@@ -548,7 +548,7 @@ const handler = () => {
       }
     }
     else {
-      console.warn('[Notionub]: Target node not found.')
+      console.warn('[Notionhub]: Target node not found.')
     }
   }
 }

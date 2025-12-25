@@ -1,10 +1,10 @@
 [中文](./README.zh.md) | English
 
-# [Notionub](https://green-wall.leoku.dev/)
+# [Notionhub](https://green-wall.leoku.dev/)
 
 _Take a snapshot 📸 of your GitHub contributions, then share it!_
 
-**Notionub** is a powerful web tool that simplifies the way you review your GitHub :octocat: contributions over time. This tool allows you to generate an image of your contributions, which you can save and share with others.
+**Notionhub** is a powerful web tool that simplifies the way you review your GitHub :octocat: contributions over time. This tool allows you to generate an image of your contributions, which you can save and share with others.
 
 [![Screenshot](./screenshot.webp)](https://green-wall.leoku.dev/)
 
@@ -103,7 +103,7 @@ This project is a Next.js app that fetches data from the GitHub GraphQL API. The
 
 ## Tampermonkey
 
-We also offer a [Tampermonkey script](https://greasyfork.org/en/scripts/492478-greenwall-view-all-contribution-graphs-in-github) that enables you to view the 'Notionub' on anyone's GitHub profile page. The script adds a button to the user's GitHub Profile page, and clicking it will display the user's contribution graphs over the years.
+We also offer a [Tampermonkey script](https://greasyfork.org/en/scripts/492478-greenwall-view-all-contribution-graphs-in-github) that enables you to view the 'Notionhub' on anyone's GitHub profile page. The script adds a button to the user's GitHub Profile page, and clicking it will display the user's contribution graphs over the years.
 
 The source code for the script is located in the file [`/plugins/script.ts`](./plugins/script.ts).
 

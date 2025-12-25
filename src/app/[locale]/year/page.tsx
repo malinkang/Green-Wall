@@ -11,7 +11,7 @@ export const generateMetadata: GenerateMetadata = async ({ params }): Promise<Me
   const { locale } = await params
   const t = await getTranslations({ locale, namespace: 'yearSearch' })
 
-  const title = `${t('title')} · Notionub`
+  const title = `${t('title')} · Notionhub`
   const description = t('description')
 
   return {
