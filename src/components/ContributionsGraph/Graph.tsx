@@ -140,6 +140,7 @@ function InnerGraph(props: GraphProps) {
               <GraphTooltipLabel
                 count={tooltipInfo.count}
                 date={tooltipInfo.date}
+                unit={unit}
               />
             )
             : null
