@@ -45,12 +45,12 @@ export function BookCoverWall({ readLongest, isLoading }: BookCoverWallProps) {
     readLongest.forEach(item => {
         if (item.albumInfo?.albumInfo?.cover) {
             covers.push({
-                url: item.albumInfo.albumInfo.cover,
+                url: item.albumInfo.albumInfo.cover.replace('/s_', '/t7_'),
                 title: item.albumInfo.albumInfo.name || ''
             })
         } else if (item.bookInfo?.cover) {
             covers.push({
-                url: item.bookInfo.cover,
+                url: item.bookInfo.cover.replace('/s_', '/t7_'),
                 title: item.bookInfo.title || ''
             })
         }
