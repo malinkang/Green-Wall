@@ -14,6 +14,7 @@ import { transformWeReadDataToGraphData } from '~/services/weread-transformer'
 import { fetchWeReadSummary } from '~/services/weread-auth'
 import type { GraphData } from '~/types'
 import { MonthlyReadingChart } from './MonthlyReadingChart'
+import { LongestStreakCard } from './LongestStreakCard'
 
 function Divider() {
     return (
@@ -57,6 +58,7 @@ export function ReportPage({ year }: ReportPageProps) {
     const [readStats, setReadStats] = useState<ReadStat[]>([])
     const [localGraphData, setLocalGraphData] = useState<GraphData>()
     const [readTimes, setReadTimes] = useState<Record<string, number>>()
+    const [dailyReadTimes, setDailyReadTimes] = useState<Record<string, number>>()
 
     useEffect(() => {
         // Load data from different sources:
@@ -114,7 +116,7 @@ export function ReportPage({ year }: ReportPageProps) {
                     }
                 }
 
-                // Set readStats and readTimes from report data
+                // Set readStats, readTimes and dailyReadTimes from report data
                 if (storedReportData) {
                     const reportData = JSON.parse(storedReportData)
                     if (reportData.readStat) {
@@ -122,6 +124,9 @@ export function ReportPage({ year }: ReportPageProps) {
                     }
                     if (reportData.readTimes) {
                         setReadTimes(reportData.readTimes)
+                    }
+                    if (reportData.dailyReadTimes) {
+                        setDailyReadTimes(reportData.dailyReadTimes)
                     }
                 }
 
@@ -241,6 +246,14 @@ export function ReportPage({ year }: ReportPageProps) {
                                             readTimes={readTimes}
                                             isLoading={isLoading}
                                             year={year ? parseInt(year, 10) : new Date().getFullYear()}
+                                        />
+                                    </div>
+
+                                    {/* Longest Streak Card */}
+                                    <div className="px-6 pb-6">
+                                        <LongestStreakCard
+                                            dailyReadTimes={dailyReadTimes}
+                                            isLoading={isLoading}
                                         />
                                     </div>
                                 </ContributionsGraph>
