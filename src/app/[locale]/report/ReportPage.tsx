@@ -81,44 +81,35 @@ export function ReportPage({ year }: ReportPageProps) {
                 const deviceId = localStorage.getItem('weread_device_id') || 'web_device'
                 const activationCode = localStorage.getItem('weread_activation_code') || ''
 
-                // Load readStats from cache or fetch from detail API
-                let storedReportData = localStorage.getItem('weread_report_data')
-                const storedReportYear = localStorage.getItem('weread_report_year')
-
-                // Check if we need to fetch detail data (no cache or different year)
-                if (!storedReportData || (storedYear && storedReportYear !== storedYear)) {
-                    if (vid && accessToken && storedYear) {
-                        console.log('Fetching detail API for year:', storedYear)
-                        try {
-                            const baseTime = new Date(Number(storedYear), 0, 1).getTime() / 1000
-                            const response = await fetch("https://api.notionhub.app/get-weread-detail", {
-                                method: "POST",
-                                headers: { "Content-Type": "application/json" },
-                                body: JSON.stringify({
-                                    vid,
-                                    accessToken,
-                                    deviceId,
-                                    refreshToken,
-                                    activationCode,
-                                    baseTime
-                                })
+                // Always fetch fresh data from detail API
+                let reportData = null
+                if (vid && accessToken && storedYear) {
+                    console.log('Fetching detail API for year:', storedYear)
+                    try {
+                        const baseTime = new Date(Number(storedYear), 0, 1).getTime() / 1000
+                        const response = await fetch("https://api.notionhub.app/get-weread-detail", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                                vid,
+                                accessToken,
+                                deviceId,
+                                refreshToken,
+                                activationCode,
+                                baseTime
                             })
-                            if (response.ok) {
-                                const data = await response.json()
-                                localStorage.setItem('weread_report_data', JSON.stringify(data))
-                                localStorage.setItem('weread_report_year', storedYear)
-                                storedReportData = JSON.stringify(data)
-                                console.log('Detail data fetched and cached')
-                            }
-                        } catch (apiError) {
-                            console.error('Failed to fetch detail API:', apiError)
+                        })
+                        if (response.ok) {
+                            reportData = await response.json()
+                            console.log('Detail data fetched successfully')
                         }
+                    } catch (apiError) {
+                        console.error('Failed to fetch detail API:', apiError)
                     }
                 }
 
                 // Set readStats, readTimes and dailyReadTimes from report data
-                if (storedReportData) {
-                    const reportData = JSON.parse(storedReportData)
+                if (reportData) {
                     if (reportData.readStat) {
                         setReadStats(reportData.readStat)
                     }
