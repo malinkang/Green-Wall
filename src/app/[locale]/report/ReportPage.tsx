@@ -15,6 +15,7 @@ import { fetchWeReadSummary } from '~/services/weread-auth'
 import type { GraphData } from '~/types'
 import { MonthlyReadingChart } from './MonthlyReadingChart'
 import { LongestStreakCard } from './LongestStreakCard'
+import { BookCoverWall } from './BookCoverWall'
 
 function Divider() {
     return (
@@ -59,6 +60,8 @@ export function ReportPage({ year }: ReportPageProps) {
     const [localGraphData, setLocalGraphData] = useState<GraphData>()
     const [readTimes, setReadTimes] = useState<Record<string, number>>()
     const [dailyReadTimes, setDailyReadTimes] = useState<Record<string, number>>()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const [readLongest, setReadLongest] = useState<any[]>()
 
     useEffect(() => {
         // Load data from different sources:
@@ -108,13 +111,16 @@ export function ReportPage({ year }: ReportPageProps) {
                     }
                 }
 
-                // Set readStats and readTimes from report data (detail API)
+                // Set readStats, readTimes and readLongest from report data (detail API)
                 if (reportData) {
                     if (reportData.readStat) {
                         setReadStats(reportData.readStat)
                     }
                     if (reportData.readTimes) {
                         setReadTimes(reportData.readTimes)
+                    }
+                    if (reportData.readLongest) {
+                        setReadLongest(reportData.readLongest)
                     }
                     // Note: dailyReadTimes now comes from summary data for accurate streak calculation
                 }
@@ -271,6 +277,14 @@ export function ReportPage({ year }: ReportPageProps) {
                                             readTimes={readTimes}
                                             isLoading={isLoading}
                                             year={year ? parseInt(year, 10) : new Date().getFullYear()}
+                                        />
+                                    </div>
+
+                                    {/* Book Cover Wall */}
+                                    <div className="px-6 pb-6">
+                                        <BookCoverWall
+                                            readLongest={readLongest}
+                                            isLoading={isLoading}
                                         />
                                     </div>
                                 </ContributionsGraph>
