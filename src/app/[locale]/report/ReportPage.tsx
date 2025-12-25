@@ -260,6 +260,7 @@ export function ReportPage({ year }: ReportPageProps) {
                                     <div className="px-6 pb-6">
                                         <LongestStreakCard
                                             dailyReadTimes={dailyReadTimes}
+                                            year={year ? parseInt(year, 10) : new Date().getFullYear()}
                                             isLoading={isLoading}
                                         />
                                     </div>

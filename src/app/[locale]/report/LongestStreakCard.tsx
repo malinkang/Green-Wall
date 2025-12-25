@@ -5,6 +5,7 @@ import { FlameIcon, CalendarIcon } from 'lucide-react'
 
 interface LongestStreakCardProps {
     dailyReadTimes: Record<string, number> | undefined
+    year: number
     isLoading: boolean
 }
 
@@ -71,13 +72,26 @@ function calculateLongestStreak(dailyReadTimes: Record<string, number>): StreakI
     }
 }
 
-export function LongestStreakCard({ dailyReadTimes, isLoading }: LongestStreakCardProps) {
+export function LongestStreakCard({ dailyReadTimes, year, isLoading }: LongestStreakCardProps) {
     const streakInfo = useMemo(() => {
         if (!dailyReadTimes) {
             return { days: 0, startDate: '', endDate: '' }
         }
-        return calculateLongestStreak(dailyReadTimes)
-    }, [dailyReadTimes])
+
+        // Filter to only include data from selected year (Jan 1st onwards)
+        const yearStart = new Date(year, 0, 1).getTime() / 1000
+        const yearEnd = new Date(year + 1, 0, 1).getTime() / 1000
+
+        const filteredData: Record<string, number> = {}
+        Object.entries(dailyReadTimes).forEach(([ts, duration]) => {
+            const timestamp = parseInt(ts, 10)
+            if (timestamp >= yearStart && timestamp < yearEnd) {
+                filteredData[ts] = duration
+            }
+        })
+
+        return calculateLongestStreak(filteredData)
+    }, [dailyReadTimes, year])
 
     if (isLoading) {
         return (
