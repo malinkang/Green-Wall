@@ -135,7 +135,7 @@ export function GraphHeader({ data, unit }: GraphHeaderProps) {
           <span className="flex items-center" translate="no">
             <AtSignIcon className="mr-px size-[13px]" />
             {graphData.login}
-            <span className="ml-1 opacity-70">{t('readingRecord')}</span>
+            <span className="ml-1 font-medium" style={{ color: '#3399FF' }}>微信读书</span>
           </span>
         </div>
 
