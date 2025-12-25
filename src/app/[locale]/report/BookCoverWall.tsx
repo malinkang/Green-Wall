@@ -1,6 +1,5 @@
 'use client'
 
-import Image from 'next/image'
 import { BookCopyIcon } from 'lucide-react'
 
 interface BookItem {
@@ -78,12 +77,11 @@ export function BookCoverWall({ readLongest, isLoading }: BookCoverWallProps) {
                         className="relative w-16 h-24 rounded overflow-hidden shadow-md hover:scale-105 transition-transform"
                         title={cover.title}
                     >
-                        <Image
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
                             src={cover.url}
                             alt={cover.title}
-                            fill
-                            className="object-cover"
-                            sizes="64px"
+                            className="w-full h-full object-cover"
                         />
                     </div>
                 ))}
