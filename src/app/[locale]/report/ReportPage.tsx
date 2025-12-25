@@ -13,6 +13,7 @@ import { useSettingPopup } from '~/hooks/useSettingPopup'
 import { transformWeReadDataToGraphData } from '~/services/weread-transformer'
 import { fetchWeReadSummary } from '~/services/weread-auth'
 import type { GraphData } from '~/types'
+import { MonthlyReadingChart } from './MonthlyReadingChart'
 
 function Divider() {
     return (
@@ -55,6 +56,7 @@ export function ReportPage({ year }: ReportPageProps) {
     const [isLoading, setIsLoading] = useState(true)
     const [readStats, setReadStats] = useState<ReadStat[]>([])
     const [localGraphData, setLocalGraphData] = useState<GraphData>()
+    const [readTimes, setReadTimes] = useState<Record<string, number>>()
 
     useEffect(() => {
         // Load data from different sources:
@@ -112,11 +114,14 @@ export function ReportPage({ year }: ReportPageProps) {
                     }
                 }
 
-                // Set readStats from report data
+                // Set readStats and readTimes from report data
                 if (storedReportData) {
                     const reportData = JSON.parse(storedReportData)
                     if (reportData.readStat) {
                         setReadStats(reportData.readStat)
+                    }
+                    if (reportData.readTimes) {
+                        setReadTimes(reportData.readTimes)
                     }
                 }
 
@@ -229,6 +234,15 @@ export function ReportPage({ year }: ReportPageProps) {
                                             ))}
                                         </div>
                                     )}
+
+                                    {/* Monthly Reading Chart */}
+                                    <div className="px-6 pb-6">
+                                        <MonthlyReadingChart
+                                            readTimes={readTimes}
+                                            isLoading={isLoading}
+                                            year={year ? parseInt(year, 10) : new Date().getFullYear()}
+                                        />
+                                    </div>
                                 </ContributionsGraph>
                             </div>
                         </>
