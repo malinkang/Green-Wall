@@ -253,20 +253,20 @@ export function ReportPage({ year }: ReportPageProps) {
                                         </div>
                                     )}
 
+                                    {/* Longest Streak Card */}
+                                    <div className="px-6 pb-6">
+                                        <LongestStreakCard
+                                            dailyReadTimes={dailyReadTimes}
+                                            isLoading={isLoading}
+                                        />
+                                    </div>
+
                                     {/* Monthly Reading Chart */}
                                     <div className="px-6 pb-6">
                                         <MonthlyReadingChart
                                             readTimes={readTimes}
                                             isLoading={isLoading}
                                             year={year ? parseInt(year, 10) : new Date().getFullYear()}
-                                        />
-                                    </div>
-
-                                    {/* Longest Streak Card */}
-                                    <div className="px-6 pb-6">
-                                        <LongestStreakCard
-                                            dailyReadTimes={dailyReadTimes}
-                                            isLoading={isLoading}
                                         />
                                     </div>
                                 </ContributionsGraph>
