@@ -123,9 +123,15 @@ export function GraphHeader({ data, unit }: GraphHeaderProps) {
       </Link>
 
       <div className="flex basis-1/2 flex-col gap-1">
+        {/* WeRead Branding */}
+        <div>
+          <span className="text-xl font-semibold" style={{ color: '#3399FF' }}>微信读书</span>
+        </div>
+
+        {/* User Name */}
         <div>
           {!!graphData.name && (
-            <span className="text-xl font-semibold" translate="no">
+            <span className="text-lg font-semibold" translate="no">
               {graphData.name}
             </span>
           )}
@@ -135,7 +141,6 @@ export function GraphHeader({ data, unit }: GraphHeaderProps) {
           <span className="flex items-center" translate="no">
             <AtSignIcon className="mr-px size-[13px]" />
             {graphData.login}
-            <span className="ml-1 font-medium" style={{ color: '#3399FF' }}>微信读书</span>
           </span>
         </div>
 
