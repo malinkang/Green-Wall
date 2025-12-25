@@ -59,19 +59,60 @@ export function ReportPage({ year }: ReportPageProps) {
     useEffect(() => {
         // Load data from different sources:
         // 1. Heatmap data: from summary cache (weread_summary) or call summary API
-        // 2. ReadStats: from report_data (detail API response)
+        // 2. ReadStats: from report_data cache or call detail API
         const loadReportData = async () => {
             try {
                 const storedYear = year || localStorage.getItem('weread_report_year')
                 const currentUser = localStorage.getItem('weread_user')
-                const storedReportData = localStorage.getItem('weread_report_data')
 
                 let user = { name: 'WeRead User', avatar: '' }
                 if (currentUser) {
                     user = JSON.parse(currentUser)
                 }
 
-                // Load readStats from detail API response (weread_report_data)
+                // Get credentials
+                const vid = localStorage.getItem('weread_vid')
+                const accessToken = localStorage.getItem('weread_token')
+                const refreshToken = localStorage.getItem('weread_refresh_token') || ''
+                const deviceId = localStorage.getItem('weread_device_id') || 'web_device'
+                const activationCode = localStorage.getItem('weread_activation_code') || ''
+
+                // Load readStats from cache or fetch from detail API
+                let storedReportData = localStorage.getItem('weread_report_data')
+                const storedReportYear = localStorage.getItem('weread_report_year')
+
+                // Check if we need to fetch detail data (no cache or different year)
+                if (!storedReportData || (storedYear && storedReportYear !== storedYear)) {
+                    if (vid && accessToken && storedYear) {
+                        console.log('Fetching detail API for year:', storedYear)
+                        try {
+                            const baseTime = new Date(Number(storedYear), 0, 1).getTime() / 1000
+                            const response = await fetch("https://api.notionhub.app/get-weread-detail", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({
+                                    vid,
+                                    accessToken,
+                                    deviceId,
+                                    refreshToken,
+                                    activationCode,
+                                    baseTime
+                                })
+                            })
+                            if (response.ok) {
+                                const data = await response.json()
+                                localStorage.setItem('weread_report_data', JSON.stringify(data))
+                                localStorage.setItem('weread_report_year', storedYear)
+                                storedReportData = JSON.stringify(data)
+                                console.log('Detail data fetched and cached')
+                            }
+                        } catch (apiError) {
+                            console.error('Failed to fetch detail API:', apiError)
+                        }
+                    }
+                }
+
+                // Set readStats from report data
                 if (storedReportData) {
                     const reportData = JSON.parse(storedReportData)
                     if (reportData.readStat) {
@@ -84,17 +125,10 @@ export function ReportPage({ year }: ReportPageProps) {
                 const cachedSummary = localStorage.getItem('weread_summary')
 
                 if (cachedSummary) {
-                    // Use cached summary data for heatmap
                     console.log('Using cached summary data for heatmap')
                     summaryData = JSON.parse(cachedSummary)
                 } else {
-                    // No cache, try to call summary API
                     console.log('No summary cache, calling summary API...')
-                    const vid = localStorage.getItem('weread_vid')
-                    const accessToken = localStorage.getItem('weread_token')
-                    const refreshToken = localStorage.getItem('weread_refresh_token') || ''
-                    const deviceId = localStorage.getItem('weread_device_id') || 'web_device'
-
                     if (vid && accessToken) {
                         try {
                             summaryData = await fetchWeReadSummary({
@@ -103,7 +137,6 @@ export function ReportPage({ year }: ReportPageProps) {
                                 refreshToken,
                                 deviceId
                             })
-                            // Cache the summary data for future use
                             if (summaryData) {
                                 localStorage.setItem('weread_summary', JSON.stringify(summaryData))
                                 console.log('Summary data fetched and cached')
@@ -117,10 +150,8 @@ export function ReportPage({ year }: ReportPageProps) {
                 // Transform summary data to graph data for heatmap
                 if (summaryData) {
                     const graphData = transformWeReadDataToGraphData(summaryData, user.name, user.avatar)
-                    // Force usageUnit to be seconds to ensure correct display
                     graphData.usageUnit = 'seconds'
 
-                    // Filter to only show the selected year if available
                     if (storedYear) {
                         const yearInt = parseInt(storedYear, 10)
                         graphData.contributionYears = [yearInt]

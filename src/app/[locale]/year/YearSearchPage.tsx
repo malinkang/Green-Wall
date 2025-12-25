@@ -86,85 +86,15 @@ export function YearSearchPage() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { setGraphData } = useData()
 
-  const handleSubmit = async (ev: React.FormEvent) => {
+  const handleSubmit = (ev: React.FormEvent) => {
     ev.preventDefault()
-    setIsLoading(true)
-    setError(null)
-
     const year = Number(selectedYear)
 
-    try {
-      const vid = localStorage.getItem('weread_vid')
-      const accessToken = localStorage.getItem('weread_token')
-      const refreshToken = localStorage.getItem('weread_refresh_token')
-      const deviceId = localStorage.getItem('weread_device_id')
-      // Note: activationCode is not usually stored in localStorage unless we put it there. 
-      // Assuming it might be in localStorage OR we might need to handle it. 
-      // The user request says: "activationCode": "YOUR_ACTIVATION_CODE". 
-      // If it's not available, this might fail. But let's try to proceed with what we have.
-      // If activationCode is needed, we might need to ask the user or it might be implicit.
-      // However, checkScanAndLogin returns 'wx_code' which might be what's referred to or 'skey'. 
-      // Let's assume for now we use an empty string or null if not found, or maybe it's not needed for this specific endpoint if we have tokens.
-      // Actually the prompt says: 'activationCode: "YOUR_ACTIVATION_CODE"'. 
-      // I'll check if I can find where activationCode comes from. 
-      // But for now, I will use what I have.
+    // Store the selected year for the report page
+    localStorage.setItem('weread_report_year', String(year))
 
-      const activationCode = localStorage.getItem('weread_activation_code') || "" // Placeholder
-
-      if (!vid || !accessToken || !deviceId) {
-        throw new Error("Missing credentials. Please login first.")
-      }
-
-      // Calculate baseTime: Jan 1st of selected year at 00:00:00
-      const baseTime = new Date(year, 0, 1).getTime() / 1000
-
-      const response = await fetch("https://api.notionhub.app/get-weread-detail", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          vid,
-          accessToken,
-          deviceId,
-          refreshToken: refreshToken || "",
-          activationCode,
-          baseTime
-        })
-      })
-
-      if (!response.ok) {
-        throw new Error(`API Request failed: ${response.status}`)
-      }
-
-      const data = await response.json()
-
-      // Store data in global context (or pass via other means)
-      // We need a way to pass this data to the new page. 
-      // Since window.open or router.push to a new page clears state unless it's a SPA navigation 
-      // AND we use a global store that persists (like local storage or a very high level context provider that doesn't unmount).
-      // Given the request "jump to a new page", and "Report page", let's behave like a SPA.
-      // We can store it in localStorage for the report page to pick up, or in the DataProvider context if we navigate client-side.
-
-      // Let's store in localStorage for simplicity and persistence across refreshing of the report page.
-      localStorage.setItem('weread_report_data', JSON.stringify(data))
-      localStorage.setItem('weread_report_year', String(year))
-
-      // Navigate to report page
-      // router.push(`/${locale}/report`) // We need router and locale
-      // Since we don't have router/locale in this snippet context easily without adding hooks:
-      // We need to add `useRouter` and `useLocale`.
-      // Navigate to report page
-      router.push(`/${locale}/report/${year}`)
-
-    } catch (err) {
-      console.error(err)
-      setError(err instanceof Error ? err.message : "An unknown error occurred")
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        ; (toastManager as any).add({ title: "Failed to generate report", description: err instanceof Error ? err.message : "Unknown error", type: 'error' })
-    } finally {
-      setIsLoading(false)
-    }
+    // Navigate directly to report page, data will be fetched there
+    router.push(`/${locale}/report/${year}`)
   }
 
   const handleViewMyYear = () => {
